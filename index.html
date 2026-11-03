@@ -141,6 +141,13 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
 
 
 /* Clean white theme with green primary and red status accents */
+[hidden]{display:none!important}
+.ent-electives:not([hidden]){display:block!important;margin:14px 0;padding:16px;border:1.5px solid #16834a!important;border-radius:14px;background:#f0f9f3!important}
+.ent-electives>b{display:block;margin:0 0 12px;color:#126b3c;font-size:16px;font-weight:850}
+.ent-electives .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ent-electives label{display:block;margin-bottom:6px;color:#34463b!important}
+#entElective1,#entElective2{width:100%;min-height:44px;border:1.5px solid #b8d9c3!important;background:#fff!important;color:#17231d!important}
+@media(max-width:520px){.ent-electives .row{grid-template-columns:1fr}}
 :root,:root[data-theme="dark"],:root[data-theme="light"]{
  --bg:#f7faf8!important;--card:#ffffff!important;--tx:#17231d!important;--mu:#68776e!important;--bd:#e1eae4!important;
  --ac:#16834a!important;--ac2:#e4f5eb!important;--ok:#16834a!important;--ielts:#dc4558!important;--sat:#16834a!important;--ent:#087f5b!important;color-scheme:light!important
@@ -201,7 +208,7 @@ input:focus,select:focus{border-color:#16834a!important;box-shadow:0 0 0 3px #16
 <body>
 <div class="w">
 <h1 id="ttl">📚 Izgi_Zhan</h1>
-<p class="mu" style="margin:-8px 0 14px">IELTS · SAT · ENT exam preparation</p>
+
 <section class="auth-shell" id="login" hidden aria-label="Account access">
   <div class="auth-brand">
     <div class="auth-brand-top"><span>IZGI_ZHAN <b>· EXAM PREP</b></span></div>
@@ -254,12 +261,12 @@ input:focus,select:focus{border-color:#16834a!important;box-shadow:0 0 0 3px #16
   <main class="main-area">
     <header class="topbar own"><div><h1 id="pageTitle">Overview</h1></div><div class="topbar-right"><div class="chips" id="lang"></div></div></header>
     <section class="app-panel active" id="overview">
-      <div class="hero-banner"><div><span class="eyebrow">PLAN · STUDY · IMPROVE</span><h2>Track Your Exams.<br><em>Achieve Your Goals.</em></h2></div><div class="hero-cap">🎓</div></div>
+      
       <div class="stats" id="stats"></div>
       <div class="overview-grid"><div class="card overview-card"><div class="section-heading"><div><span class="eyebrow">YOUR ACTIVITY</span><h2>Exam Overview</h2></div><span class="soft-tag">IELTS · SAT · ENT</span></div><div id="overviewSummary" class="overview-summary"></div><div class="countdown-area" id="cd"></div></div>
-      <div class="card quick-card"><span class="eyebrow">SHORTCUTS</span><h2>Quick Actions</h2><button class="quick-action" type="button" onclick="openPanel('progressPanel')">▥ <span>View Progress</span><b>→</b></button></div></div>
+      </div>
     </section>
-    <section class="app-panel" id="addPanel"><div class="page-intro"><h2>Add Exam Result</h2></div><div class="card own"><div class="chips" id="exChips"></div><div class="row"><div><label>Date</label><input type="date" id="date"></div><div><label>Type</label><select id="kind"><option>Mock test</option><option>Practice</option><option>Real exam</option></select></div></div><div id="entElectiveWrap" hidden class="ent-electives"><b>Таңдау пәндері</b><div class="row"><div><label id="entElectiveLabel1">1-пән</label><select id="entElective1"></select></div><div><label id="entElectiveLabel2">2-пән</label><select id="entElective2"></select></div></div></div><div id="subjWrap" hidden style="margin-bottom:10px"><label>Subject / Пән / Предмет</label><select id="subj"></select></div><div id="examParts" hidden class="parts-box"><div class="parts-heading"><b id="partsTitle">Exam subjects</b><span class="mu">Choose completed sections and enter scores</span></div><div id="partsList"></div><div id="calculatedScore" class="calculated-score" aria-live="polite"><span>Overall score</span><strong>—</strong><small>Select parts and enter their scores</small></div></div><div class="row" id="singleScoreRow"><div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div></div><button class="main" id="add">Save Result</button></div></section>
+    <section class="app-panel" id="addPanel"><div class="page-intro"><h2>Add Exam Result</h2></div><div class="card own"><div class="chips" id="exChips"></div><div class="row"><div><label>Date</label><input type="date" id="date"></div><select id="kind" hidden><option>Practice</option><option>Mock test</option><option>Real exam</option></select></div><div id="entElectiveWrap" hidden class="ent-electives"><b>Таңдау пәндері</b><div class="row"><div><label id="entElectiveLabel1">1-пән</label><select id="entElective1"></select></div><div><label id="entElectiveLabel2">2-пән</label><select id="entElective2"></select></div></div></div><div id="subjWrap" hidden style="margin-bottom:10px"><label>Subject / Пән / Предмет</label><select id="subj"></select></div><div id="examParts" hidden class="parts-box"><div class="parts-heading"><b id="partsTitle">Exam subjects</b></div><div id="partsList"></div><div id="calculatedScore" class="calculated-score" aria-live="polite"><span>Overall score</span><strong>—</strong><small>Select parts and enter their scores</small></div></div><div class="row" id="singleScoreRow"><div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div></div><button class="main" id="add">Save Result</button></div></section>
     <section class="app-panel" id="progressPanel"><div class="page-intro"><span class="eyebrow">YOUR DEVELOPMENT</span><h2>Your Progress</h2></div><div class="trend-grid" id="trendCards"></div><div class="card"><div class="chips" id="chartChips"></div><select id="csub" hidden style="margin-bottom:10px"></select><div class="sc" id="chart"></div></div></section>
 
     <section class="app-panel" id="profilePanel"><div class="page-intro"><h2>Your QR Profile</h2></div><div class="card profile-share"><div class="qr-frame" id="qrBox"><span class="profile-share-note">Create your personal QR code</span></div><p class="profile-share-note" id="profileStatus">Your public statistics will open from this QR code.</p><div class="profile-actions"><button class="main" id="makeQr" type="button">Create my QR</button><button class="chip" id="pcopy" type="button" disabled>Share profile</button></div></div><input id="pname" type="hidden"><input id="pslug" type="hidden"><input id="ppub" type="checkbox" hidden><select id="sub1" hidden></select><select id="sub2" hidden></select><span id="pmsg" hidden></span><input id="plink" type="hidden"><div id="shareRow" hidden></div><button id="psave" hidden></button></section>
@@ -374,7 +381,7 @@ function updateCalculatedScore(){
      (def.step!==0.5||Math.round(score*2)===score*2)&&(def.step!==10||score%10===0);
    return {def,score,valid};
  }).filter(v=>v.valid);
- let label="Overall score",total="—",hint="Select parts and enter their scores";
+ let label="Overall score",total="—",hint="";
  if(cur==="IELTS")label="Overall IELTS band";
  if(cur==="SAT")label="Total SAT score";
  if(cur==="ENT")label="Total ENT score";
@@ -386,8 +393,8 @@ function updateCalculatedScore(){
    hint=cur==="IELTS"
      ?`Average of ${values.length} completed section${values.length===1?"":"s"} · rounded to 0.5`
      :`Sum of ${values.length} entered part${values.length===1?"":"s"} · maximum ${max}`;
- }else if(checked.length){hint="Enter a valid score in at least one selected part"}
- box.innerHTML=`<span>${label}</span><strong>${total}</strong><small>${hint}</small>`;
+ }else if(checked.length){hint=""}
+ box.innerHTML=`<span>${label}</span><strong>${total}</strong>${hint?`<small>${hint}</small>`:""}`;
 }
 
 function updScore(){renderExamParts();const m=maxOf(cur,null);$("scLbl").textContent="Score (max "+m+")";$("score").step=EX[cur].step;$("score").max=m}
