@@ -39,6 +39,73 @@ svg{width:100%;height:auto;display:block}
 .mu{color:var(--mu);font-size:13px}#coach h2{margin-top:14px}#coach ul{padding-left:18px;margin:0}.pub .own,.pub .x,.pub .tg{display:none!important}
 .tg{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}.tg input{width:90px}
 @media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+
+/* Refined visual design and account-first screen */
+.auth-shell[hidden],.auth-submit[hidden]{display:none!important}
+body{font-weight:500;letter-spacing:-.012em}
+h1{font-size:26px;font-weight:850;letter-spacing:-.04em}
+h2{font-size:17px;font-weight:800;letter-spacing:-.025em}
+.card,.st{border-width:1.5px;border-radius:17px;box-shadow:0 5px 20px rgba(25,32,65,.045)}
+.card{padding:18px}
+label{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:6px}
+input,select{border-width:1.5px;border-radius:11px;padding:12px;font-weight:550;transition:border-color .18s,box-shadow .18s}
+input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 16%,transparent)}
+button{font-family:inherit;font-weight:750}
+button.main{font-weight:800;border-radius:12px;padding:13px 16px;box-shadow:0 5px 12px color-mix(in srgb,var(--ac) 20%,transparent);transition:transform .15s,filter .15s}
+button.main:hover{filter:brightness(1.06);transform:translateY(-1px)}
+button.main:active{transform:translateY(0)}
+.chip{font-weight:700;border-width:1.5px}
+.st b{font-weight:850}
+.it .m b,.sco{font-weight:800}
+
+body.auth-mode{min-height:100vh;background:radial-gradient(ellipse at 12% 12%,rgba(99,102,241,.13),transparent 38%),radial-gradient(ellipse at 90% 88%,rgba(14,165,233,.11),transparent 36%),var(--bg)}
+body.auth-mode .w{max-width:1080px;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:36px 22px}
+body.auth-mode>#app{display:none}
+body.auth-mode #ttl,body.auth-mode>.w>p.mu,body.auth-mode #lang{display:none!important}
+.auth-shell{width:100%;min-height:590px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;border:1px solid var(--bd);border-radius:26px;background:var(--card);box-shadow:0 24px 80px rgba(28,35,75,.13)}
+.auth-brand{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:590px;padding:42px;color:#fff;background:linear-gradient(145deg,#24245b 0%,#3437a0 52%,#5146d8 100%);isolation:isolate;overflow:hidden}
+.auth-brand:before,.auth-brand:after{content:"";position:absolute;z-index:-1;border:1px solid rgba(255,255,255,.13);border-radius:50%;width:390px;height:390px;right:-155px;top:80px}
+.auth-brand:after{width:270px;height:270px;right:-95px;top:140px;background:rgba(255,255,255,.045)}
+.auth-brand-top{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:850;letter-spacing:.09em}
+.auth-brand-top b{font-weight:600;opacity:.72}
+.auth-logo{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.26);font-weight:900;font-size:17px;letter-spacing:-.05em}
+.auth-brand-copy{max-width:390px;margin:auto 0;padding:55px 0 35px}
+.auth-eyebrow{display:block;font-size:10px;font-weight:850;letter-spacing:.17em;opacity:.72}
+.auth-brand-copy h2{font-size:clamp(35px,4.4vw,52px);line-height:1.08;letter-spacing:-.055em;margin:18px 0;font-weight:900}
+.auth-brand-copy h2 span{color:#c7d2fe}
+.auth-brand-copy p{max-width:330px;color:rgba(255,255,255,.78);font-size:15px;line-height:1.75;font-weight:500}
+.auth-exams{display:flex;gap:9px;flex-wrap:wrap}
+.auth-exams span{padding:9px 15px;border-radius:99px;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.09);font-size:12px;font-weight:800;letter-spacing:.06em}
+.auth-brand-foot{margin-top:26px;color:rgba(255,255,255,.58);font-size:11px;font-weight:600}
+.auth-form{align-self:center;width:100%;max-width:470px;margin:0 auto;padding:56px 54px}
+.auth-form-kicker{color:var(--ac);opacity:1;margin-bottom:12px}
+.auth-form h2{font-size:31px;line-height:1.15;font-weight:900;letter-spacing:-.045em;margin:0 0 9px}
+.auth-subtitle{margin:0 0 26px;color:var(--mu);font-size:14px;font-weight:550}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px;border-radius:12px;background:var(--bg);border:1px solid var(--bd);margin-bottom:25px}
+.auth-tab{padding:10px 8px;border:0;border-radius:8px;background:transparent;color:var(--mu);font-size:13px;font-weight:800;cursor:pointer}
+.auth-tab.active{background:var(--card);color:var(--ac);box-shadow:0 2px 8px rgba(20,25,55,.09)}
+.auth-field{margin-bottom:17px}
+.auth-field label{display:block;margin-bottom:7px}
+.password-wrap{position:relative}
+.password-wrap input{padding-right:76px}
+.password-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);padding:7px 10px;border:0;border-radius:7px;background:var(--ac2);color:var(--ac);font-size:12px;font-weight:850;cursor:pointer}
+.auth-submit{margin-top:7px;display:flex;justify-content:center;align-items:center;gap:10px;min-height:48px}
+.auth-submit span{font-size:18px}
+.auth-message{min-height:20px;margin:13px 0 0;color:var(--mu);font-size:13px;font-weight:650;overflow-wrap:anywhere}
+.auth-terms{margin:22px 0 0;color:var(--mu);font-size:11px;line-height:1.6;text-align:center;opacity:.85}
+.auth-mobile-logo{display:none}
+@media(max-width:760px){
+ body.auth-mode .w{padding:18px 12px;justify-content:flex-start}
+ .auth-shell{grid-template-columns:1fr;min-height:0;border-radius:20px}
+ .auth-brand{display:none}
+ .auth-form{padding:30px 24px 27px}
+ .auth-mobile-logo{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:900;letter-spacing:.06em;margin-bottom:27px}
+ .auth-mobile-logo .auth-logo{background:linear-gradient(145deg,#3730a3,#6366f1);color:white;border:0}
+ .auth-form h2{font-size:28px}
+}
+@media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}.card{padding:15px}.row{gap:8px}}
+
 </style>
 </head>
 <body>
@@ -47,13 +114,43 @@ svg{width:100%;height:auto;display:block}
 <p class="mu" style="margin:-8px 0 14px">IELTS · SAT · ENT progress tracker</p>
 <div class="chips" id="lang"></div>
 
-<div class="card" id="login" hidden>
-<h2>Log in</h2>
-<div class="row"><div><label>Email</label><input type="email" id="em" autocomplete="email"></div>
-<div><label>Password</label><input type="password" id="pw" autocomplete="current-password"></div></div>
-<div class="row"><button class="main" id="bIn">Log in</button><button class="main" id="bUp" style="background:var(--mu)">Create account</button></div>
-<p class="mu" id="lmsg"></p>
-</div>
+<section class="auth-shell" id="login" hidden aria-label="Account access">
+  <div class="auth-brand">
+    <div class="auth-brand-top"><div class="auth-logo">IZ</div><span>IZGI_ZHAN <b>· EXAM TRACKER</b></span></div>
+    <div class="auth-brand-copy">
+      <span class="auth-eyebrow">YOUR PERSONAL STUDY SPACE</span>
+      <h2>Make progress.<br><span>Reach your goals.</span></h2>
+      <p>Keep your exam results, follow your progress and get a smarter plan for your next step.</p>
+    </div>
+    <div class="auth-exams"><span>IELTS</span><span>SAT</span><span>ENT</span></div>
+    <div class="auth-brand-foot">One place for every achievement.</div>
+  </div>
+  <div class="auth-form">
+    <div class="auth-mobile-logo"><div class="auth-logo">IZ</div><span>IZGI_ZHAN</span></div>
+    <span class="auth-eyebrow auth-form-kicker">WELCOME TO YOUR TRACKER</span>
+    <h2 id="authTitle">Welcome back</h2>
+    <p class="auth-subtitle" id="authSubtitle">Log in to continue your learning journey.</p>
+    <div class="auth-tabs" role="tablist" aria-label="Account action">
+      <button type="button" class="auth-tab active" id="modeIn" role="tab" aria-selected="true">Log in</button>
+      <button type="button" class="auth-tab" id="modeUp" role="tab" aria-selected="false">Create account</button>
+    </div>
+    <div class="auth-field">
+      <label for="em">Email address</label>
+      <input type="email" id="em" placeholder="you@example.com" autocomplete="email" required>
+    </div>
+    <div class="auth-field">
+      <label for="pw">Password</label>
+      <div class="password-wrap">
+        <input type="password" id="pw" placeholder="Enter your password" autocomplete="current-password" required>
+        <button type="button" class="password-toggle" id="togglePw" aria-label="Show password" aria-pressed="false">Show</button>
+      </div>
+    </div>
+    <button class="main auth-submit" id="bIn" type="button">Log in <span aria-hidden="true">→</span></button>
+    <button class="main auth-submit" id="bUp" type="button" hidden>Create account <span aria-hidden="true">→</span></button>
+    <p class="auth-message" id="lmsg" role="status" aria-live="polite"></p>
+    <p class="auth-terms">By continuing, you agree to use this tracker responsibly and keep your account details private.</p>
+  </div>
+</section>
 <div id="app" hidden>
 <div class="chips" id="cd"></div>
 <div class="stats" id="stats"></div>
@@ -307,10 +404,35 @@ $("psave").onclick=saveProfile;$("pcopy").onclick=copyLink;
 $("ppub").onchange=updateShare;$("pslug").oninput=updateShare;
 
 function show(session){
+  document.body.classList.toggle("auth-mode",!session);
   $("login").hidden=!!session;$("app").hidden=!session;
   if(!session){uid=null;return}
   if(session.user.id!==uid){uid=session.user.id;loadProfile();load()}
 }
+function setAuthMode(mode){
+  const signup=mode==="up";
+  $("modeIn").classList.toggle("active",!signup);
+  $("modeUp").classList.toggle("active",signup);
+  $("modeIn").setAttribute("aria-selected",String(!signup));
+  $("modeUp").setAttribute("aria-selected",String(signup));
+  $("bIn").hidden=signup;
+  $("bUp").hidden=!signup;
+  $("authTitle").textContent=signup?"Create your account":"Welcome back";
+  $("authSubtitle").textContent=signup?"Sign up to save and track your exam progress.":"Log in to continue your learning journey.";
+  $("pw").autocomplete=signup?"new-password":"current-password";
+  $("lmsg").textContent="";
+}
+$("modeIn").onclick=()=>setAuthMode("in");
+$("modeUp").onclick=()=>setAuthMode("up");
+$("togglePw").onclick=()=>{
+  const visible=$("pw").type==="password";
+  $("pw").type=visible?"text":"password";
+  $("togglePw").textContent=visible?"Hide":"Show";
+  $("togglePw").setAttribute("aria-label",visible?"Hide password":"Show password");
+  $("togglePw").setAttribute("aria-pressed",String(visible));
+};
+setAuthMode("in");
+
 async function auth(kind){
   const email=$("em").value.trim(),password=$("pw").value;
   const {error}=kind==="in"?await sb.auth.signInWithPassword({email,password}):await sb.auth.signUp({email,password});
@@ -322,7 +444,7 @@ $("out").onclick=e=>{e.preventDefault();sb.auth.signOut()};
 $("date").value=today();setEx("IELTS");
 const PUB=new URLSearchParams(location.search).get("u");
 if(PUB){document.body.classList.add("pub");loadPublic(PUB)}
-else{sb.auth.onAuthStateChange((_ev,s)=>setTimeout(()=>show(s),0));sb.auth.getSession().then(({data})=>show(data.session))}
+else{document.body.classList.add("auth-mode");sb.auth.onAuthStateChange((_ev,s)=>setTimeout(()=>show(s),0));sb.auth.getSession().then(({data})=>show(data.session))}
 </script>
 </body>
 </html>
