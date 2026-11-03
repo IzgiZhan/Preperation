@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Exam Tracker | Izgi_Zhan</title>
+<title>Exam Prep | Izgi_Zhan</title>
 <meta name="theme-color" content="#080f25">
 <meta name="description" content="Track IELTS, SAT and ENT results, goals and study progress.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x2='1' y2='1'%3E%3Cstop stop-color='%231d4ed8'/%3E%3Cstop offset='1' stop-color='%23060d25'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Cpath d='M16 38 50 20 84 38 50 56Z' fill='white'/%3E%3Cpath d='M29 47v17q21 17 42 0V47L50 59Z' fill='white'/%3E%3Cpath d='M83 40v24' stroke='%233b82f6' stroke-width='5'/%3E%3Ccircle cx='83' cy='68' r='5' fill='%233b82f6'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b1738'/%3E%3Cpath d='M16 38 50 20 84 38 50 56Z' fill='white'/%3E%3Cpath d='M29 47v17q21 17 42 0V47L50 59Z' fill='white'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--tx:#161a2b;--mu:#6b7186;--bd:#e3e6f0;--ac:#4f46e5;--ac2:#e0e7ff;--ok:#16a34a;
 --ielts:#e11d48;--sat:#2563eb;--ent:#059669;
@@ -40,7 +42,7 @@ svg{width:100%;height:auto;display:block}
 .it .m{flex:1;min-width:0}.it small{color:var(--mu)}
 .sco{font-weight:700;white-space:nowrap}
 .x{background:none;border:0;color:var(--mu);font-size:18px;cursor:pointer;padding:4px 8px}
-.mu{color:var(--mu);font-size:13px}#coach h2{margin-top:14px}#coach ul{padding-left:18px;margin:0}.pub .own,.pub .x,.pub .tg{display:none!important}
+.mu{color:var(--mu);font-size:13px}#coach h2{margin-top:14px}#coach ul{padding-left:18px;margin:0}.pub .own,.pub .x,.pub .tg{display:none!important}.pub .sidebar{display:none!important}.pub .main-area{max-width:980px;margin:auto}.pub #overview,.pub #addPanel,.pub #coachPanel,.pub #profilePanel,.pub #historyPanel{display:none!important}.pub #progressPanel{display:block!important}.trend-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 16px}.trend-card{padding:17px;border:1px solid #263858;border-radius:16px;background:linear-gradient(145deg,#142344,#101a32)}.trend-card span{display:block;color:#9eafd0;font-size:12px;font-weight:700}.trend-card strong{display:block;margin:7px 0 2px;font-size:25px;font-weight:900}.trend-card small{color:#aab8d6}.trend-up{color:#45d6a0!important}.trend-down{color:#ff8293!important}.trend-flat{color:#8db8ff!important}.profile-share{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;text-align:center;min-height:260px}.qr-frame{padding:14px;background:#fff;border-radius:16px;display:inline-flex;align-items:center;justify-content:center;min-width:228px;min-height:228px}.qr-frame img,.qr-frame canvas{display:block}.profile-actions{display:flex;gap:10px;width:min(100%,420px)}.profile-actions button{flex:1}.profile-share-note{color:#9eafd0;font-size:13px;margin:0}@media(max-width:600px){.trend-grid{grid-template-columns:1fr}.profile-actions{flex-direction:column}}
 .tg{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}.tg input{width:90px}
 @media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}}
 
@@ -110,7 +112,7 @@ body.auth-mode #ttl,body.auth-mode>.w>p.mu,body.auth-mode #lang{display:none!imp
 }
 @media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}.card{padding:15px}.row{gap:8px}}
 
-.app-nav{display:flex;gap:7px;overflow-x:auto;padding:5px 2px 14px;margin-bottom:8px;scrollbar-width:thin}.nav-btn{flex:none;border:1.5px solid var(--bd);border-radius:11px;padding:10px 14px;background:var(--card);color:var(--mu);font:750 13px system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}.nav-btn.active{background:var(--ac);border-color:var(--ac);color:#fff}.app-panel{display:none}.app-panel.active{display:block}.overview-summary{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}.summary-pill{border:1px solid var(--bd);background:var(--bg);padding:10px 13px;border-radius:12px;font-weight:750;font-size:13px}.parts-box{border:1.5px solid var(--bd);border-radius:14px;padding:14px;margin:4px 0 14px}.parts-heading{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}.part-row{display:grid;grid-template-columns:1fr minmax(100px,150px);align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--bd)}.part-check{display:flex;align-items:center;gap:10px;margin:0;font-size:14px;font-weight:800;color:var(--tx)}.part-check input{width:18px;height:18px;accent-color:var(--ac)}.part-score input{padding:9px 10px}@media(max-width:560px){.app-nav{margin-right:-15px}.parts-heading{display:block}.parts-heading .mu{display:block;margin-top:3px}}
+.app-nav{display:flex;gap:7px;overflow-x:auto;padding:5px 2px 14px;margin-bottom:8px;scrollbar-width:thin}.nav-btn{flex:none;border:1.5px solid var(--bd);border-radius:11px;padding:10px 14px;background:var(--card);color:var(--mu);font:750 13px system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}.nav-btn.active{background:var(--ac);border-color:var(--ac);color:#fff}.app-panel{display:none}.app-panel.active{display:block}.overview-summary{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}.summary-pill{border:1px solid var(--bd);background:var(--bg);padding:10px 13px;border-radius:12px;font-weight:750;font-size:13px}.parts-box{border:1.5px solid var(--bd);border-radius:14px;padding:14px;margin:4px 0 14px}.parts-heading{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}.part-row{display:grid;grid-template-columns:1fr minmax(100px,150px);align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--bd)}.part-check{display:flex;align-items:center;gap:10px;margin:0;font-size:14px;font-weight:800;color:var(--tx)}.part-check input{width:18px;height:18px;accent-color:var(--ac)}.part-score input{padding:9px 10px}.calculated-score{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:13px;padding:13px 15px;border:1px solid rgba(36,120,255,.38);border-radius:12px;background:rgba(36,120,255,.09)}.calculated-score span{font-size:13px;font-weight:800;color:var(--tx)}.calculated-score strong{font-size:22px;color:var(--ok);margin-left:auto}.calculated-score small{width:100%;color:var(--mu);font-size:11px}{.app-nav{margin-right:-15px}.parts-heading{display:block}.parts-heading .mu{display:block;margin-top:3px}}
 
 /* Premium navy dashboard redesign */
 :root{--bg:#080f22;--card:#111b35;--tx:#f5f7ff;--mu:#9aa8c9;--bd:#253454;--ac:#2478ff;--ac2:#142f68;--ok:#42e6a4;--ielts:#ff6688;--sat:#4b9cff;--ent:#39d6a0;color-scheme:dark}
@@ -141,10 +143,10 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
 <body>
 <div class="w">
 <h1 id="ttl">📚 Izgi_Zhan</h1>
-<p class="mu" style="margin:-8px 0 14px">IELTS · SAT · ENT progress tracker</p>
+<p class="mu" style="margin:-8px 0 14px">IELTS · SAT · ENT exam preparation</p>
 <section class="auth-shell" id="login" hidden aria-label="Account access">
   <div class="auth-brand">
-    <div class="auth-brand-top"><div class="auth-logo">IZ</div><span>IZGI_ZHAN <b>· EXAM TRACKER</b></span></div>
+    <div class="auth-brand-top"><div class="auth-logo">IZ</div><span>IZGI_ZHAN <b>· EXAM PREP</b></span></div>
     <div class="auth-brand-copy">
       <span class="auth-eyebrow">YOUR PERSONAL STUDY SPACE</span>
       <h2>Make progress.<br><span>Reach your goals.</span></h2>
@@ -155,7 +157,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
   </div>
   <div class="auth-form">
     <div class="auth-mobile-logo"><div class="auth-logo">IZ</div><span>IZGI_ZHAN</span></div>
-    <span class="auth-eyebrow auth-form-kicker">WELCOME TO YOUR TRACKER</span>
+    <span class="auth-eyebrow auth-form-kicker">WELCOME TO EXAM PREP</span>
     <h2 id="authTitle">Welcome back</h2>
     <p class="auth-subtitle" id="authSubtitle">Log in to continue your learning journey.</p>
     <div class="auth-tabs" role="tablist" aria-label="Account action">
@@ -176,12 +178,12 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
     <button class="main auth-submit" id="bIn" type="button">Log in <span aria-hidden="true">→</span></button>
     <button class="main auth-submit" id="bUp" type="button" hidden>Create account <span aria-hidden="true">→</span></button>
     <p class="auth-message" id="lmsg" role="status" aria-live="polite"></p>
-    <p class="auth-terms">By continuing, you agree to use this tracker responsibly and keep your account details private.</p>
+    <p class="auth-terms">By continuing, you agree to use this exam prep responsibly and keep your account details private.</p>
   </div>
 </section>
 <div id="app" hidden class="dashboard">
   <aside class="sidebar own">
-    <div class="brand-lockup"><div class="brand-mark">🎓</div><div><b>Exam</b><strong>Tracker</strong><small>IZGI_ZHAN</small></div></div>
+    <div class="brand-lockup"><div class="brand-mark">🎓</div><div><b>Exam</b><strong>Prep</strong><small>IZGI_ZHAN</small></div></div>
     <nav class="app-nav" id="appNav" aria-label="Main navigation">
       <button class="nav-btn active" data-panel="overview"><span>⌂</span>Overview</button>
       <button class="nav-btn" data-panel="addPanel"><span>⊕</span>Add Result</button>
@@ -201,12 +203,12 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
       <div class="overview-grid"><div class="card overview-card"><div class="section-heading"><div><span class="eyebrow">YOUR ACTIVITY</span><h2>Exam Overview</h2></div><span class="soft-tag">IELTS · SAT · ENT</span></div><div id="overviewSummary" class="overview-summary"></div><div class="countdown-area" id="cd"></div></div>
       <div class="card quick-card"><span class="eyebrow">SHORTCUTS</span><h2>Quick Actions</h2><button class="quick-action" type="button" onclick="openPanel('coachPanel')">✦ <span>Ask AI Coach</span><b>→</b></button><button class="quick-action" type="button" onclick="openPanel('progressPanel')">▥ <span>View Progress</span><b>→</b></button></div></div>
     </section>
-    <section class="app-panel" id="addPanel"><div class="page-intro"><span class="eyebrow">RECORD YOUR WORK</span><h2>Add Exam Result</h2><p>Choose an exam, select completed subjects and enter your scores.</p></div><div class="card own"><div class="chips" id="exChips"></div><div class="row"><div><label>Date</label><input type="date" id="date"></div><div><label>Type</label><select id="kind"><option>Mock test</option><option>Practice</option><option>Real exam</option></select></div></div><div id="subjWrap" hidden style="margin-bottom:10px"><label>Subject / Пән / Предмет</label><select id="subj"></select></div><div id="examParts" hidden class="parts-box"><div class="parts-heading"><b id="partsTitle">Exam subjects</b><span class="mu">Select the parts you completed</span></div><div id="partsList"></div></div><div class="row" id="singleScoreRow"><div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div></div><button class="main" id="add">Save Result</button></div></section>
-    <section class="app-panel" id="progressPanel"><div class="page-intro"><span class="eyebrow">SEE HOW FAR YOU HAVE COME</span><h2>Your Progress</h2><p>Follow your scores and set your next goal.</p></div><div class="card"><div class="chips" id="chartChips"></div><select id="csub" hidden style="margin-bottom:10px"></select><div class="sc" id="chart"></div><div class="tg"><span class="mu">Goal score:</span><input type="number" id="target" inputmode="decimal"><span class="mu">Exam date:</span><input type="date" id="dl" style="width:150px"><span class="mu" id="tgInfo"></span></div></div></section>
+    <section class="app-panel" id="addPanel"><div class="page-intro"><span class="eyebrow">RECORD YOUR WORK</span><h2>Add Exam Result</h2><p>Choose an exam, select completed subjects and enter your scores.</p></div><div class="card own"><div class="chips" id="exChips"></div><div class="row"><div><label>Date</label><input type="date" id="date"></div><div><label>Type</label><select id="kind"><option>Mock test</option><option>Practice</option><option>Real exam</option></select></div></div><div id="subjWrap" hidden style="margin-bottom:10px"><label>Subject / Пән / Предмет</label><select id="subj"></select></div><div id="examParts" hidden class="parts-box"><div class="parts-heading"><b id="partsTitle">Exam subjects</b><span class="mu">Select the parts you completed</span></div><div id="partsList"></div><div id="calculatedScore" class="calculated-score" aria-live="polite"><span>Overall score</span><strong>—</strong><small>Enter all parts to calculate automatically</small></div></div><div class="row" id="singleScoreRow"><div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div></div><button class="main" id="add">Save Result</button></div></section>
+    <section class="app-panel" id="progressPanel"><div class="page-intro"><span class="eyebrow">YOUR DEVELOPMENT</span><h2>Your Progress</h2><p>See how your latest result changed compared with your previous attempt.</p></div><div class="trend-grid" id="trendCards"></div><div class="card"><div class="chips" id="chartChips"></div><select id="csub" hidden style="margin-bottom:10px"></select><div class="sc" id="chart"></div></div></section>
     <section class="app-panel" id="coachPanel"><div class="page-intro"><span class="eyebrow">SMART STUDY SUPPORT</span><h2>AI Coach</h2><p>Get practical advice for your next exam.</p></div><div class="card own"><p class="mu">The coach uses the exam selected in Progress. Tell it what is difficult for you.</p><input id="focus" placeholder="Weak part (example: Reading, vocabulary, Math)"><div style="height:12px"></div><button class="main" id="ask">Get advice</button><div id="coach"></div></div></section>
-    <section class="app-panel" id="profilePanel"><div class="page-intro"><span class="eyebrow">YOUR ACCOUNT</span><h2>Profile & Settings</h2><p>Manage your public profile and exam preferences.</p></div><div class="card own"><div class="row"><div><label>Display name</label><input id="pname" maxlength="40"></div><div><label>Link name (a-z, 0-9, _ -)</label><input id="pslug" maxlength="30" placeholder="izgi_zhan"></div></div><label class="check-label"><input type="checkbox" id="ppub"> Anyone with my link can see my progress</label><label>ENT elective subjects (pick 2) · Таңдау пәндері · Профильные предметы</label><div class="row"><select id="sub1"></select><select id="sub2"></select></div><button class="main" id="psave">Save Profile</button><p class="mu" id="pmsg"></p><div class="tg" id="shareRow" hidden><input id="plink" readonly style="flex:1;min-width:200px;width:auto"><button class="chip" id="pcopy">Copy link</button></div></div></section>
+    <section class="app-panel" id="profilePanel"><div class="page-intro"><h2>Your QR Profile</h2><p>Scan the QR code or share your link to show your exam statistics.</p></div><div class="card profile-share"><div class="qr-frame" id="qrBox"><span class="profile-share-note">Create your personal QR code</span></div><p class="profile-share-note" id="profileStatus">Your public statistics will open from this QR code.</p><div class="profile-actions"><button class="main" id="makeQr" type="button">Create my QR</button><button class="chip" id="pcopy" type="button" disabled>Share profile</button></div></div><input id="pname" type="hidden"><input id="pslug" type="hidden"><input id="ppub" type="checkbox" hidden><select id="sub1" hidden></select><select id="sub2" hidden></select><span id="pmsg" hidden></span><input id="plink" type="hidden"><div id="shareRow" hidden></div><button id="psave" hidden></button></section>
     <section class="app-panel" id="historyPanel"><div class="page-intro"><span class="eyebrow">ALL YOUR RECORDS</span><h2>History</h2><p>Review and manage your previous results.</p></div><div class="card"><div id="list"></div></div><div class="card"><h2>Study Activity</h2><p class="mu">How often you studied during the last 8 weeks.</p><div class="sc" id="freq"></div></div></section>
-    <footer class="app-footer">Exam Tracker · Keep learning, keep improving.</footer>
+    <footer class="app-footer">Exam Prep · Keep learning, keep improving.</footer>
   </main>
 </div>
 </div>
@@ -272,7 +274,26 @@ function renderExamParts(){
  const parts=examParts();$("examParts").hidden=!parts.length;$("singleScoreRow").hidden=!!parts.length;$("subjWrap").hidden=true;
  $("partsTitle").textContent=cur+" subjects";
  $("partsList").innerHTML=parts.map(p=>`<div class="part-row"><label class="part-check"><input type="checkbox" class="part-toggle" value="${p.id}"> ${p.name}</label><div class="part-score" hidden><input type="number" class="part-value" data-part="${p.id}" min="${p.min??0}" max="${p.max}" step="${p.step}" placeholder="${p.min??0}–${p.max}"></div></div>`).join("");
- $("partsList").querySelectorAll(".part-toggle").forEach(c=>c.addEventListener("change",()=>{c.closest(".part-row").querySelector(".part-score").hidden=!c.checked}));
+ $("partsList").querySelectorAll(".part-toggle").forEach(c=>c.addEventListener("change",()=>{c.closest(".part-row").querySelector(".part-score").hidden=!c.checked;updateCalculatedScore()}));
+ $("partsList").querySelectorAll(".part-value").forEach(i=>i.addEventListener("input",updateCalculatedScore));
+ updateCalculatedScore();
+}
+function updateCalculatedScore(){
+ const box=$("calculatedScore");if(!box)return;
+ const defs=examParts(),checked=[...document.querySelectorAll(".part-toggle:checked")];
+ const values=checked.map(c=>{const def=defs.find(p=>p.id===c.value),input=document.querySelector(`.part-value[data-part="${c.value}"]`);return {def,score:input&&input.value.trim()!==""?Number(input.value):NaN}});
+ const allDone=checked.length===defs.length&&values.every(v=>v.def&&!Number.isNaN(v.score)&&v.score>=(v.def.min??0)&&v.score<=v.def.max);
+ let label="Overall score",total="—",hint="Enter all parts to calculate automatically";
+ if(cur==="IELTS")label="Overall IELTS band";
+ if(cur==="SAT")label="Total SAT score";
+ if(cur==="ENT")label="Total ENT score";
+ if(allDone){
+   if(cur==="IELTS")total=(Math.round(values.reduce((a,v)=>a+v.score,0)/values.length*2)/2).toFixed(1).replace(/\.0$/,"");
+   else total=String(values.reduce((a,v)=>a+v.score,0));
+   const max=defs.reduce((a,p)=>a+p.max,0);
+   hint=cur==="IELTS"?"Calculated from the average of 4 sections":"Calculated automatically · maximum "+max;
+ }else if(checked.length){hint="Complete all "+defs.length+" parts to see the total"}
+ box.innerHTML=`<span>${label}</span><strong>${total}</strong><small>${hint}</small>`;
 }
 function updScore(){renderExamParts();const m=maxOf(cur,null);$("scLbl").textContent="Score (max "+m+")";$("score").step=EX[cur].step;$("score").max=m}
 function setEx(k){cur=k;updScore();render()}
@@ -287,28 +308,50 @@ function stats(){
   $("stats").innerHTML=[[streak,"day streak"],[w,"last 7 days"],[m,"last 30 days"],[entries.length,"total"]].map(a=>`<div class="st"><b>${a[0]}</b><span>${a[1]}</span></div>`).join("");
 }
 
+function renderTrend(){
+  const selected=chartSub&&chartSub!=="full"?chartSub:null;
+  const relevant=entries.filter(e=>e.exam===chartEx&&(!selected||e.subject===selected));
+  const byAttempt={};
+  relevant.forEach(e=>{const key=e.date+"|"+(e.kind||"Practice");const mx=maxOf(e.exam,e.subject||null);(byAttempt[key]??={date:e.date,kind:e.kind||"Practice",raw:[]}).raw.push({score:e.score,max:mx});});
+  const attempts=Object.values(byAttempt).sort((a,b)=>a.date.localeCompare(b.date)).map(a=>({...a,percent:a.raw.reduce((sum,v)=>sum+v.score/v.max*100,0)/a.raw.length}));
+  const box=$("trendCards"); if(!box)return;
+  if(!attempts.length){box.innerHTML='<div class="trend-card"><span>Progress</span><strong>—</strong><small>Add results to track improvement.</small></div>';return}
+  const last=attempts[attempts.length-1],prev=attempts.length>1?attempts[attempts.length-2]:null;
+  const diff=prev?last.percent-prev.percent:null;
+  const trendClass=diff===null?'trend-flat':diff>0.05?'trend-up':diff< -0.05?'trend-down':'trend-flat';
+  const trendText=diff===null?'Add one more attempt to compare':diff>0.05?'You improved since the previous attempt':diff< -0.05?'Your score dropped since the previous attempt':'Your result stayed almost the same';
+  const signed=diff===null?'—':(diff>0?'+':'')+diff.toFixed(1)+' percentage points';
+  const latestRaw=last.raw.length===1?last.raw[0].score+' / '+last.raw[0].max:last.percent.toFixed(1)+'%';
+  box.innerHTML=`<div class="trend-card"><span>Latest result</span><strong>${latestRaw}</strong><small>${fmtD(last.date)} · ${last.kind}</small></div><div class="trend-card"><span>Improvement / Drop</span><strong class="${trendClass}">${signed}</strong><small class="${trendClass}">${trendText}</small></div><div class="trend-card"><span>Latest performance</span><strong>${last.percent.toFixed(1)}%</strong><small>${attempts.length} ${attempts.length===1?'attempt':'attempts'} recorded</small></div>`;
+}
+
 function chart(){
-  const isE=chartEx==="ENT",isI=chartEx==="IELTS",isS=chartEx==="SAT",hasParts=isE||isI||isS;
+  const hasParts=["IELTS","SAT","ENT"].includes(chartEx);
   $("csub").hidden=!hasParts;
   const opts=examPartsFor(chartEx);
   if(hasParts){$("csub").innerHTML='<option value="full">All '+chartEx+' sections</option>'+opts.map(k=>`<option value="${k.id}">${k.name}</option>`).join("");$("csub").value=chartSub||"full"}
-  const selected=chartSub&&chartSub!=="full"?chartSub:null,ex=EX[chartEx],mx=selected?maxOf(chartEx,selected):maxOf(chartEx,null),pts=entries.filter(e=>e.exam===chartEx&&(!selected||e.subject===selected)).sort((a,b)=>a.date<b.date?-1:1);
-  const tg=selected?null:targets[chartEx];
-  $("tgInfo").textContent=pts.length&&tg?("Last: "+pts[pts.length-1].score+(pts[pts.length-1].score>=tg?" ✓ Goal reached":" · Left: "+(+(tg-pts[pts.length-1].score).toFixed(1)))):"";
-  if($("target")!==document.activeElement)$("target").value=targets[chartEx]||"";
-  if($("dl")!==document.activeElement)$("dl").value=deadlines[chartEx]||"";
+  const selected=chartSub&&chartSub!=="full"?chartSub:null,ex=EX[chartEx];
+  let pts;
+  if(selected){
+    pts=entries.filter(e=>e.exam===chartEx&&e.subject===selected).sort((a,b)=>a.date.localeCompare(b.date)||(a.ts||0)-(b.ts||0)).map(e=>({date:e.date,score:e.score}));
+  }else{
+    const grouped={};
+    entries.filter(e=>e.exam===chartEx).forEach(e=>{
+      const key=e.date+"|"+(e.kind||"Practice");
+      if(!grouped[key])grouped[key]={date:e.date,score:0,count:0};
+      grouped[key].score+=e.score/maxOf(chartEx,e.subject||null)*100;grouped[key].count++;
+    });
+    pts=Object.values(grouped).sort((a,b)=>a.date.localeCompare(b.date)).map(g=>({date:g.date,score:g.score/g.count}));
+  }
   if(!pts.length){$("chart").innerHTML='<p class="mu">No records yet for '+ex.n+'.</p>';return}
-  const W=600,H=220,L=40,R=14,T=14,B=30;
-  const vals=pts.map(p=>p.score).concat(tg?[tg]:[]);
-  let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*0.2||mx*0.05;lo=Math.max(0,lo-pad);hi=Math.min(mx,hi+pad);if(hi<=lo)hi=lo+1;
+  const mx=selected?maxOf(chartEx,selected):100,W=600,H=220,L=40,R=14,T=14,B=30;
+  const vals=pts.map(p=>p.score);let lo=Math.min(...vals),hi=Math.max(...vals);
+  const pad=(hi-lo)*0.2||mx*0.05;lo=Math.max(0,lo-pad);hi=Math.min(mx,hi+pad);if(hi<=lo)hi=Math.min(mx,lo+1);if(hi<=lo){lo=Math.max(0,lo-1);hi=lo+2}
   const x=i=>L+(pts.length===1?(W-L-R)/2:i*(W-L-R)/(pts.length-1)),y=v=>T+(hi-v)/(hi-lo)*(H-T-B);
   let s=`<svg viewBox="0 0 ${W} ${H}">`;
-  for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4,yy=y(v);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="var(--bd)"/><text x="${L-6}" y="${yy+4}" text-anchor="end" font-size="11" fill="var(--mu)">${+v.toFixed(1)}</text>`}
-  if(tg&&tg>=lo&&tg<=hi)s+=`<line x1="${L}" x2="${W-R}" y1="${y(tg)}" y2="${y(tg)}" stroke="var(--ok)" stroke-dasharray="5 4"/><text x="${W-R}" y="${y(tg)-4}" text-anchor="end" font-size="11" fill="var(--ok)">goal ${tg}</text>`;
-  s+=`<polyline fill="none" stroke="${ex.c}" stroke-width="2.5" points="${pts.map((p,i)=>x(i)+","+y(p.score)).join(" ")}"/>`;
-  pts.forEach((p,i)=>{s+=`<circle cx="${x(i)}" cy="${y(p.score)}" r="4.5" fill="${ex.c}"/>`;
-    if(pts.length<=10||i===0||i===pts.length-1)s+=`<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="10" fill="var(--mu)">${fmtD(p.date).slice(0,5)}</text>`;
-    if(pts.length<=12||i===pts.length-1)s+=`<text x="${x(i)}" y="${y(p.score)-9}" text-anchor="middle" font-size="11" font-weight="600" fill="var(--tx)">${p.score}</text>`});
+  for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4,yy=y(v);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="var(--bd)"/><text x="${L-6}" y="${yy+4}" text-anchor="end" font-size="11" fill="var(--mu)">${+v.toFixed(1)}${selected?'':'%'}</text>`}
+  s+=`<polyline fill="none" stroke="${ex.c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="${pts.map((p,i)=>x(i)+","+y(p.score)).join(" ")}"/>`;
+  pts.forEach((p,i)=>{s+=`<circle cx="${x(i)}" cy="${y(p.score)}" r="4.5" fill="${ex.c}"/>`;if(pts.length<=10||i===0||i===pts.length-1)s+=`<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="10" fill="var(--mu)">${fmtD(p.date).slice(0,5)}</text>`;if(pts.length<=12||i===pts.length-1)s+=`<text x="${x(i)}" y="${y(p.score)-9}" text-anchor="middle" font-size="11" font-weight="600" fill="var(--tx)">${selected?p.score:p.score.toFixed(1)+'%'}</text>`});
   $("chart").innerHTML=s+"</svg>";
 }
 
@@ -337,7 +380,7 @@ function list(){
 
 function render(){
   chips($("exChips"),cur,setEx);chips($("chartChips"),chartEx,k=>{chartEx=k;chartSub="full";render()});
-  countdown();stats();chart();freq();list();$("ask").textContent=L().ask+EX[chartEx].n;langUI();
+  countdown();stats();renderTrend();chart();freq();list();$("ask").textContent=L().ask+EX[chartEx].n;langUI();
 }
 
 const SUPABASE_URL = "https://stzqldduufxspzqywbeh.supabase.co";
@@ -374,13 +417,6 @@ async function add(){
 }
 async function del(id){await sb.from("entries").delete().eq("id",id);load()}
 $("add").onclick=add;
-async function saveGoal(){
-  const v=parseFloat($("target").value),d=$("dl").value;
-  await sb.from("targets").upsert({exam:chartEx,target:isNaN(v)?null:v,deadline:d||null},{onConflict:"user_id,exam"});
-  load();
-}
-$("target").onchange=saveGoal;$("dl").onchange=saveGoal;$("ask").onclick=coach;
-
 function countdown(){
   const t=dayNum(today());
   $("cd").innerHTML=Object.keys(EX).filter(k=>deadlines[k]).map(k=>{const d=dayNum(deadlines[k])-t;
@@ -407,37 +443,43 @@ async function coach(){
   box.replaceChildren(...out);
 }
 
-function updateShare(){const sl=$("pslug").value.trim().toLowerCase(),on=$("ppub").checked&&sl;$("shareRow").hidden=!on;if(on)$("plink").value=location.origin+location.pathname+"?u="+sl}
+function updateShare(){const sl=$("pslug").value.trim().toLowerCase();if(sl)$("plink").value=location.origin+location.pathname+"?u="+sl}
 async function loadProfile(){
   const {data:p}=await sb.from("profiles").select("*").eq("user_id",uid).maybeSingle();
-  if(p){$("pname").value=p.display_name||"";$("pslug").value=p.slug||"";$("ppub").checked=p.is_public;entSubs=p.ent_subjects||[]}
-  fillElect();updateShare();render();
+  if(p){$("pslug").value=p.slug||"";$("plink").value=p.slug?location.origin+location.pathname+"?u="+p.slug:"";}
+  if(p?.is_public&&p.slug)drawProfileQr($("plink").value);
+  fillElect();
 }
-async function saveProfile(){
-  const sl=$("pslug").value.trim().toLowerCase(),subs=[$("sub1").value,$("sub2").value].filter(Boolean),m=$("pmsg");
-  if(subs.length===2&&subs[0]===subs[1]){m.textContent="Pick two different subjects.";return}
-  if($("ppub").checked&&!/^[a-z0-9_-]{3,30}$/.test(sl)){m.textContent="Link name: 3-30 characters, a-z, 0-9, _ or -";return}
-  if(sl&&!/^[a-z0-9_-]{3,30}$/.test(sl)){m.textContent="Link name: 3-30 characters, a-z, 0-9, _ or -";return}
-  const {error}=await sb.from("profiles").upsert({user_id:uid,display_name:$("pname").value.trim()||null,slug:sl||null,is_public:$("ppub").checked,ent_subjects:subs},{onConflict:"user_id"});
-  if(error){m.textContent=error.code==="23505"?"This link name is taken. Try another one.":error.message;return}
-  entSubs=subs;m.textContent="Saved ✓";updateShare();render();
+function drawProfileQr(url){
+  const box=$("qrBox");box.innerHTML="";
+  if(!window.QRCode){box.textContent="QR generator is not available. Use Share profile.";return}
+  new QRCode(box,{text:url,width:200,height:200,colorDark:"#101a32",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});
+  $("pcopy").disabled=false;$("profileStatus").textContent="Anyone with this link can view your exam statistics.";
 }
-function copyLink(){
-  const b=$("pcopy");navigator.clipboard.writeText($("plink").value).then(()=>{b.textContent="Copied ✓";setTimeout(()=>b.textContent="Copy link",1500)}).catch(()=>$("plink").select());
+async function createProfileQr(){
+  const slug=$("pslug").value||("student-"+uid.replace(/-/g,"").slice(0,10));
+  const {error}=await sb.from("profiles").upsert({user_id:uid,display_name:null,slug,is_public:true,ent_subjects:entSubs||[]},{onConflict:"user_id"});
+  if(error){$("profileStatus").textContent=error.code==="23505"?"Could not create link. Please try again.":error.message;return}
+  $("pslug").value=slug;const url=location.origin+location.pathname+"?u="+slug;$("plink").value=url;drawProfileQr(url);
+}
+async function copyLink(){
+  const url=$("plink").value;if(!url)return;
+  try{if(navigator.share)await navigator.share({title:"My Exam Prep",url});else{await navigator.clipboard.writeText(url);$("profileStatus").textContent="Link copied!"}}
+  catch(e){if(e.name!=="AbortError"){$("profileStatus").textContent="Could not share. Copy this link: "+url}}
 }
 async function loadPublic(slug){
   $("login").hidden=true;
   const {data:p}=await sb.from("profiles").select("*").eq("slug",slug).eq("is_public",true).maybeSingle();
   if(!p){$("ttl").textContent="Profile not found or private";return}
   viewUid=p.user_id;entSubs=p.ent_subjects||[];
-  $("ttl").textContent="📚 "+(p.display_name||slug);$("app").hidden=false;load();
+  $("ttl").textContent="📚 Exam Statistics";$("app").hidden=false;openPanel("progressPanel");load();
 }
 $("subj").onchange=updScore;$("csub").onchange=()=>{chartSub=$("csub").value;render()};
 document.querySelectorAll(".part-toggle").forEach(c=>c.addEventListener("change",()=>{c.closest(".part-row").querySelector(".part-score").hidden=!c.checked}));
 document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>openPanel(b.dataset.panel)));
 function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Result",progressPanel:"Progress",coachPanel:"AI Coach",profilePanel:"Profile",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";window.scrollTo({top:0,behavior:"smooth"})}window.openPanel=openPanel;
-$("psave").onclick=saveProfile;$("pcopy").onclick=copyLink;
-$("ppub").onchange=updateShare;$("pslug").oninput=updateShare;
+$("makeQr").onclick=createProfileQr;$("pcopy").onclick=copyLink;
+
 
 function show(session){
   document.body.classList.toggle("auth-mode",!session);
