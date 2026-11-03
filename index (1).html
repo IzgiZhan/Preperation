@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Izgi_Zhan | Exam Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#161a2b;--mu:#6b7186;--bd:#e3e6f0;--ac:#4f46e5;--ac2:#e0e7ff;--ok:#16a34a;
+--ielts:#e11d48;--sat:#2563eb;--ent:#059669;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1220;--card:#181c30;--tx:#eef0fa;--mu:#9aa1bd;--bd:#2a2f4a;--ac:#818cf8;--ac2:#25285a;--ok:#4ade80;--ielts:#fb7185;--sat:#60a5fa;--ent:#34d399;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1220;--card:#181c30;--tx:#eef0fa;--mu:#9aa1bd;--bd:#2a2f4a;--ac:#818cf8;--ac2:#25285a;--ok:#4ade80;--ielts:#fb7185;--sat:#60a5fa;--ent:#34d399;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 14px}
+h2{font-size:15px;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.st{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px;text-align:center}
+.st b{display:block;font-size:22px}.st span{color:var(--mu);font-size:12px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.chip{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:99px;padding:8px 14px;font-size:14px;cursor:pointer}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+label{display:block;font-size:12px;color:var(--mu);margin-bottom:3px}
+input,select{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+button.main{width:100%;padding:12px;border:0;border-radius:10px;background:var(--ac);color:#fff;font:600 15px inherit;cursor:pointer}
+.sc{overflow-x:auto}
+svg{width:100%;height:auto;display:block}
+.it{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--bd)}
+.it:first-of-type{border-top:0}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.it .m{flex:1;min-width:0}.it small{color:var(--mu)}
+.sco{font-weight:700;white-space:nowrap}
+.x{background:none;border:0;color:var(--mu);font-size:18px;cursor:pointer;padding:4px 8px}
+.mu{color:var(--mu);font-size:13px}#coach h2{margin-top:14px}#coach ul{padding-left:18px;margin:0}.pub .own,.pub .x,.pub .tg{display:none!important}
+.tg{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}.tg input{width:90px}
+@media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="w">
+<h1 id="ttl">📚 Izgi_Zhan</h1>
+<p class="mu" style="margin:-8px 0 14px">IELTS · SAT · ENT progress tracker</p>
+<div class="chips" id="lang"></div>
+
+<div class="card" id="login" hidden>
+<h2>Log in</h2>
+<div class="row"><div><label>Email</label><input type="email" id="em" autocomplete="email"></div>
+<div><label>Password</label><input type="password" id="pw" autocomplete="current-password"></div></div>
+<div class="row"><button class="main" id="bIn">Log in</button><button class="main" id="bUp" style="background:var(--mu)">Create account</button></div>
+<p class="mu" id="lmsg"></p>
+</div>
+<div id="app" hidden>
+<div class="chips" id="cd"></div>
+<div class="stats" id="stats"></div>
+<div style="height:14px"></div>
+
+<div class="card own">
+<h2>What did you do today?</h2>
+<div class="chips" id="exChips"></div>
+<div class="row">
+<div><label>Date</label><input type="date" id="date"></div>
+<div><label>Type</label><select id="kind"><option>Mock test</option><option>Practice</option><option>Real exam</option></select></div>
+</div>
+<div id="subjWrap" hidden style="margin-bottom:10px"><label>Subject / Пән / Предмет</label><select id="subj"></select></div>
+<div class="row">
+<div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div>
+<div><label>Note (optional)</label><input id="note" placeholder="Reading, Math..."></div>
+</div>
+<button class="main" id="add">Add</button>
+</div>
+
+<div class="card">
+<h2>Score progress</h2>
+<div class="chips" id="chartChips"></div>
+<select id="csub" hidden style="margin-bottom:10px"></select>
+<div class="sc" id="chart"></div>
+<div class="tg"><span class="mu">Goal score:</span><input type="number" id="target" inputmode="decimal"><span class="mu">Exam date:</span><input type="date" id="dl" style="width:150px"><span class="mu" id="tgInfo"></span></div>
+</div>
+
+<div class="card own">
+<h2>🤖 AI Coach</h2>
+<p class="mu">The coach uses the exam you chose in "Score progress". Tell it what is hard for you.</p>
+<input id="focus" placeholder="Weak part (example: Reading, vocabulary, Math)">
+<div style="height:10px"></div>
+<button class="main" id="ask">Get advice</button>
+<div id="coach"></div>
+</div>
+
+<div class="card">
+<h2>How often I study (last 8 weeks)</h2>
+<div class="sc" id="freq"></div>
+</div>
+
+<div class="card own">
+<h2>👤 My profile and sharing</h2>
+<div class="row"><div><label>Display name</label><input id="pname" maxlength="40"></div>
+<div><label>Link name (a-z, 0-9, _ -)</label><input id="pslug" maxlength="30" placeholder="izgi_zhan"></div></div>
+<label style="display:flex;gap:8px;align-items:center;margin-bottom:12px;font-size:14px;color:var(--tx)"><input type="checkbox" id="ppub" style="width:auto"> Anyone with my link can see my progress</label>
+<label>ENT elective subjects (pick 2) · Таңдау пәндері · Профильные предметы</label>
+<div class="row"><select id="sub1"></select><select id="sub2"></select></div>
+<button class="main" id="psave">Save profile</button>
+<p class="mu" id="pmsg"></p>
+<div class="tg" id="shareRow" hidden><input id="plink" readonly style="flex:1;min-width:200px;width:auto"><button class="chip" id="pcopy">Copy link</button></div>
+</div>
+
+<div class="card">
+<h2>History</h2>
+<div id="list"></div>
+</div>
+<p class="mu own"><a href="#" id="out" style="color:var(--mu)">Log out</a></p>
+</div>
+</div>
+
+<script>
+const EX={IELTS:{n:"IELTS",max:9,step:0.5,c:"var(--ielts)"},SAT:{n:"SAT",max:1600,step:10,c:"var(--sat)"},ENT:{n:"ENT",max:140,step:1,c:"var(--ent)"}};
+const SUBJ={
+full:{max:140,kk:"Толық тест",ru:"Полный тест",en:"Full test"},
+hist:{max:20,m:1,kk:"Қазақстан тарихы",ru:"История Казахстана",en:"History of Kazakhstan"},
+math_l:{max:10,m:1,kk:"Математикалық сауаттылық",ru:"Математическая грамотность",en:"Math literacy"},
+read_l:{max:10,m:1,kk:"Оқу сауаттылығы",ru:"Грамотность чтения",en:"Reading literacy"},
+math:{max:50,kk:"Математика",ru:"Математика",en:"Mathematics"},
+phys:{max:50,kk:"Физика",ru:"Физика",en:"Physics"},
+chem:{max:50,kk:"Химия",ru:"Химия",en:"Chemistry"},
+bio:{max:50,kk:"Биология",ru:"Биология",en:"Biology"},
+geo:{max:50,kk:"География",ru:"География",en:"Geography"},
+whist:{max:50,kk:"Дүниежүзі тарихы",ru:"Всемирная история",en:"World history"},
+eng:{max:50,kk:"Шет тілі (ағылшын)",ru:"Иностранный язык (английский)",en:"Foreign language (English)"},
+inf:{max:50,kk:"Информатика",ru:"Информатика",en:"Informatics"},
+kzl:{max:50,kk:"Қазақ тілі мен әдебиеті",ru:"Казахский язык и литература",en:"Kazakh language and literature"},
+rul:{max:50,kk:"Орыс тілі мен әдебиеті",ru:"Русский язык и литература",en:"Russian language and literature"},
+law:{max:50,kk:"Құқық негіздері",ru:"Основы права",en:"Basics of law"}};
+const ELECT=Object.keys(SUBJ).filter(k=>k!=="full"&&!SUBJ[k].m);
+const TT={
+kk:{plan:"Жоспар",mock:"Сынақ тесттері",tips:"Кеңестер",words:"Үйренетін сөздер мен терминдер",every:n=>"Әр "+n+" күн сайын сынақ тест тапсыр.",next:"Келесі сынақ тест: ",today:"бүгін",ex:"Мысал: ",think:"Ойланып жатырмын...",err:"Көмекші қазір қолжетімсіз. Кейінірек қайталап көр.",ask:"Кеңес алу: "},
+ru:{plan:"План",mock:"Пробные тесты",tips:"Советы",words:"Слова и термины для изучения",every:n=>"Сдавай пробник каждые "+n+" дн.",next:"Следующий пробник: ",today:"сегодня",ex:"Пример: ",think:"Думаю...",err:"Помощник сейчас недоступен. Попробуй позже.",ask:"Получить совет: "},
+en:{plan:"Your plan",mock:"Mock tests",tips:"Tips",words:"Words to learn",every:n=>"Take a mock test every "+n+" days.",next:"Next mock test: ",today:"today",ex:"Example: ",think:"Thinking...",err:"The coach is not available now. Try again later.",ask:"Get advice for "}};
+let uid=null,viewUid=null,entLang=lsGet("ent_lang","ru"),entSubs=[],chartSub="full";
+const L=()=>chartEx==="ENT"?TT[entLang]:TT.en;
+const maxOf=(ex,sub)=>ex==="ENT"&&sub&&SUBJ[sub]?SUBJ[sub].max:EX[ex].max;
+const subName=id=>SUBJ[id]?SUBJ[id][entLang]:id;
+const subjIds=()=>["full","hist","math_l","read_l",...entSubs.filter(k=>SUBJ[k])];
+function fillSubs(sel,val){sel.innerHTML="";subjIds().forEach(id=>{const o=document.createElement("option");o.value=id;o.textContent=subName(id)+(id==="full"?"":" ("+SUBJ[id].max+")");sel.appendChild(o)});sel.value=subjIds().includes(val)?val:"full"}
+function fillElect(){[["sub1",0],["sub2",1]].forEach(([id,i])=>{const s=$(id);s.innerHTML='<option value="">—</option>';ELECT.forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=SUBJ[k][entLang];s.appendChild(o)});s.value=entSubs[i]||""})}
+function langUI(){const b=$("lang");b.innerHTML="";b.appendChild(el("span","ENT language:","mu"));
+  [["kk","Қазақша"],["ru","Русский"]].forEach(([k,n])=>{const c=el("button",n,"chip"+(k===entLang?" on":""));c.onclick=()=>{entLang=k;lsSet("ent_lang",k);fillElect();render()};b.appendChild(c)})}
+let entries=[],targets={},deadlines={},cur="IELTS",chartEx="IELTS",col=null,tdoc=null;
+const $=id=>document.getElementById(id);
+const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
+const today=()=>iso(new Date());
+const dayNum=s=>Math.round(new Date(s+"T00:00:00Z").getTime()/864e5);
+const fmtD=s=>{const [y,m,d]=s.split("-");return d+"."+m+"."+y.slice(2)};
+function lsGet(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+
+function chips(el,cur,fn){
+  el.innerHTML="";
+  Object.keys(EX).forEach(k=>{const b=document.createElement("button");b.className="chip"+(k===cur?" on":"");b.textContent=EX[k].n;b.onclick=()=>fn(k);el.appendChild(b)});
+}
+function updScore(){const m=maxOf(cur,cur==="ENT"?$("subj").value:null);$("scLbl").textContent="Score (max "+m+")";$("score").step=EX[cur].step;$("score").max=m}
+function setEx(k){cur=k;$("subjWrap").hidden=k!=="ENT";if(k==="ENT")fillSubs($("subj"),$("subj").value);updScore();render()}
+
+function stats(){
+  const days=[...new Set(entries.map(e=>e.date))].map(dayNum).sort((a,b)=>b-a);
+  const t=dayNum(today());let streak=0,exp=days[0]===t?t:t-1;
+  if(days[0]===t||days[0]===t-1){for(const d of days){if(d===exp){streak++;exp--}else if(d<exp)break}}
+  const w=entries.filter(e=>dayNum(e.date)>t-7).length;
+  const m=entries.filter(e=>dayNum(e.date)>t-30).length;
+  $("stats").innerHTML=[[streak,"day streak"],[w,"last 7 days"],[m,"last 30 days"],[entries.length,"total"]].map(a=>`<div class="st"><b>${a[0]}</b><span>${a[1]}</span></div>`).join("");
+}
+
+function chart(){
+  const isE=chartEx==="ENT";$("csub").hidden=!isE;if(isE){fillSubs($("csub"),chartSub);chartSub=$("csub").value}
+  const ex=EX[chartEx],mx=maxOf(chartEx,isE?chartSub:null),pts=entries.filter(e=>e.exam===chartEx&&(!isE||(e.subject||"full")===chartSub)).sort((a,b)=>a.date<b.date?-1:1);
+  const tg=(isE&&chartSub!=="full")?null:targets[chartEx];
+  $("tgInfo").textContent=pts.length&&tg?("Last: "+pts[pts.length-1].score+(pts[pts.length-1].score>=tg?" ✓ Goal reached":" · Left: "+(+(tg-pts[pts.length-1].score).toFixed(1)))):"";
+  if($("target")!==document.activeElement)$("target").value=targets[chartEx]||"";
+  if($("dl")!==document.activeElement)$("dl").value=deadlines[chartEx]||"";
+  if(!pts.length){$("chart").innerHTML='<p class="mu">No records yet for '+ex.n+'.</p>';return}
+  const W=600,H=220,L=40,R=14,T=14,B=30;
+  const vals=pts.map(p=>p.score).concat(tg?[tg]:[]);
+  let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*0.2||mx*0.05;lo=Math.max(0,lo-pad);hi=Math.min(mx,hi+pad);if(hi<=lo)hi=lo+1;
+  const x=i=>L+(pts.length===1?(W-L-R)/2:i*(W-L-R)/(pts.length-1)),y=v=>T+(hi-v)/(hi-lo)*(H-T-B);
+  let s=`<svg viewBox="0 0 ${W} ${H}">`;
+  for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4,yy=y(v);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="var(--bd)"/><text x="${L-6}" y="${yy+4}" text-anchor="end" font-size="11" fill="var(--mu)">${+v.toFixed(1)}</text>`}
+  if(tg&&tg>=lo&&tg<=hi)s+=`<line x1="${L}" x2="${W-R}" y1="${y(tg)}" y2="${y(tg)}" stroke="var(--ok)" stroke-dasharray="5 4"/><text x="${W-R}" y="${y(tg)-4}" text-anchor="end" font-size="11" fill="var(--ok)">goal ${tg}</text>`;
+  s+=`<polyline fill="none" stroke="${ex.c}" stroke-width="2.5" points="${pts.map((p,i)=>x(i)+","+y(p.score)).join(" ")}"/>`;
+  pts.forEach((p,i)=>{s+=`<circle cx="${x(i)}" cy="${y(p.score)}" r="4.5" fill="${ex.c}"/>`;
+    if(pts.length<=10||i===0||i===pts.length-1)s+=`<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="10" fill="var(--mu)">${fmtD(p.date).slice(0,5)}</text>`;
+    if(pts.length<=12||i===pts.length-1)s+=`<text x="${x(i)}" y="${y(p.score)-9}" text-anchor="middle" font-size="11" font-weight="600" fill="var(--tx)">${p.score}</text>`});
+  $("chart").innerHTML=s+"</svg>";
+}
+
+function freq(){
+  const t=dayNum(today()),dow=(new Date().getDay()+6)%7,wkStart=t-dow;
+  const W=[];for(let i=7;i>=0;i--){const s=wkStart-i*7;W.push({s,c:{IELTS:0,SAT:0,ENT:0}})}
+  entries.forEach(e=>{const d=dayNum(e.date);W.forEach(w=>{if(d>=w.s&&d<w.s+7)w.c[e.exam]++})});
+  const mx=Math.max(1,...W.map(w=>w.c.IELTS+w.c.SAT+w.c.ENT));
+  const bw=60,H=150,B=22;let s=`<svg viewBox="0 0 ${bw*8+10} ${H+B}">`;
+  W.forEach((w,i)=>{let yy=H;Object.keys(EX).forEach(k=>{const h=w.c[k]/mx*(H-18);if(h){yy-=h;s+=`<rect x="${i*bw+14}" y="${yy}" width="34" height="${h}" rx="3" fill="${EX[k].c}"/>`}});
+    const tot=w.c.IELTS+w.c.SAT+w.c.ENT;if(tot)s+=`<text x="${i*bw+31}" y="${yy-4}" text-anchor="middle" font-size="11" fill="var(--tx)">${tot}</text>`;
+    const dd=new Date(w.s*864e5);s+=`<text x="${i*bw+31}" y="${H+15}" text-anchor="middle" font-size="10" fill="var(--mu)">${String(dd.getUTCDate()).padStart(2,"0")}.${String(dd.getUTCMonth()+1).padStart(2,"0")}</text>`});
+  $("freq").innerHTML=s+`</svg><p class="mu">Week starts on Monday. Colors: <span style="color:var(--ielts)">●</span> IELTS <span style="color:var(--sat)">●</span> SAT <span style="color:var(--ent)">●</span> ENT</p>`;
+}
+
+function list(){
+  const a=[...entries].sort((x,y)=>x.date<y.date?1:x.date>y.date?-1:(y.ts||0)-(x.ts||0));
+  $("list").innerHTML=a.length?"":'<p class="mu">No records yet. Add your first one above.</p>';
+  a.forEach(e=>{const d=document.createElement("div");d.className="it";
+    const ex=EX[e.exam];
+    d.innerHTML=`<span class="dot" style="background:${ex.c}"></span><div class="m"><b>${ex.n}</b>${e.exam==="ENT"&&e.subject&&e.subject!=="full"?" · "+subName(e.subject):""} · ${e.kind||""}<br><small></small></div><span class="sco">${e.score}<small class="mu">/${maxOf(e.exam,e.subject)}</small></span><button class="x" title="Delete">✕</button>`;
+    d.querySelector("small").textContent=fmtD(e.date)+(e.note?" · "+e.note:"");
+    d.querySelector(".x").onclick=()=>{if(confirm("Delete this record?"))del(e.id)};
+    $("list").appendChild(d)});
+}
+
+function render(){
+  chips($("exChips"),cur,setEx);chips($("chartChips"),chartEx,k=>{chartEx=k;render()});
+  countdown();stats();chart();freq();list();$("ask").textContent=L().ask+EX[chartEx].n;langUI();
+}
+
+const SUPABASE_URL = "https://stzqldduufxspzqywbeh.supabase.co";
+const SUPABASE_KEY = "sb_publishable_4PLDUQJ_cwW5bWIxd1R47w_L3tNFtHX";
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+async function load(){
+  const {data:e,error}=await sb.from("entries").select("*").eq("user_id",viewUid||uid).order("entry_date",{ascending:false});
+  if(error){alert(error.message);return}
+  entries=e.map(r=>({id:r.id,exam:r.exam,subject:r.subject,date:r.entry_date,kind:r.kind,score:Number(r.score),note:r.note,ts:Date.parse(r.created_at)}));
+  const {data:t}=await sb.from("targets").select("*").eq("user_id",viewUid||uid);
+  targets={};deadlines={};(t||[]).forEach(r=>{if(r.target!=null)targets[r.exam]=Number(r.target);if(r.deadline)deadlines[r.exam]=r.deadline});
+  render();
+}
+async function add(){
+  const sub=cur==="ENT"?$("subj").value:null,mx=maxOf(cur,sub),score=parseFloat($("score").value);
+  if(isNaN(score)||score<0||score>mx){alert("Enter a score from 0 to "+mx);return}
+  const {error}=await sb.from("entries").insert({exam:cur,subject:sub,entry_date:$("date").value||today(),kind:$("kind").value,score,note:$("note").value.trim()});
+  if(error){alert(error.message);return}
+  $("score").value="";$("note").value="";chartEx=cur;load();
+}
+async function del(id){await sb.from("entries").delete().eq("id",id);load()}
+$("add").onclick=add;
+async function saveGoal(){
+  const v=parseFloat($("target").value),d=$("dl").value;
+  await sb.from("targets").upsert({exam:chartEx,target:isNaN(v)?null:v,deadline:d||null},{onConflict:"user_id,exam"});
+  load();
+}
+$("target").onchange=saveGoal;$("dl").onchange=saveGoal;$("ask").onclick=coach;
+
+function countdown(){
+  const t=dayNum(today());
+  $("cd").innerHTML=Object.keys(EX).filter(k=>deadlines[k]).map(k=>{const d=dayNum(deadlines[k])-t;
+    return `<span class="chip" style="border-color:${EX[k].c}">${EX[k].n}: ${d>0?d+" days left":d===0?"TODAY!":"date passed"}</span>`}).join("");
+}
+function el(t,x,c){const e=document.createElement(t);if(x!=null)e.textContent=x;if(c)e.className=c;return e}
+async function coach(){
+  const ex=chartEx,isE=ex==="ENT",T=L(),box=$("coach"),btn=$("ask"),subV=isE&&chartSub!=="full";
+  const mine=entries.filter(e=>e.exam===ex).sort((a,b)=>a.date<b.date?-1:1).slice(-15).map(e=>({date:e.date,type:e.kind,score:e.score,subject:isE?(SUBJ[e.subject||"full"]||SUBJ.full).en:undefined}));
+  btn.disabled=true;box.replaceChildren(el("p",T.think,"mu"));
+  const {data,error}=await sb.functions.invoke("coach",{body:{exam:EX[ex].n,max:maxOf(ex,isE?chartSub:null),today:today(),goal:subV?null:(targets[ex]||null),exam_date:deadlines[ex]||null,focus:$("focus").value.trim().slice(0,200),results:mine,language:isE?(entLang==="kk"?"Kazakh":"Russian"):"English",subject:subV?SUBJ[chartSub].en:"",subjects:isE?entSubs.filter(k=>SUBJ[k]).map(k=>SUBJ[k].en):[]}});
+  btn.disabled=false;
+  if(error||!data||data.error){box.replaceChildren(el("p",T.err,"mu"));return}
+  const n=Math.max(1,parseInt(data.mock_every_days)||7);
+  const mocks=mine.filter(e=>e.type==="Mock test"),last=mocks.length?mocks[mocks.length-1].date:null;
+  let next=today();
+  if(last){next=new Date((dayNum(last)+n)*864e5).toISOString().slice(0,10);if(next<today())next=today()}
+  const out=[el("h2",T.plan),el("p",data.summary),el("h2",T.mock),
+    el("p",T.every(n)+" "+T.next+(next===today()?T.today:fmtD(next))+". "+(data.mock_advice||"")),el("h2",T.tips)];
+  const ul=el("ul");(data.tips||[]).forEach(x=>ul.appendChild(el("li",x)));
+  out.push(ul,el("h2",T.words));
+  (data.words||[]).forEach(w=>{const r=el("div",null,"it"),m=el("div",null,"m");
+    m.append(el("b",w.word),document.createElement("br"),el("small",w.meaning+" "+T.ex+w.example));r.appendChild(m);out.push(r)});
+  box.replaceChildren(...out);
+}
+
+function updateShare(){const sl=$("pslug").value.trim().toLowerCase(),on=$("ppub").checked&&sl;$("shareRow").hidden=!on;if(on)$("plink").value=location.origin+location.pathname+"?u="+sl}
+async function loadProfile(){
+  const {data:p}=await sb.from("profiles").select("*").eq("user_id",uid).maybeSingle();
+  if(p){$("pname").value=p.display_name||"";$("pslug").value=p.slug||"";$("ppub").checked=p.is_public;entSubs=p.ent_subjects||[]}
+  fillElect();updateShare();render();
+}
+async function saveProfile(){
+  const sl=$("pslug").value.trim().toLowerCase(),subs=[$("sub1").value,$("sub2").value].filter(Boolean),m=$("pmsg");
+  if(subs.length===2&&subs[0]===subs[1]){m.textContent="Pick two different subjects.";return}
+  if($("ppub").checked&&!/^[a-z0-9_-]{3,30}$/.test(sl)){m.textContent="Link name: 3-30 characters, a-z, 0-9, _ or -";return}
+  if(sl&&!/^[a-z0-9_-]{3,30}$/.test(sl)){m.textContent="Link name: 3-30 characters, a-z, 0-9, _ or -";return}
+  const {error}=await sb.from("profiles").upsert({user_id:uid,display_name:$("pname").value.trim()||null,slug:sl||null,is_public:$("ppub").checked,ent_subjects:subs},{onConflict:"user_id"});
+  if(error){m.textContent=error.code==="23505"?"This link name is taken. Try another one.":error.message;return}
+  entSubs=subs;m.textContent="Saved ✓";updateShare();render();
+}
+function copyLink(){
+  const b=$("pcopy");navigator.clipboard.writeText($("plink").value).then(()=>{b.textContent="Copied ✓";setTimeout(()=>b.textContent="Copy link",1500)}).catch(()=>$("plink").select());
+}
+async function loadPublic(slug){
+  $("login").hidden=true;
+  const {data:p}=await sb.from("profiles").select("*").eq("slug",slug).eq("is_public",true).maybeSingle();
+  if(!p){$("ttl").textContent="Profile not found or private";return}
+  viewUid=p.user_id;entSubs=p.ent_subjects||[];
+  $("ttl").textContent="📚 "+(p.display_name||slug);$("app").hidden=false;load();
+}
+$("subj").onchange=updScore;$("csub").onchange=()=>{chartSub=$("csub").value;render()};
+$("psave").onclick=saveProfile;$("pcopy").onclick=copyLink;
+$("ppub").onchange=updateShare;$("pslug").oninput=updateShare;
+
+function show(session){
+  $("login").hidden=!!session;$("app").hidden=!session;
+  if(!session){uid=null;return}
+  if(session.user.id!==uid){uid=session.user.id;loadProfile();load()}
+}
+async function auth(kind){
+  const email=$("em").value.trim(),password=$("pw").value;
+  const {error}=kind==="in"?await sb.auth.signInWithPassword({email,password}):await sb.auth.signUp({email,password});
+  $("lmsg").textContent=error?error.message:(kind==="up"?"Done. If email confirmation is on, check your email.":"");
+}
+$("bIn").onclick=()=>auth("in");$("bUp").onclick=()=>auth("up");
+$("out").onclick=e=>{e.preventDefault();sb.auth.signOut()};
+
+$("date").value=today();setEx("IELTS");
+const PUB=new URLSearchParams(location.search).get("u");
+if(PUB){document.body.classList.add("pub");loadPublic(PUB)}
+else{sb.auth.onAuthStateChange((_ev,s)=>setTimeout(()=>show(s),0));sb.auth.getSession().then(({data})=>show(data.session))}
+</script>
+</body>
+</html>
