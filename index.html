@@ -203,7 +203,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
       <div class="overview-grid"><div class="card overview-card"><div class="section-heading"><div><span class="eyebrow">YOUR ACTIVITY</span><h2>Exam Overview</h2></div><span class="soft-tag">IELTS · SAT · ENT</span></div><div id="overviewSummary" class="overview-summary"></div><div class="countdown-area" id="cd"></div></div>
       <div class="card quick-card"><span class="eyebrow">SHORTCUTS</span><h2>Quick Actions</h2><button class="quick-action" type="button" onclick="openPanel('coachPanel')">✦ <span>Ask AI Coach</span><b>→</b></button><button class="quick-action" type="button" onclick="openPanel('progressPanel')">▥ <span>View Progress</span><b>→</b></button></div></div>
     </section>
-    <section class="app-panel" id="addPanel"><div class="page-intro"><span class="eyebrow">RECORD YOUR WORK</span><h2>Add Exam Result</h2><p>Choose an exam, select completed subjects and enter your scores.</p></div><div class="card own"><div class="chips" id="exChips"></div><div class="row"><div><label>Date</label><input type="date" id="date"></div><div><label>Type</label><select id="kind"><option>Mock test</option><option>Practice</option><option>Real exam</option></select></div></div><div id="subjWrap" hidden style="margin-bottom:10px"><label>Subject / Пән / Предмет</label><select id="subj"></select></div><div id="examParts" hidden class="parts-box"><div class="parts-heading"><b id="partsTitle">Exam subjects</b><span class="mu">Select the parts you completed</span></div><div id="partsList"></div><div id="calculatedScore" class="calculated-score" aria-live="polite"><span>Overall score</span><strong>—</strong><small>Enter all parts to calculate automatically</small></div></div><div class="row" id="singleScoreRow"><div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div></div><button class="main" id="add">Save Result</button></div></section>
+    <section class="app-panel" id="addPanel"><div class="page-intro"><span class="eyebrow">RECORD YOUR WORK</span><h2>Add Exam Result</h2><p>Choose an exam, select completed subjects and enter your scores.</p></div><div class="card own"><div class="chips" id="exChips"></div><div class="row"><div><label>Date</label><input type="date" id="date"></div><div><label>Type</label><select id="kind"><option>Mock test</option><option>Practice</option><option>Real exam</option></select></div></div><div id="subjWrap" hidden style="margin-bottom:10px"><label>Subject / Пән / Предмет</label><select id="subj"></select></div><div id="examParts" hidden class="parts-box"><div class="parts-heading"><b id="partsTitle">Exam subjects</b><span class="mu">Select the parts you completed</span></div><div id="partsList"></div><div id="calculatedScore" class="calculated-score" aria-live="polite"><span>Overall score</span><strong>—</strong><small>Select parts and enter their scores</small></div></div><div class="row" id="singleScoreRow"><div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div></div><button class="main" id="add">Save Result</button></div></section>
     <section class="app-panel" id="progressPanel"><div class="page-intro"><span class="eyebrow">YOUR DEVELOPMENT</span><h2>Your Progress</h2><p>See how your latest result changed compared with your previous attempt.</p></div><div class="trend-grid" id="trendCards"></div><div class="card"><div class="chips" id="chartChips"></div><select id="csub" hidden style="margin-bottom:10px"></select><div class="sc" id="chart"></div></div></section>
     <section class="app-panel" id="coachPanel"><div class="page-intro"><span class="eyebrow">SMART STUDY SUPPORT</span><h2>AI Coach</h2><p>Get practical advice for your next exam.</p></div><div class="card own"><p class="mu">The coach uses the exam selected in Progress. Tell it what is difficult for you.</p><input id="focus" placeholder="Weak part (example: Reading, vocabulary, Math)"><div style="height:12px"></div><button class="main" id="ask">Get advice</button><div id="coach"></div></div></section>
     <section class="app-panel" id="profilePanel"><div class="page-intro"><h2>Your QR Profile</h2><p>Scan the QR code or share your link to show your exam statistics.</p></div><div class="card profile-share"><div class="qr-frame" id="qrBox"><span class="profile-share-note">Create your personal QR code</span></div><p class="profile-share-note" id="profileStatus">Your public statistics will open from this QR code.</p><div class="profile-actions"><button class="main" id="makeQr" type="button">Create my QR</button><button class="chip" id="pcopy" type="button" disabled>Share profile</button></div></div><input id="pname" type="hidden"><input id="pslug" type="hidden"><input id="ppub" type="checkbox" hidden><select id="sub1" hidden></select><select id="sub2" hidden></select><span id="pmsg" hidden></span><input id="plink" type="hidden"><div id="shareRow" hidden></div><button id="psave" hidden></button></section>
@@ -281,20 +281,29 @@ function renderExamParts(){
 function updateCalculatedScore(){
  const box=$("calculatedScore");if(!box)return;
  const defs=examParts(),checked=[...document.querySelectorAll(".part-toggle:checked")];
- const values=checked.map(c=>{const def=defs.find(p=>p.id===c.value),input=document.querySelector(`.part-value[data-part="${c.value}"]`);return {def,score:input&&input.value.trim()!==""?Number(input.value):NaN}});
- const allDone=checked.length===defs.length&&values.every(v=>v.def&&!Number.isNaN(v.score)&&v.score>=(v.def.min??0)&&v.score<=v.def.max);
- let label="Overall score",total="—",hint="Enter all parts to calculate automatically";
+ const values=checked.map(c=>{
+   const def=defs.find(p=>p.id===c.value),input=document.querySelector(`.part-value[data-part="${c.value}"]`);
+   const score=input&&input.value.trim()!==""?Number(input.value):NaN;
+   const valid=def&&!Number.isNaN(score)&&score>=(def.min??0)&&score<=def.max&&
+     (def.step!==0.5||Math.round(score*2)===score*2)&&(def.step!==10||score%10===0);
+   return {def,score,valid};
+ }).filter(v=>v.valid);
+ let label="Overall score",total="—",hint="Select parts and enter their scores";
  if(cur==="IELTS")label="Overall IELTS band";
  if(cur==="SAT")label="Total SAT score";
  if(cur==="ENT")label="Total ENT score";
- if(allDone){
-   if(cur==="IELTS")total=(Math.round(values.reduce((a,v)=>a+v.score,0)/values.length*2)/2).toFixed(1).replace(/\.0$/,"");
-   else total=String(values.reduce((a,v)=>a+v.score,0));
-   const max=defs.reduce((a,p)=>a+p.max,0);
-   hint=cur==="IELTS"?"Calculated from the average of 4 sections":"Calculated automatically · maximum "+max;
- }else if(checked.length){hint="Complete all "+defs.length+" parts to see the total"}
+ if(values.length){
+   const sum=values.reduce((a,v)=>a+v.score,0);
+   if(cur==="IELTS")total=(Math.round(sum/values.length*2)/2).toFixed(1).replace(/\.0$/,"");
+   else total=String(sum);
+   const max=values.reduce((a,v)=>a+v.def.max,0);
+   hint=cur==="IELTS"
+     ?`Average of ${values.length} completed section${values.length===1?"":"s"} · rounded to 0.5`
+     :`Sum of ${values.length} entered part${values.length===1?"":"s"} · maximum ${max}`;
+ }else if(checked.length){hint="Enter a valid score in at least one selected part"}
  box.innerHTML=`<span>${label}</span><strong>${total}</strong><small>${hint}</small>`;
 }
+
 function updScore(){renderExamParts();const m=maxOf(cur,null);$("scLbl").textContent="Score (max "+m+")";$("score").step=EX[cur].step;$("score").max=m}
 function setEx(k){cur=k;updScore();render()}
 
