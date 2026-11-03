@@ -106,6 +106,7 @@ body.auth-mode #ttl,body.auth-mode>.w>p.mu,body.auth-mode #lang{display:none!imp
 }
 @media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}.card{padding:15px}.row{gap:8px}}
 
+.app-nav{display:flex;gap:7px;overflow-x:auto;padding:5px 2px 14px;margin-bottom:8px;scrollbar-width:thin}.nav-btn{flex:none;border:1.5px solid var(--bd);border-radius:11px;padding:10px 14px;background:var(--card);color:var(--mu);font:750 13px system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}.nav-btn.active{background:var(--ac);border-color:var(--ac);color:#fff}.app-panel{display:none}.app-panel.active{display:block}.overview-summary{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}.summary-pill{border:1px solid var(--bd);background:var(--bg);padding:10px 13px;border-radius:12px;font-weight:750;font-size:13px}.parts-box{border:1.5px solid var(--bd);border-radius:14px;padding:14px;margin:4px 0 14px}.parts-heading{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}.part-row{display:grid;grid-template-columns:1fr minmax(100px,150px);align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--bd)}.part-check{display:flex;align-items:center;gap:10px;margin:0;font-size:14px;font-weight:800;color:var(--tx)}.part-check input{width:18px;height:18px;accent-color:var(--ac)}.part-score input{padding:9px 10px}@media(max-width:560px){.app-nav{margin-right:-15px}.parts-heading{display:block}.parts-heading .mu{display:block;margin-top:3px}}
 </style>
 </head>
 <body>
@@ -152,11 +153,11 @@ body.auth-mode #ttl,body.auth-mode>.w>p.mu,body.auth-mode #lang{display:none!imp
   </div>
 </section>
 <div id="app" hidden>
-<div class="chips" id="cd"></div>
-<div class="stats" id="stats"></div>
-<div style="height:14px"></div>
-
-<div class="card own">
+<nav class="app-nav own" id="appNav">
+<button class="nav-btn active" data-panel="overview">Overview</button><button class="nav-btn" data-panel="addPanel">Add result</button><button class="nav-btn" data-panel="progressPanel">Progress</button><button class="nav-btn" data-panel="coachPanel">AI Coach</button><button class="nav-btn" data-panel="profilePanel">Profile</button><button class="nav-btn" data-panel="historyPanel">History</button>
+</nav>
+<section class="app-panel active" id="overview"><div class="chips" id="cd"></div><div class="stats" id="stats"></div><div class="card"><h2>Welcome back</h2><p class="mu">Your study activity and exam deadlines at a glance.</p><div id="overviewSummary" class="overview-summary"></div><button class="main own" type="button" onclick="openPanel('addPanel')">＋ Add exam result</button></div></section>
+<section class="app-panel" id="addPanel"><div class="card own">
 <h2>What did you do today?</h2>
 <div class="chips" id="exChips"></div>
 <div class="row">
@@ -164,36 +165,27 @@ body.auth-mode #ttl,body.auth-mode>.w>p.mu,body.auth-mode #lang{display:none!imp
 <div><label>Type</label><select id="kind"><option>Mock test</option><option>Practice</option><option>Real exam</option></select></div>
 </div>
 <div id="subjWrap" hidden style="margin-bottom:10px"><label>Subject / Пән / Предмет</label><select id="subj"></select></div>
-<div class="row">
-<div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div>
-<div><label>Note (optional)</label><input id="note" placeholder="Reading, Math..."></div>
-</div>
-<button class="main" id="add">Add</button>
-</div>
+<div id="examParts" hidden class="parts-box"><div class="parts-heading"><b id="partsTitle">Exam subjects</b><span class="mu">Select the parts you completed</span></div><div id="partsList"></div></div>
+<div class="row" id="singleScoreRow"><div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div></div>
+<button class="main" id="add">Add result</button></div></section>
 
-<div class="card">
+<section class="app-panel" id="progressPanel"><div class="card">
 <h2>Score progress</h2>
 <div class="chips" id="chartChips"></div>
 <select id="csub" hidden style="margin-bottom:10px"></select>
 <div class="sc" id="chart"></div>
 <div class="tg"><span class="mu">Goal score:</span><input type="number" id="target" inputmode="decimal"><span class="mu">Exam date:</span><input type="date" id="dl" style="width:150px"><span class="mu" id="tgInfo"></span></div>
-</div>
-
-<div class="card own">
+</div></section>
+<section class="app-panel" id="coachPanel"><div class="card own">
 <h2>🤖 AI Coach</h2>
 <p class="mu">The coach uses the exam you chose in "Score progress". Tell it what is hard for you.</p>
 <input id="focus" placeholder="Weak part (example: Reading, vocabulary, Math)">
 <div style="height:10px"></div>
 <button class="main" id="ask">Get advice</button>
 <div id="coach"></div>
-</div>
+</div></section>
 
-<div class="card">
-<h2>How often I study (last 8 weeks)</h2>
-<div class="sc" id="freq"></div>
-</div>
-
-<div class="card own">
+<section class="app-panel" id="profilePanel"><div class="card own">
 <h2>👤 My profile and sharing</h2>
 <div class="row"><div><label>Display name</label><input id="pname" maxlength="40"></div>
 <div><label>Link name (a-z, 0-9, _ -)</label><input id="pslug" maxlength="30" placeholder="izgi_zhan"></div></div>
@@ -203,12 +195,8 @@ body.auth-mode #ttl,body.auth-mode>.w>p.mu,body.auth-mode #lang{display:none!imp
 <button class="main" id="psave">Save profile</button>
 <p class="mu" id="pmsg"></p>
 <div class="tg" id="shareRow" hidden><input id="plink" readonly style="flex:1;min-width:200px;width:auto"><button class="chip" id="pcopy">Copy link</button></div>
-</div>
-
-<div class="card">
-<h2>History</h2>
-<div id="list"></div>
-</div>
+</div></section>
+<section class="app-panel" id="historyPanel"><div class="card"><h2>History</h2><div id="list"></div></div><div class="card"><h2>How often I study (last 8 weeks)</h2><div class="sc" id="freq"></div></div></section>
 <p class="mu own"><a href="#" id="out" style="color:var(--mu)">Log out</a></p>
 </div>
 </div>
@@ -238,7 +226,7 @@ ru:{plan:"План",mock:"Пробные тесты",tips:"Советы",words:"
 en:{plan:"Your plan",mock:"Mock tests",tips:"Tips",words:"Words to learn",every:n=>"Take a mock test every "+n+" days.",next:"Next mock test: ",today:"today",ex:"Example: ",think:"Thinking...",err:"The coach is not available now. Try again later.",ask:"Get advice for "}};
 let uid=null,viewUid=null,entLang=lsGet("ent_lang","ru"),entSubs=[],chartSub="full";
 const L=()=>chartEx==="ENT"?TT[entLang]:TT.en;
-const maxOf=(ex,sub)=>ex==="ENT"&&sub&&SUBJ[sub]?SUBJ[sub].max:EX[ex].max;
+const maxOf=(ex,sub)=>ex==="ENT"&&sub&&SUBJ[sub]?SUBJ[sub].max:ex==="SAT"&&sub?800:EX[ex].max;
 const subName=id=>SUBJ[id]?SUBJ[id][entLang]:id;
 const subjIds=()=>["full","hist","math_l","read_l",...entSubs.filter(k=>SUBJ[k])];
 function fillSubs(sel,val){sel.innerHTML="";subjIds().forEach(id=>{const o=document.createElement("option");o.value=id;o.textContent=subName(id)+(id==="full"?"":" ("+SUBJ[id].max+")");sel.appendChild(o)});sel.value=subjIds().includes(val)?val:"full"}
@@ -258,10 +246,29 @@ function chips(el,cur,fn){
   el.innerHTML="";
   Object.keys(EX).forEach(k=>{const b=document.createElement("button");b.className="chip"+(k===cur?" on":"");b.textContent=EX[k].n;b.onclick=()=>fn(k);el.appendChild(b)});
 }
-function updScore(){const m=maxOf(cur,cur==="ENT"?$("subj").value:null);$("scLbl").textContent="Score (max "+m+")";$("score").step=EX[cur].step;$("score").max=m}
-function setEx(k){cur=k;$("subjWrap").hidden=k!=="ENT";if(k==="ENT")fillSubs($("subj"),$("subj").value);updScore();render()}
+const SAT_PARTS=[{id:"sat_reading",name:"Reading and Writing",max:800,step:10},{id:"sat_math",name:"Math",max:800,step:10}];
+function examParts(){
+ if(cur==="IELTS")return [{id:"listening",name:"Listening",max:9,step:0.5},{id:"reading",name:"Reading",max:9,step:0.5},{id:"writing",name:"Writing",max:9,step:0.5},{id:"speaking",name:"Speaking",max:9,step:0.5}];
+ if(cur==="SAT")return SAT_PARTS.map(x=>({...x,min:200}));
+ if(cur==="ENT")return ["hist","math_l","read_l",...entSubs.filter(k=>ELECT.includes(k))].slice(0,5).map(id=>({id,name:subName(id),max:SUBJ[id].max,step:1}));
+ return [];
+}
+function examPartsFor(ex){
+ if(ex==="IELTS")return [{id:"listening",name:"Listening"},{id:"reading",name:"Reading"},{id:"writing",name:"Writing"},{id:"speaking",name:"Speaking"}];
+ if(ex==="SAT")return SAT_PARTS;
+ return ["hist","math_l","read_l",...entSubs.filter(k=>ELECT.includes(k))].slice(0,5).map(id=>({id,name:subName(id)}));
+}
+function renderExamParts(){
+ const parts=examParts();$("examParts").hidden=!parts.length;$("singleScoreRow").hidden=!!parts.length;$("subjWrap").hidden=true;
+ $("partsTitle").textContent=cur+" subjects";
+ $("partsList").innerHTML=parts.map(p=>`<div class="part-row"><label class="part-check"><input type="checkbox" class="part-toggle" value="${p.id}"> ${p.name}</label><div class="part-score" hidden><input type="number" class="part-value" data-part="${p.id}" min="${p.min??0}" max="${p.max}" step="${p.step}" placeholder="${p.min??0}–${p.max}"></div></div>`).join("");
+ $("partsList").querySelectorAll(".part-toggle").forEach(c=>c.addEventListener("change",()=>{c.closest(".part-row").querySelector(".part-score").hidden=!c.checked}));
+}
+function updScore(){renderExamParts();const m=maxOf(cur,null);$("scLbl").textContent="Score (max "+m+")";$("score").step=EX[cur].step;$("score").max=m}
+function setEx(k){cur=k;updScore();render()}
 
 function stats(){
+  $("overviewSummary").innerHTML=Object.keys(EX).map(k=>`<span class="summary-pill">${EX[k].n}: ${entries.filter(e=>e.exam===k).length} records</span>`).join("");
   const days=[...new Set(entries.map(e=>e.date))].map(dayNum).sort((a,b)=>b-a);
   const t=dayNum(today());let streak=0,exp=days[0]===t?t:t-1;
   if(days[0]===t||days[0]===t-1){for(const d of days){if(d===exp){streak++;exp--}else if(d<exp)break}}
@@ -271,9 +278,12 @@ function stats(){
 }
 
 function chart(){
-  const isE=chartEx==="ENT";$("csub").hidden=!isE;if(isE){fillSubs($("csub"),chartSub);chartSub=$("csub").value}
-  const ex=EX[chartEx],mx=maxOf(chartEx,isE?chartSub:null),pts=entries.filter(e=>e.exam===chartEx&&(!isE||(e.subject||"full")===chartSub)).sort((a,b)=>a.date<b.date?-1:1);
-  const tg=(isE&&chartSub!=="full")?null:targets[chartEx];
+  const isE=chartEx==="ENT",isI=chartEx==="IELTS",isS=chartEx==="SAT",hasParts=isE||isI||isS;
+  $("csub").hidden=!hasParts;
+  const opts=examPartsFor(chartEx);
+  if(hasParts){$("csub").innerHTML='<option value="full">All '+chartEx+' sections</option>'+opts.map(k=>`<option value="${k.id}">${k.name}</option>`).join("");$("csub").value=chartSub||"full"}
+  const selected=chartSub&&chartSub!=="full"?chartSub:null,ex=EX[chartEx],mx=selected?maxOf(chartEx,selected):maxOf(chartEx,null),pts=entries.filter(e=>e.exam===chartEx&&(!selected||e.subject===selected)).sort((a,b)=>a.date<b.date?-1:1);
+  const tg=selected?null:targets[chartEx];
   $("tgInfo").textContent=pts.length&&tg?("Last: "+pts[pts.length-1].score+(pts[pts.length-1].score>=tg?" ✓ Goal reached":" · Left: "+(+(tg-pts[pts.length-1].score).toFixed(1)))):"";
   if($("target")!==document.activeElement)$("target").value=targets[chartEx]||"";
   if($("dl")!==document.activeElement)$("dl").value=deadlines[chartEx]||"";
@@ -309,14 +319,14 @@ function list(){
   $("list").innerHTML=a.length?"":'<p class="mu">No records yet. Add your first one above.</p>';
   a.forEach(e=>{const d=document.createElement("div");d.className="it";
     const ex=EX[e.exam];
-    d.innerHTML=`<span class="dot" style="background:${ex.c}"></span><div class="m"><b>${ex.n}</b>${e.exam==="ENT"&&e.subject&&e.subject!=="full"?" · "+subName(e.subject):""} · ${e.kind||""}<br><small></small></div><span class="sco">${e.score}<small class="mu">/${maxOf(e.exam,e.subject)}</small></span><button class="x" title="Delete">✕</button>`;
-    d.querySelector("small").textContent=fmtD(e.date)+(e.note?" · "+e.note:"");
+    d.innerHTML=`<span class="dot" style="background:${ex.c}"></span><div class="m"><b>${ex.n}</b>${e.subject&&e.subject!=="full"?" · "+(e.exam==="ENT"?subName(e.subject):e.exam==="SAT"?(e.subject==="sat_reading"?"Reading and Writing":"Math"):e.subject[0].toUpperCase()+e.subject.slice(1)):""} · ${e.kind||""}<br><small></small></div><span class="sco">${e.score}<small class="mu">/${maxOf(e.exam,e.subject)}</small></span><button class="x" title="Delete">✕</button>`;
+    d.querySelector("small").textContent=fmtD(e.date)+(e.exam==="IELTS"&&e.subject?" · "+e.subject[0].toUpperCase()+e.subject.slice(1):"");
     d.querySelector(".x").onclick=()=>{if(confirm("Delete this record?"))del(e.id)};
     $("list").appendChild(d)});
 }
 
 function render(){
-  chips($("exChips"),cur,setEx);chips($("chartChips"),chartEx,k=>{chartEx=k;render()});
+  chips($("exChips"),cur,setEx);chips($("chartChips"),chartEx,k=>{chartEx=k;chartSub="full";render()});
   countdown();stats();chart();freq();list();$("ask").textContent=L().ask+EX[chartEx].n;langUI();
 }
 
@@ -327,17 +337,30 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 async function load(){
   const {data:e,error}=await sb.from("entries").select("*").eq("user_id",viewUid||uid).order("entry_date",{ascending:false});
   if(error){alert(error.message);return}
-  entries=e.map(r=>({id:r.id,exam:r.exam,subject:r.subject,date:r.entry_date,kind:r.kind,score:Number(r.score),note:r.note,ts:Date.parse(r.created_at)}));
+  entries=e.map(r=>({id:r.id,exam:r.exam,subject:r.subject,date:r.entry_date,kind:r.kind,score:Number(r.score),ts:Date.parse(r.created_at)}));
   const {data:t}=await sb.from("targets").select("*").eq("user_id",viewUid||uid);
   targets={};deadlines={};(t||[]).forEach(r=>{if(r.target!=null)targets[r.exam]=Number(r.target);if(r.deadline)deadlines[r.exam]=r.deadline});
   render();
 }
 async function add(){
-  const sub=cur==="ENT"?$("subj").value:null,mx=maxOf(cur,sub),score=parseFloat($("score").value);
+ const date=$("date").value||today(),kind=$("kind").value;let records=[];
+ if(["IELTS","SAT","ENT"].includes(cur)){
+  const checked=[...document.querySelectorAll(".part-toggle:checked")];
+  if(!checked.length){alert("Select at least one subject or section.");return}
+  const defs=examParts();
+  for(const c of checked){
+   const part=c.value,def=defs.find(x=>x.id===part),input=document.querySelector(`.part-value[data-part="${part}"]`),score=parseFloat(input.value);
+   const valid=def&&!isNaN(score)&&score>=(def.min??0)&&score<=def.max&&(def.step!==0.5||Math.round(score*2)===score*2)&&(def.step!==10||score%10===0);
+   if(!valid){alert("Enter a valid "+(def?.name||"subject")+" score from "+(def?.min??0)+" to "+(def?.max||"")+".");return}
+   records.push({exam:cur,subject:part,entry_date:date,kind,score});
+  }
+ }else{
+  const score=parseFloat($("score").value),mx=maxOf(cur,null);
   if(isNaN(score)||score<0||score>mx){alert("Enter a score from 0 to "+mx);return}
-  const {error}=await sb.from("entries").insert({exam:cur,subject:sub,entry_date:$("date").value||today(),kind:$("kind").value,score,note:$("note").value.trim()});
-  if(error){alert(error.message);return}
-  $("score").value="";$("note").value="";chartEx=cur;load();
+  records.push({exam:cur,subject:null,entry_date:date,kind,score})
+ }
+ const {error}=await sb.from("entries").insert(records);if(error){alert(error.message);return}
+ $("score").value="";document.querySelectorAll(".part-toggle").forEach(c=>{c.checked=false;c.closest(".part-row").querySelector(".part-score").hidden=true});document.querySelectorAll(".part-value").forEach(i=>i.value="");chartEx=cur;chartSub="full";openPanel("historyPanel");load();
 }
 async function del(id){await sb.from("entries").delete().eq("id",id);load()}
 $("add").onclick=add;
@@ -400,6 +423,9 @@ async function loadPublic(slug){
   $("ttl").textContent="📚 "+(p.display_name||slug);$("app").hidden=false;load();
 }
 $("subj").onchange=updScore;$("csub").onchange=()=>{chartSub=$("csub").value;render()};
+document.querySelectorAll(".part-toggle").forEach(c=>c.addEventListener("change",()=>{c.closest(".part-row").querySelector(".part-score").hidden=!c.checked}));
+document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>openPanel(b.dataset.panel)));
+function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));window.scrollTo({top:0,behavior:"smooth"})}window.openPanel=openPanel;
 $("psave").onclick=saveProfile;$("pcopy").onclick=copyLink;
 $("ppub").onchange=updateShare;$("pslug").oninput=updateShare;
 
