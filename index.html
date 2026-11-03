@@ -10,7 +10,6 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b1738'/%3E%3Cpath d='M16 38 50 20 84 38 50 56Z' fill='white'/%3E%3Cpath d='M29 47v17q21 17 42 0V47L50 59Z' fill='white'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--tx:#161a2b;--mu:#6b7186;--bd:#e3e6f0;--ac:#4f46e5;--ac2:#e0e7ff;--ok:#16a34a;
 --ielts:#e11d48;--sat:#2563eb;--ent:#059669;
@@ -387,7 +386,7 @@ function list(){
 
 function render(){
   chips($("exChips"),cur,setEx);chips($("chartChips"),chartEx,k=>{chartEx=k;chartSub="full";render()});
-  countdown();stats();renderTrend();chart();freq();list();langUI();
+  countdown();stats();renderTrend();chart();list();langUI();
 }
 
 const SUPABASE_URL = "https://stzqldduufxspzqywbeh.supabase.co";
@@ -431,6 +430,40 @@ function countdown(){
 }
 function el(t,x,c){const e=document.createElement(t);if(x!=null)e.textContent=x;if(c)e.className=c;return e}
 function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Result",progressPanel:"Progress",profilePanel:"Profile",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";window.scrollTo({top:0,behavior:"smooth"})}window.openPanel=openPanel;
+function updateShare(){const sl=$("pslug").value.trim().toLowerCase();if(sl)$("plink").value=location.origin+location.pathname+"?u="+sl}
+async function loadProfile(){
+  const {data:p}=await sb.from("profiles").select("*").eq("user_id",uid).maybeSingle();
+  if(p){$("pslug").value=p.slug||"";$("plink").value=p.slug?location.origin+location.pathname+"?u="+p.slug:"";}
+  if(p?.is_public&&p.slug)drawProfileQr($("plink").value);
+  fillElect();
+}
+function drawProfileQr(url){
+  const box=$("qrBox");box.innerHTML="";
+  if(!window.QRCode){box.textContent="QR generator is not available. Use Share profile.";return}
+  new QRCode(box,{text:url,width:200,height:200,colorDark:"#101a32",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});
+  $("pcopy").disabled=false;$("profileStatus").textContent="Anyone with this link can view your exam statistics.";
+}
+async function createProfileQr(){
+  const slug=$("pslug").value||("student-"+uid.replace(/-/g,"").slice(0,10));
+  const {error}=await sb.from("profiles").upsert({user_id:uid,display_name:null,slug,is_public:true,ent_subjects:entSubs||[]},{onConflict:"user_id"});
+  if(error){$("profileStatus").textContent=error.code==="23505"?"Could not create link. Please try again.":error.message;return}
+  $("pslug").value=slug;const url=location.origin+location.pathname+"?u="+slug;$("plink").value=url;drawProfileQr(url);
+}
+async function copyLink(){
+  const url=$("plink").value;if(!url)return;
+  try{if(navigator.share)await navigator.share({title:"My Exam Prep",url});else{await navigator.clipboard.writeText(url);$("profileStatus").textContent="Link copied!"}}
+  catch(e){if(e.name!=="AbortError"){$("profileStatus").textContent="Could not share. Copy this link: "+url}}
+}
+async function loadPublic(slug){
+  $("login").hidden=true;
+  const {data:p}=await sb.from("profiles").select("*").eq("slug",slug).eq("is_public",true).maybeSingle();
+  if(!p){$("ttl").textContent="Profile not found or private";return}
+  viewUid=p.user_id;entSubs=p.ent_subjects||[];
+  $("ttl").textContent="📚 Exam Statistics";$("app").hidden=false;openPanel("progressPanel");load();
+}
+
+$("subj").onchange=updScore;$("csub").onchange=()=>{chartSub=$("csub").value;render()};
+document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>openPanel(b.dataset.panel)));
 $("makeQr").onclick=createProfileQr;$("pcopy").onclick=copyLink;
 
 
