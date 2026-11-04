@@ -8,6 +8,7 @@
 <meta name="description" content="Track IELTS, SAT and ENT results, goals and study progress.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x2='1' y2='1'%3E%3Cstop stop-color='%231d4ed8'/%3E%3Cstop offset='1' stop-color='%23060d25'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Cpath d='M16 38 50 20 84 38 50 56Z' fill='white'/%3E%3Cpath d='M29 47v17q21 17 42 0V47L50 59Z' fill='white'/%3E%3Cpath d='M83 40v24' stroke='%233b82f6' stroke-width='5'/%3E%3Ccircle cx='83' cy='68' r='5' fill='%233b82f6'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b1738'/%3E%3Cpath d='M16 38 50 20 84 38 50 56Z' fill='white'/%3E%3Cpath d='M29 47v17q21 17 42 0V47L50 59Z' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -139,6 +140,39 @@ svg{max-width:100%}
  .pub h1#ttl{padding:20px 18px 10px}
 }
 @media(prefers-reduced-motion:no-preference){.app-panel.active{animation:in .18s ease-out}@keyframes in{from{opacity:.4}to{opacity:1}}}
+
+/* v3: bolder look */
+:root{--bg:#f1f4fb;--card:#fff;--tx:#0d1530;--mu:#59657f;--bd:#d6dcec;--ac:#3355ff;--ac2:#e6ebff;--ink:#0e1633;--f:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#0a0f20;--card:#111a33;--tx:#eaf0ff;--mu:#9aa8c7;--bd:#25314f;--ac:#8ea2ff;--ac2:#18244a;--ink:#060a17}}
+html,body{min-height:100%}
+h1,h2,.st b,.trend-card strong,.sco,.calculated-score strong,.t-score,.brand-lockup strong,.auth-brand-copy h2,.auth-form h2{font-family:var(--f)}
+.sidebar{background:var(--ink);border-right:0}
+.brand-lockup{border-bottom-color:rgba(255,255,255,.14)}.brand-lockup strong{color:#fff;font-size:19px}.brand-mark{color:#8aa0ff}
+.nav-btn,.logout-link{color:#aab7dd}.nav-btn:hover,.logout-link:hover{color:#fff}
+.nav-btn.active{color:#fff;background:rgba(255,255,255,.1);border-left-color:#8aa0ff}
+.logout-link{border-top-color:rgba(255,255,255,.14)}
+.topbar{border-bottom:0;padding-bottom:0;margin-bottom:24px}.topbar h1{font-size:42px;letter-spacing:-.045em}
+.stats{border:0;margin-bottom:20px;border-top:2px solid var(--tx)}
+.st{padding:14px 0 6px 18px}.st b{font-size:44px;letter-spacing:-.05em}
+.tiles{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:34px}
+.tile{background:var(--c);color:#fff;border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:8px;min-height:210px}
+.t-name{font-weight:700;font-size:15px;letter-spacing:.02em}
+.t-score{font-size:68px;line-height:1;font-weight:700;letter-spacing:-.06em}
+.t-score small{font:500 15px system-ui,sans-serif;letter-spacing:0;margin-left:10px;opacity:.9}
+.t-bar{height:4px;background:rgba(255,255,255,.3);margin-top:auto}.t-bar i{display:block;height:100%;background:#fff}
+.t-meta{display:flex;justify-content:space-between;gap:10px;font-size:14px;font-weight:600}
+.block>h2{font-size:20px;border-bottom:2px solid var(--tx)}
+.trend-card strong{font-size:32px}
+.chip.on{border-bottom-width:3px}
+button.main{background:var(--ac);border-radius:8px;padding:14px 18px;font-size:16px}
+.auth-brand{background:var(--ink);color:#fff;border-right:0}
+.auth-brand-top{border-bottom-color:rgba(255,255,255,.18)}
+.auth-brand-copy h2{font-size:clamp(38px,5.2vw,68px)}
+.auth-brand-copy p,.auth-brand-foot{color:#aab7dd}
+.auth-exams,.auth-exams span{border-color:rgba(255,255,255,.18)}
+.sidebar .ico{opacity:.95}
+@media(max-width:1100px){.tiles{grid-template-columns:1fr}.tile{min-height:150px}.t-score{font-size:52px}}
+@media(max-width:820px){.topbar h1{font-size:30px}.st b{font-size:34px}}
 </style>
 </head>
 <body>
@@ -200,7 +234,9 @@ svg{max-width:100%}
     <section class="app-panel active" id="overview">
       
       <div class="stats" id="stats"></div>
-      <div class="block"><h2>Exams and goals</h2><div id="overviewSummary" class="overview-summary"></div><div class="countdown-area" id="cd"></div><div id="goals" class="goals own"></div></div>
+      <div class="tiles" id="cd"></div>
+      <div id="overviewSummary" hidden></div>
+      <div class="block own"><h2>Goals and exam dates</h2><div id="goals" class="goals"></div></div>
       <div class="block"><h2>Study frequency</h2><div class="sc" id="freq"></div></div>
     </section>
     <section class="app-panel" id="addPanel"><div class="page-intro"><h2>Add Exam Result</h2></div><div class="card own"><div class="chips" id="exChips"></div><div class="row"><div><label>Date</label><input type="date" id="date"></div><div><label>Type</label><select id="kind"><option>Practice</option><option>Mock test</option><option>Real exam</option></select></div></div><div id="entElectiveWrap" hidden class="ent-electives"><b>Таңдау пәндері</b><div class="row"><div><label id="entElectiveLabel1">1-пән</label><select id="entElective1"></select></div><div><label id="entElectiveLabel2">2-пән</label><select id="entElective2"></select></div></div></div><div id="subjWrap" hidden style="margin-bottom:10px"><label>Subject / Пән / Предмет</label><select id="subj"></select></div><div id="examParts" hidden class="parts-box"><div class="parts-heading"><b id="partsTitle">Exam subjects</b></div><div id="partsList"></div><div id="calculatedScore" class="calculated-score" aria-live="polite"><span>Overall score</span><strong>—</strong><small>Select parts and enter their scores</small></div></div><div class="row" id="singleScoreRow"><div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div></div><button class="main" id="add">Save Result</button></div></section>
@@ -457,18 +493,25 @@ async function add(){
 }
 async function del(id){await sb.from("entries").delete().eq("id",id);load()}
 $("add").onclick=add;
+function latest(k){
+  const g={};entries.filter(e=>e.exam===k).forEach(e=>{const key=e.date+"|"+(e.kind||"");(g[key]??={date:e.date,v:[]}).v.push(e.score)});
+  const a=Object.values(g).sort((x,y)=>x.date<y.date?-1:1);if(!a.length)return null;
+  const l=a[a.length-1],sum=l.v.reduce((p,c)=>p+c,0);
+  return {score:k==="IELTS"?Math.round(sum/l.v.length*2)/2:sum,n:a.length};
+}
 function countdown(){
-  const t=dayNum(today());
-  $("cd").innerHTML=Object.keys(EX).filter(k=>deadlines[k]||targets[k]!=null).map(k=>{const d=deadlines[k]?dayNum(deadlines[k])-t:null;
-    const big=d===null?"No exam date":d>0?d+" days left":d===0?"Today":"Date passed";
-    return `<div class="cd-row"><b style="color:${EX[k].c}">${EX[k].n}</b><span class="cd-big">${big}</span><span class="mu">${targets[k]!=null?"Goal "+targets[k]:""}</span></div>`}).join("")||'<p class="mu">Set a goal score and an exam date below.</p>';
+  const t=dayNum(today()),DK={IELTS:"#c2255c",SAT:"#1971c2",ENT:"#2b8a3e"};
+  $("cd").innerHTML=Object.keys(EX).map(k=>{
+    const l=latest(k),g=targets[k],d=deadlines[k]?dayNum(deadlines[k])-t:null,base=g!=null?g:EX[k].max,pct=l?Math.max(0,Math.min(100,l.score/base*100)):0;
+    const days=d===null?"No exam date":d>0?d+" days left":d===0?"Exam today":"Date passed";
+    return `<div class="tile" style="--c:${DK[k]}"><div class="t-name">${EX[k].n}</div><div class="t-score">${l?l.score:"–"}<small>${g!=null?"goal "+g:"max "+EX[k].max}</small></div><div class="t-bar"><i style="width:${pct}%"></i></div><div class="t-meta"><span>${days}</span><span>${l?l.n+(l.n===1?" attempt":" attempts"):"No results yet"}</span></div></div>`}).join("");
 }
 function el(t,x,c){const e=document.createElement(t);if(x!=null)e.textContent=x;if(c)e.className=c;return e}
 const lab=(t,i)=>{const w=el("div");w.append(el("label",t),i);return w};
 const ICON_X='<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>';
 function renderGoals(){
   const g=$("goals");if(!g||!uid||g.contains(document.activeElement))return;
-  g.replaceChildren(el("h3","Goal score and exam date"));
+  g.replaceChildren();
   Object.keys(EX).forEach(k=>{
     const r=el("div",null,"goal-row"),n=el("b",EX[k].n),t=document.createElement("input"),d=document.createElement("input");
     n.style.color=EX[k].c;t.type="number";t.step=EX[k].step;t.min=0;t.max=EX[k].max;t.placeholder="Max "+EX[k].max;t.value=targets[k]??"";d.type="date";d.value=deadlines[k]||"";
