@@ -217,7 +217,6 @@ button.danger{background:var(--bad)}
       <button class="nav-btn" data-panel="addPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>Add Exam</button>
       <button class="nav-btn" data-panel="progressPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>Progress</button>
       <button class="nav-btn" data-panel="goalsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>Goals</button>
-      <button class="nav-btn" data-panel="coachPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>Coach</button>
       <button class="nav-btn" data-panel="subjectsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>Subjects</button>
       <button class="nav-btn" data-panel="historyPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>History</button>
       <button class="nav-btn" data-panel="profilePanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>My Profile</button>
@@ -242,11 +241,11 @@ button.danger{background:var(--bad)}
 <div class="duo"><div class="block"><h2>Compare attempts</h2><div id="cmpBox"></div></div><div class="block"><h2>Exams compared</h2><div id="cmpExams"></div></div></div>
 <div class="block" style="margin-top:20px"><h2>By section</h2><div id="secStats"></div></div></section>
 
-    <section class="app-panel" id="goalsPanel"><div class="page-intro"><h2>Goals and exam dates</h2><p class="mu">Set a goal score and an exam date for each exam. Overview and Coach use them.</p></div><div class="card own"><div id="goals" class="goals"></div></div></section>
-    <section class="app-panel" id="subjectsPanel"><div class="page-intro"><h2>My subjects</h2><p class="mu">Add your own subjects, log results and follow your progress. Coach can analyze them too.</p></div>
+    <section class="app-panel" id="goalsPanel"><div class="page-intro"><h2>Goals and exam dates</h2><p class="mu">Set a goal score and an exam date for each exam. Overview shows them.</p></div><div class="card own"><div id="goals" class="goals"></div></div></section>
+    <section class="app-panel" id="subjectsPanel"><div class="page-intro"><h2>My subjects</h2><p class="mu">Add your own subjects, log results and follow your progress.</p></div>
 <div class="card own"><div class="row"><div><label>Subject name</label><input id="sName" maxlength="40" placeholder="Physics, Essay writing..."></div><div><label>Maximum score</label><input id="sMax" type="number" min="1" value="100"></div></div><button class="main" id="sAdd" type="button">Add subject</button><p class="mu" id="sMsg"></p></div>
 <div id="subjList"></div></section>
-<section class="app-panel" id="coachPanel"><div class="page-intro"><h2>Study coach</h2><p class="mu">The coach reads your results by itself and writes a plan for you.</p></div><div class="card own"><div class="chips" id="coachChips"></div><div class="chips lang-box" data-ctx="coach"></div><div id="coach"></div><button class="main" id="ask" style="margin-top:20px">Update advice</button></div></section>
+
     <section class="app-panel" id="profilePanel"><div class="page-intro"><h2>Account and settings</h2></div>
 <div class="card own"><div class="prof-head"><div class="avatar" id="avatar">S</div><div><b id="acEmail"></b><div class="mu">Member since <span id="acJoined"></span></div></div></div>
 <div class="row"><div><label>Name</label><input id="pname" maxlength="40" placeholder="Your name"></div><div><label>Public link</label><input id="plink" readonly></div></div>
@@ -298,7 +297,7 @@ function langUI(){
     const c=b.dataset.ctx,on=c==="add"?cur==="ENT":c==="chart"?chartEx==="ENT":c==="profile"?true:coachEx==="ENT";
     b.hidden=!on;b.innerHTML="";if(!on)return;
     b.appendChild(el("span","ҰБТ language:","mu"));
-    [["kk","Қазақша"],["ru","Русский"]].forEach(([k,n])=>{const x=el("button",n,"chip"+(k===entLang?" on":""));x.onclick=()=>{entLang=k;lsSet("ent_lang",k);fillElect();renderExamParts();render();if($("coachPanel").classList.contains("active"))coach()};b.appendChild(x)})
+    [["kk","Қазақша"],["ru","Русский"]].forEach(([k,n])=>{const x=el("button",n,"chip"+(k===entLang?" on":""));x.onclick=()=>{entLang=k;lsSet("ent_lang",k);fillElect();renderExamParts();render()};b.appendChild(x)})
   })
 }
 let entries=[],targets={},deadlines={},cur="IELTS",chartEx="IELTS",col=null,tdoc=null;
@@ -555,7 +554,7 @@ function renderSubjects(){
 }
 function render(){
   chips($("exChips"),cur,setEx);chips($("chartChips"),chartEx,k=>{chartEx=k;chartSub="full";render()});
-  countdown();renderGoals();stats();renderTrend();chart();freq();list();coachChipsUI();rangeUI();renderProgressExtra();renderSubjects();langUI();
+  countdown();renderGoals();stats();renderTrend();chart();freq();list();rangeUI();renderProgressExtra();renderSubjects();langUI();
 }
 
 const SUPABASE_URL = "https://stzqldduufxspzqywbeh.supabase.co";
@@ -656,7 +655,7 @@ async function coach(force){
   cache[key]={sig,data};lsSet("coach_cache",cache);
   if(coachEx===ex)showCoach(data,T,mine);
 }
-function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"My Profile",subjectsPanel:"Subjects",goalsPanel:"Goals",coachPanel:"Coach",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="coachPanel")coach()}window.openPanel=openPanel;
+function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"My Profile",subjectsPanel:"Subjects",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq()}window.openPanel=openPanel;
 function updateShare(){const sl=$("pslug").value.trim().toLowerCase();if(sl)$("plink").value=location.origin+location.pathname+"?u="+sl}
 async function loadProfile(){
   const {data:p}=await sb.from("profiles").select("*").eq("user_id",uid).maybeSingle();
@@ -709,7 +708,7 @@ async function loadPublic(slug){
 
 $("entElective1").onchange=()=>{entSubs[0]=$("entElective1").value;fillEntElectives();saveEntElectives();renderExamParts()};$("entElective2").onchange=()=>{entSubs[1]=$("entElective2").value;fillEntElectives();saveEntElectives();renderExamParts()};$("subj").onchange=updScore;$("csub").onchange=()=>{chartSub=$("csub").value;render()};
 document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>openPanel(b.dataset.panel)));
-let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{chart();freq()},150)});$("ask").onclick=()=>coach(true);
+let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{chart();freq()},150)});
 $("hSearch").oninput=list;$("hSort").onchange=list;
 $("sAdd").onclick=async()=>{const n=$("sName").value.trim(),m=parseFloat($("sMax").value);if(!n||isNaN(m)||m<=0){$("sMsg").textContent="Enter a name and a maximum score above 0.";return}const {error}=await sb.from("subjects").insert({name:n,max_score:m});if(error){$("sMsg").textContent=error.message;return}$("sName").value="";$("sMsg").textContent="";load()};
 $("psaveBtn").onclick=()=>saveProfileSettings(false);
