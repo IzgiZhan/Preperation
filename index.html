@@ -280,7 +280,7 @@ input:focus,select:focus{border-bottom-color:var(--pc)}
     <a href="#" id="out" class="logout-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H5v16h4"/><path d="m16 8 4 4-4 4M20 12H9"/></svg><span>Log out</span></a>
   </aside>
   <main class="main-area">
-    <header class="topbar own"><div><h1 id="pageTitle">Overview</h1></div><div class="topbar-right"><div class="chips" id="lang"></div></div></header>
+    <header class="topbar own"><div><h1 id="pageTitle">Overview</h1></div></header>
     <section class="app-panel active" id="overview">
       
       <div class="stats" id="stats"></div>
@@ -289,10 +289,10 @@ input:focus,select:focus{border-bottom-color:var(--pc)}
       <div class="block own"><h2>Goals and exam dates</h2><div id="goals" class="goals"></div></div>
       <div class="block"><h2>Study frequency</h2><div class="sc" id="freq"></div></div>
     </section>
-    <section class="app-panel" id="addPanel"><div class="page-intro"><h2>Add Exam Result</h2></div><div class="card own"><div class="chips" id="exChips"></div><div class="row"><div><label>Date</label><input type="date" id="date"></div><div><label>Type</label><select id="kind"><option>Practice</option><option>Mock test</option><option>Real exam</option></select></div></div><div id="entElectiveWrap" hidden class="ent-electives"><b>Таңдау пәндері</b><div class="row"><div><label id="entElectiveLabel1">1-пән</label><select id="entElective1"></select></div><div><label id="entElectiveLabel2">2-пән</label><select id="entElective2"></select></div></div></div><div id="subjWrap" hidden style="margin-bottom:10px"><label>Subject / Пән / Предмет</label><select id="subj"></select></div><div id="examParts" hidden class="parts-box"><div class="parts-heading"><b id="partsTitle">Exam subjects</b></div><div id="partsList"></div><div id="calculatedScore" class="calculated-score" aria-live="polite"><span>Overall score</span><strong>—</strong><small>Select parts and enter their scores</small></div></div><div class="row" id="singleScoreRow"><div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div></div><button class="main" id="add">Save Result</button></div></section>
-    <section class="app-panel" id="progressPanel"><div class="page-intro"><h2>Your Progress</h2></div><div class="trend-grid" id="trendCards"></div><div class="card"><div class="chips" id="chartChips"></div><select id="csub" hidden style="margin-bottom:10px"></select><div class="sc" id="chart"></div></div></section>
+    <section class="app-panel" id="addPanel"><div class="page-intro"><h2>Add Exam Result</h2></div><div class="card own"><div class="chips" id="exChips"></div><div class="chips lang-box" data-ctx="add"></div><div class="row"><div><label>Date</label><input type="date" id="date"></div><div><label>Type</label><select id="kind"><option>Practice</option><option>Mock test</option><option>Real exam</option></select></div></div><div id="entElectiveWrap" hidden class="ent-electives"><b>Таңдау пәндері</b><div class="row"><div><label id="entElectiveLabel1">1-пән</label><select id="entElective1"></select></div><div><label id="entElectiveLabel2">2-пән</label><select id="entElective2"></select></div></div></div><div id="subjWrap" hidden style="margin-bottom:10px"><label>Subject / Пән / Предмет</label><select id="subj"></select></div><div id="examParts" hidden class="parts-box"><div class="parts-heading"><b id="partsTitle">Exam subjects</b></div><div id="partsList"></div><div id="calculatedScore" class="calculated-score" aria-live="polite"><span>Overall score</span><strong>—</strong><small>Select parts and enter their scores</small></div></div><div class="row" id="singleScoreRow"><div><label id="scLbl">Score</label><input type="number" id="score" inputmode="decimal"></div></div><button class="main" id="add">Save Result</button></div></section>
+    <section class="app-panel" id="progressPanel"><div class="page-intro"><h2>Your Progress</h2></div><div class="trend-grid" id="trendCards"></div><div class="card"><div class="chips" id="chartChips"></div><div class="chips lang-box" data-ctx="chart"></div><select id="csub" hidden style="margin-bottom:10px"></select><div class="sc" id="chart"></div></div></section>
 
-    <section class="app-panel" id="coachPanel"><div class="page-intro"><h2>Study coach</h2><p class="mu">A plan, a mock test schedule and words to learn for one exam.</p></div><div class="card own"><div class="row"><div><label>Exam</label><select id="coachEx"><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">ENT</option></select></div><div><label>What is hard for you?</label><input id="focus" maxlength="200" placeholder="Reading, vocabulary, Math"></div></div><button class="main" id="ask">Get advice</button><div id="coach"></div></div></section>
+    <section class="app-panel" id="coachPanel"><div class="page-intro"><h2>Study coach</h2><p class="mu">The coach reads your results by itself and writes a plan for you.</p></div><div class="card own"><div class="chips" id="coachChips"></div><div class="chips lang-box" data-ctx="coach"></div><div id="coach"></div><button class="main" id="ask" style="margin-top:20px">Update advice</button></div></section>
     <section class="app-panel" id="profilePanel"><div class="page-intro"><h2>Your QR Profile</h2></div><div class="card profile-share"><div class="qr-frame" id="qrBox"><span class="profile-share-note">Create your personal QR code</span></div><p class="profile-share-note" id="profileStatus">Your public statistics will open from this QR code.</p><div class="profile-actions"><button class="main" id="makeQr" type="button">Create my QR</button><button class="chip" id="pcopy" type="button" disabled>Share profile</button></div></div><input id="pname" type="hidden"><input id="pslug" type="hidden"><input id="ppub" type="checkbox" hidden><select id="sub1" hidden></select><select id="sub2" hidden></select><span id="pmsg" hidden></span><input id="plink" type="hidden"><div id="shareRow" hidden></div><button id="psave" hidden></button></section>
     <section class="app-panel" id="historyPanel"><div class="page-intro"><h2>History</h2></div><div class="card"><div id="list"></div></div></section>
   </main>
@@ -322,15 +322,21 @@ const TT={
 kk:{plan:"Жоспар",mock:"Сынақ тесттері",tips:"Кеңестер",words:"Үйренетін сөздер мен терминдер",every:n=>"Әр "+n+" күн сайын сынақ тест тапсыр.",next:"Келесі сынақ тест: ",today:"бүгін",ex:"Мысал: ",think:"Ойланып жатырмын...",err:"Көмекші қазір қолжетімсіз. Кейінірек қайталап көр."},
 ru:{plan:"План",mock:"Пробные тесты",tips:"Советы",words:"Слова и термины для изучения",every:n=>"Сдавай пробник каждые "+n+" дн.",next:"Следующий пробник: ",today:"сегодня",ex:"Пример: ",think:"Думаю...",err:"Помощник сейчас недоступен. Попробуй позже."},
 en:{plan:"Your plan",mock:"Mock tests",tips:"Tips",words:"Words to learn",every:n=>"Take a mock test every "+n+" days.",next:"Next mock test: ",today:"today",ex:"Example: ",think:"Thinking...",err:"The coach is not available now. Try again later."}};
-let uid=null,viewUid=null,entLang=lsGet("ent_lang","ru"),entSubs=[],chartSub="full";
+let coachEx="IELTS",uid=null,viewUid=null,entLang=lsGet("ent_lang","ru"),entSubs=[],chartSub="full";
 const L=()=>chartEx==="ENT"?TT[entLang]:TT.en;
 const maxOf=(ex,sub)=>ex==="ENT"&&sub&&SUBJ[sub]?SUBJ[sub].max:ex==="SAT"&&sub?800:EX[ex].max;
 const subName=id=>SUBJ[id]?SUBJ[id][entLang]:id;
 const subjIds=()=>["full","hist","math_l","read_l",...entSubs.filter(k=>SUBJ[k])];
 function fillSubs(sel,val){sel.innerHTML="";subjIds().forEach(id=>{const o=document.createElement("option");o.value=id;o.textContent=subName(id)+(id==="full"?"":" ("+SUBJ[id].max+")");sel.appendChild(o)});sel.value=subjIds().includes(val)?val:"full"}
 function fillElect(){[["sub1",0],["sub2",1]].forEach(([id,i])=>{const s=$(id);s.innerHTML='<option value="">—</option>';ELECT.forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=SUBJ[k][entLang];s.appendChild(o)});s.value=entSubs[i]||""})}
-function langUI(){const b=$("lang");b.innerHTML="";b.appendChild(el("span","ENT language:","mu"));
-  [["kk","Қазақша"],["ru","Русский"]].forEach(([k,n])=>{const c=el("button",n,"chip"+(k===entLang?" on":""));c.onclick=()=>{entLang=k;lsSet("ent_lang",k);fillElect();renderExamParts();render()};b.appendChild(c)})}
+function langUI(){
+  document.querySelectorAll(".lang-box").forEach(b=>{
+    const c=b.dataset.ctx,on=c==="add"?cur==="ENT":c==="chart"?chartEx==="ENT":coachEx==="ENT";
+    b.hidden=!on;b.innerHTML="";if(!on)return;
+    b.appendChild(el("span","ENT language:","mu"));
+    [["kk","Қазақша"],["ru","Русский"]].forEach(([k,n])=>{const x=el("button",n,"chip"+(k===entLang?" on":""));x.onclick=()=>{entLang=k;lsSet("ent_lang",k);fillElect();renderExamParts();render();if($("coachPanel").classList.contains("active"))coach()};b.appendChild(x)})
+  })
+}
 let entries=[],targets={},deadlines={},cur="IELTS",chartEx="IELTS",col=null,tdoc=null;
 const $=id=>document.getElementById(id);
 const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
@@ -506,7 +512,7 @@ function list(){
 
 function render(){
   chips($("exChips"),cur,setEx);chips($("chartChips"),chartEx,k=>{chartEx=k;chartSub="full";render()});
-  countdown();renderGoals();stats();renderTrend();chart();freq();list();langUI();
+  countdown();renderGoals();stats();renderTrend();chart();freq();list();chips($("coachChips"),coachEx,k=>{coachEx=k;render();coach()});langUI();
 }
 
 const SUPABASE_URL = "https://stzqldduufxspzqywbeh.supabase.co";
@@ -568,21 +574,30 @@ function renderGoals(){
     const save=async()=>{const v=parseFloat(t.value);await sb.from("targets").upsert({exam:k,target:isNaN(v)?null:v,deadline:d.value||null},{onConflict:"user_id,exam"});load()};
     t.onchange=save;d.onchange=save;r.append(n,lab("Goal",t),lab("Exam date",d));g.appendChild(r)});
 }
-async function coach(){
-  const ex=$("coachEx").value,isE=ex==="ENT",T=TT[isE?entLang:"en"],box=$("coach"),btn=$("ask");
-  const mine=entries.filter(e=>e.exam===ex).sort((a,b)=>a.date<b.date?-1:1).slice(-20).map(e=>({date:e.date,type:e.kind,score:e.score,max:maxOf(ex,e.subject||null),subject:e.subject?((SUBJ[e.subject]||{}).en||e.subject):"full test"}));
-  btn.disabled=true;box.replaceChildren(el("p",T.think,"mu"));
-  const {data,error}=await sb.functions.invoke("coach",{body:{exam:EX[ex].n,max:EX[ex].max,today:today(),goal:targets[ex]??null,exam_date:deadlines[ex]||null,focus:$("focus").value.trim().slice(0,200),results:mine,language:isE?(entLang==="kk"?"Kazakh":"Russian"):"English",subject:"",subjects:isE?entSubs.filter(k=>SUBJ[k]).map(k=>SUBJ[k].en):[]}});
-  btn.disabled=false;
-  if(error||!data||data.error){box.replaceChildren(el("p",T.err,"mu"));return}
+function showCoach(data,T,mine){
   const n=Math.max(1,parseInt(data.mock_every_days)||7),mocks=mine.filter(e=>e.type==="Mock test"),last=mocks.length?mocks[mocks.length-1].date:null;
   let next=today();if(last){next=new Date((dayNum(last)+n)*864e5).toISOString().slice(0,10);if(next<today())next=today()}
   const out=[el("h2",T.plan),el("p",data.summary),el("h2",T.mock),el("p",T.every(n)+" "+T.next+(next===today()?T.today:fmtD(next))+". "+(data.mock_advice||"")),el("h2",T.tips)];
   const ul=el("ul");(data.tips||[]).forEach(x=>ul.appendChild(el("li",x)));out.push(ul,el("h2",T.words));
   (data.words||[]).forEach(w=>{const r=el("div",null,"it"),m=el("div",null,"m");m.append(el("b",w.word),document.createElement("br"),el("small",w.meaning+" "+T.ex+w.example));r.appendChild(m);out.push(r)});
-  box.replaceChildren(...out);
+  $("coach").replaceChildren(...out);
 }
-function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Result",progressPanel:"Progress",profilePanel:"Profile",coachPanel:"Coach",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq()}window.openPanel=openPanel;
+async function coach(force){
+  const ex=coachEx,isE=ex==="ENT",lk=isE?entLang:"en",T=TT[lk],box=$("coach"),btn=$("ask");
+  if(!uid||!box)return;
+  const mine=entries.filter(e=>e.exam===ex).sort((a,b)=>a.date<b.date?-1:1).slice(-30).map(e=>({date:e.date,type:e.kind,score:e.score,max:maxOf(ex,e.subject||null),subject:e.subject?((SUBJ[e.subject]||{}).en||e.subject):"full test"}));
+  if(!mine.length){box.replaceChildren(el("p",{kk:"Алдымен нәтиже қосыңыз, көмекші оны талдайды.",ru:"Добавь первый результат, и помощник его разберёт.",en:"Add your first result and the coach will analyze it."}[lk],"mu"));return}
+  const lang=isE?(entLang==="kk"?"Kazakh":"Russian"):"English",goal=targets[ex]??null,ed=deadlines[ex]||null;
+  const sig=JSON.stringify([today(),goal,ed,mine.map(m=>[m.date,m.score,m.subject,m.type])]),key=ex+lang,cache=lsGet("coach_cache",{});
+  if(force!==true&&cache[key]&&cache[key].sig===sig){showCoach(cache[key].data,T,mine);return}
+  btn.disabled=true;box.replaceChildren(el("p",T.think,"mu"));
+  const {data,error}=await sb.functions.invoke("coach",{body:{exam:EX[ex].n,max:EX[ex].max,today:today(),goal,exam_date:ed,focus:"",results:mine,language:lang,subject:"",subjects:isE?entSubs.filter(k=>SUBJ[k]).map(k=>SUBJ[k].en):[]}});
+  btn.disabled=false;
+  if(error||!data||data.error){if(coachEx===ex)box.replaceChildren(el("p",T.err,"mu"));return}
+  cache[key]={sig,data};lsSet("coach_cache",cache);
+  if(coachEx===ex)showCoach(data,T,mine);
+}
+function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Result",progressPanel:"Progress",profilePanel:"Profile",coachPanel:"Coach",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="coachPanel")coach()}window.openPanel=openPanel;
 function updateShare(){const sl=$("pslug").value.trim().toLowerCase();if(sl)$("plink").value=location.origin+location.pathname+"?u="+sl}
 async function loadProfile(){
   const {data:p}=await sb.from("profiles").select("*").eq("user_id",uid).maybeSingle();
@@ -617,7 +632,7 @@ async function loadPublic(slug){
 
 $("entElective1").onchange=()=>{entSubs[0]=$("entElective1").value;fillEntElectives();saveEntElectives();renderExamParts()};$("entElective2").onchange=()=>{entSubs[1]=$("entElective2").value;fillEntElectives();saveEntElectives();renderExamParts()};$("subj").onchange=updScore;$("csub").onchange=()=>{chartSub=$("csub").value;render()};
 document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>openPanel(b.dataset.panel)));
-let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{chart();freq()},150)});$("ask").onclick=coach;$("makeQr").onclick=createProfileQr;$("pcopy").onclick=copyLink;
+let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{chart();freq()},150)});$("ask").onclick=()=>coach(true);$("makeQr").onclick=createProfileQr;$("pcopy").onclick=copyLink;
 
 
 function show(session){
