@@ -7,8 +7,12 @@
 <script>try{document.documentElement.dataset.theme=JSON.parse(localStorage.getItem("theme"))||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
 <meta name="theme-color" content="#ffffff">
 <meta name="description" content="Track IELTS, SAT and ENT results, goals and study progress.">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b1f4d'/%3E%3Cpath d='m22 42 28-14 28 14-28 14z' fill='none' stroke='white' stroke-width='5' stroke-linejoin='round'/%3E%3Cpath d='M34 51v13c9 6 23 6 32 0V51' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b1f4d'/%3E%3Cpath d='m22 42 28-14 28 14-28 14z' fill='none' stroke='white' stroke-width='5' stroke-linejoin='round'/%3E%3Cpath d='M34 51v13c9 6 23 6 32 0V51' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Exam Prep">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -176,6 +180,23 @@ input:disabled,select:disabled{background:var(--bg);color:var(--tx);opacity:1;-w
 .pub-av{width:44px;height:44px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:12px}
 .bar rect{transition:opacity .2s}.bar:hover rect{opacity:.85!important}
 .s-add{grid-template-columns:1fr auto!important}
+/* colorful buttons */
+.chip{background:var(--ac2);border:2px solid transparent;color:var(--ac)}
+.chip:hover{border-color:var(--ac)}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#fff;box-shadow:0 4px 12px rgba(0,113,227,.25)}
+.chip[data-ex]{background:color-mix(in srgb,var(--ex) 15%,var(--card));border:2px solid transparent;color:var(--ex)}
+.chip[data-ex]:hover{border-color:var(--ex)}
+.chip[data-ex].on{background:var(--ex);border-color:var(--ex);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--ex) 35%,transparent)}
+.hbtn{background:var(--ac2);border:0;color:var(--ac);padding:8px 14px}.hbtn:hover{background:var(--ac);color:#fff;border:0}
+.hbtn.amber{background:color-mix(in srgb,#ff9f0a 18%,var(--card));color:#b36200}.hbtn.amber:hover{background:#ff9f0a;color:#fff}
+.hbtn.gray{background:var(--bg);color:var(--mu)}.hbtn.gray:hover{background:var(--bd);color:var(--tx)}
+:root[data-theme=dark] .hbtn.amber{color:#ffb340}
+.icon-btn{background:var(--ac);border-color:var(--ac);color:#fff}.icon-btn:hover{filter:brightness(1.1);border-color:var(--ac)}
+.x{background:var(--badbg);color:var(--bad)}.x:hover{background:var(--bad);color:#fff}
+.nav-btn:hover,.logout-link:hover{background:var(--ac2);color:var(--ac)}
+.logout-link{color:var(--bad)}.logout-link:hover{background:var(--badbg);color:var(--bad)}
+.info{margin-bottom:18px}.info-row{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-top:1px solid var(--bd)}.info-row:first-child{border-top:0}.info-row span{color:var(--mu)}.info-row b{text-align:right}
+#bUp{background:var(--ok)}.auth-tab.active{background:var(--ac);color:#fff;box-shadow:none}
 </style>
 </head>
 <body>
@@ -257,9 +278,10 @@ input:disabled,select:disabled{background:var(--bg);color:var(--tx);opacity:1;-w
 
     <section class="app-panel" id="profilePanel"><div class="page-intro"><h2>My Profile</h2></div>
 <div class="card own"><div class="prof-head"><div class="avatar" id="avatar"><img id="avatarImg" alt="" hidden><span id="avatarLetter">S</span></div><div><b id="acEmail"></b><div class="mu">Member since <span id="acJoined"></span></div><button class="hbtn" id="avatarBtn" type="button" style="margin-top:8px">Change photo</button><input type="file" id="avatarFile" accept="image/*" hidden></div></div>
-<div class="row"><div><label>Name</label><input id="pname" maxlength="40" placeholder="Your name"></div><div><label>Grade</label><select id="pgrade"></select></div></div>
+<div id="profForm"><div class="row"><div><label>Name</label><input id="pname" maxlength="40" placeholder="Your name"></div><div><label>Grade</label><select id="pgrade"></select></div></div>
 <div class="row"><div><label>Birthday</label><div id="pbirth"></div></div><div></div></div>
-<label class="switch"><input type="checkbox" id="ppub" checked> Public profile: anyone with my QR code can see my results</label>
+<label class="switch"><input type="checkbox" id="ppub" checked> Public profile: anyone with my QR code can see my results</label></div>
+<div id="profView" class="info" hidden><div class="info-row"><span>Name</span><b id="vName"></b></div><div class="info-row"><span>Grade</span><b id="vGrade"></b></div><div class="info-row"><span>Birthday</span><b id="vBirth"></b></div><div class="info-row"><span>Public profile</span><b id="vPub"></b></div></div>
 <button class="main" id="psaveBtn" type="button">Save profile</button><p class="mu" id="pmsg"></p></div>
 <div class="card own"><h3 class="sub-h">Change password</h3><div class="row"><div><label>Current password</label><input type="password" id="oldpw" autocomplete="current-password"></div><div><label>New password</label><input type="password" id="newpw" autocomplete="new-password"></div></div><button class="main" id="pwBtn" type="button">Change password</button><p class="mu" id="pwMsg"></p></div>
 <input id="pslug" type="hidden"><input id="plink" type="hidden"><select id="sub1" hidden></select><select id="sub2" hidden></select><div id="shareRow" hidden></div><button id="psave" hidden></button>
@@ -480,7 +502,7 @@ function attemptCard(x){
   dot.style.background="var(--"+x.exam.toLowerCase()+")";
   m.append(el("b",EX[x.exam].n),document.createElement("br"),el("small",fmtD(x.date)+", "+x.rows.length+(x.rows.length===1?" part":" parts")));
   sc.append(document.createTextNode(x.total),el("small","/"+x.max,"mu"));
-  const bD=el("button","Details","hbtn"),bE=el("button","Edit","hbtn"),bX=el("button",null,"x");bX.innerHTML=ICON_X;bX.title="Delete";
+  const bD=el("button","Details","hbtn"),bE=el("button","Edit","hbtn amber"),bX=el("button",null,"x");bX.innerHTML=ICON_X;bX.title="Delete";
   head.append(dot,m,sc,bD,bE,bX);w.appendChild(head);
   const det=el("div",null,"att-parts");det.hidden=true;
   x.rows.forEach(r=>{const l=el("div",null,"part-line");l.append(el("span",partName(x.exam,r.subject)),el("b",r.score+" / "+maxOf(x.exam,r.subject||null)));det.appendChild(l)});
@@ -491,7 +513,7 @@ function attemptCard(x){
     det.hidden=false;det.replaceChildren();
     const dp=dateSel(x.date,null,Y0-3,Y0+1);det.appendChild(lab("Date",dp.el));
     const ins=x.rows.map(r=>{const i=document.createElement("input");i.type="number";i.step=x.exam==="IELTS"?0.5:1;i.min=0;i.max=maxOf(x.exam,r.subject||null);i.value=r.score;det.appendChild(lab(partName(x.exam,r.subject)+" (max "+i.max+")",i));return i});
-    const ok=el("button","Save","main"),no=el("button","Cancel","hbtn"),bar=el("div",null,"chips");ok.style.minWidth="0";bar.append(ok,no);det.appendChild(bar);
+    const ok=el("button","Save","main"),no=el("button","Cancel","hbtn gray"),bar=el("div",null,"chips");ok.style.minWidth="0";bar.append(ok,no);det.appendChild(bar);
     no.onclick=()=>list();
     ok.onclick=async()=>{
       if(ins.some(i=>{const v=parseFloat(i.value);return isNaN(v)||v<0||v>+i.max})){alert("Each score must be from 0 to its maximum.");return}
@@ -696,9 +718,10 @@ async function saveProfileSettings(auto){
   fillAccount();
 }
 let profEdit=true;
+function fmtLong(iso){if(!iso)return "Not set";const p=iso.split("-");return +p[2]+" "+MONTHS[+p[1]-1]+" "+p[0]}
 function setProfileEdit(on){
-  profEdit=on;["pname","pgrade","ppub"].forEach(id=>$(id).disabled=!on);
-  $("pbirth").querySelectorAll("select").forEach(x=>x.disabled=!on);
+  profEdit=on;$("profForm").hidden=!on;$("profView").hidden=on;
+  if(!on){$("vName").textContent=$("pname").value.trim()||"Student";$("vGrade").textContent=$("pgrade").value||"Not set";$("vBirth").textContent=fmtLong(birth.get());$("vPub").textContent=$("ppub").checked?"On, anyone with my QR code can see my results":"Off, only me";}
   $("psaveBtn").textContent=on?"Save profile":"Edit profile";
 }
 function showAvatar(url){const im=$("avatarImg");if(url){im.src=url;im.hidden=false;$("avatarLetter").hidden=true}else{im.hidden=true;$("avatarLetter").hidden=false}}
