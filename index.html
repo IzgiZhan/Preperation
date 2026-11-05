@@ -17,10 +17,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-:root{--bg:#f5f5f7;--card:#fff;--tx:#1d1d1f;--mu:#6e6e73;--bd:#e5e5ea;--ac:#0071e3;--ac2:#e8f2ff;--ok:#1f9d55;--okbg:#e6f6ec;--bad:#d92d20;--badbg:#fdecea;--ielts:#5e5ce6;--sat:#0a84ff;--ent:#ff9f0a;--ink:#0b1f4d;
+:root{--bg:#f5f5f7;--card:#fff;--tx:#1d1d1f;--mu:#6e6e73;--bd:#e5e5ea;--ac:#0071e3;--ac2:#e8f2ff;--ok:#1f9d55;--okbg:#e6f6ec;--bad:#d92d20;--badbg:#fdecea;--ielts:#7c3aed;--sat:#0284c7;--ent:#ea580c;--ink:#0b1f4d;
 --sh:0 1px 2px rgba(0,0,0,.04),0 8px 28px rgba(0,0,0,.06);--f:"Inter",-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;color-scheme:light;
 padding-top:env(safe-area-inset-top,0px)}
-:root[data-theme=dark]{--bg:#000;--card:#1c1c1e;--tx:#f5f5f7;--mu:#98989d;--bd:#2c2c2e;--ac:#2997ff;--ac2:#10233f;--ok:#30d158;--okbg:#0f2a18;--bad:#ff453a;--badbg:#341513;--ielts:#7d7aff;--sat:#409cff;--ent:#ffb340;--sh:0 1px 2px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.35);color-scheme:dark}
+:root[data-theme=dark]{--bg:#000;--card:#1c1c1e;--tx:#f5f5f7;--mu:#98989d;--bd:#2c2c2e;--ac:#2997ff;--ac2:#10233f;--ok:#30d158;--okbg:#0f2a18;--bad:#ff453a;--badbg:#341513;--ielts:#a78bfa;--sat:#38bdf8;--ent:#fb923c;--sh:0 1px 2px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.35);color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 var(--f);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
@@ -123,9 +123,9 @@ button.danger{background:var(--bad)}
 .auth-exams{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .auth-exams span{border-radius:18px;min-height:120px;padding:16px;color:#fff;font-weight:700;display:flex;flex-direction:column;justify-content:space-between}
 .auth-exams span::after{font:800 38px var(--f);letter-spacing:-.05em}
-.auth-exams span:nth-child(1){background:#5e5ce6}.auth-exams span:nth-child(1)::after{content:"9.0"}
-.auth-exams span:nth-child(2){background:#0a84ff}.auth-exams span:nth-child(2)::after{content:"1600"}
-.auth-exams span:nth-child(3){background:#ff9f0a}.auth-exams span:nth-child(3)::after{content:"140"}
+.auth-exams span:nth-child(1){background:#7c3aed}.auth-exams span:nth-child(1)::after{content:"9.0"}
+.auth-exams span:nth-child(2){background:#0284c7}.auth-exams span:nth-child(2)::after{content:"1600"}
+.auth-exams span:nth-child(3){background:#ea580c}.auth-exams span:nth-child(3)::after{content:"140"}
 .auth-form{display:flex;flex-direction:column;justify-content:center;padding:44px clamp(24px,8vw,140px);background:var(--card)}
 .auth-form>*{max-width:470px;width:100%}
 .auth-form h2{font-size:38px;font-weight:800;letter-spacing:-.04em}
@@ -197,6 +197,12 @@ input:disabled,select:disabled{background:var(--bg);color:var(--tx);opacity:1;-w
 .logout-link{color:var(--bad)}.logout-link:hover{background:var(--badbg);color:var(--bad)}
 .info{margin-bottom:18px}.info-row{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-top:1px solid var(--bd)}.info-row:first-child{border-top:0}.info-row span{color:var(--mu)}.info-row b{text-align:right}
 #bUp{background:var(--ok)}.auth-tab.active{background:var(--ac);color:#fff;box-shadow:none}
+.top-right{display:flex;align-items:center;gap:12px;min-width:0}
+.top-name{font-weight:650;font-size:15px;max-width:40vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmp-row{display:grid;grid-template-columns:minmax(0,1fr) 120px 100px;gap:12px;align-items:center}
+.cmp-row>b,.cmp-row>span:nth-child(2){text-align:right;font-size:17px;font-weight:700;color:var(--tx)}
+.cmp-row>.delta{justify-self:end}
+:root[data-theme=dark] .chip[data-ex].on{color:#0b1220}
 </style>
 </head>
 <body>
@@ -247,7 +253,7 @@ input:disabled,select:disabled{background:var(--bg);color:var(--tx);opacity:1;-w
       <button class="nav-btn active" data-panel="overview"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/></svg>Overview</button>
       <button class="nav-btn" data-panel="addPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>Add Exam</button>
       <button class="nav-btn" data-panel="progressPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>Progress</button>
-      <button class="nav-btn" data-panel="goalsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>Goals</button>
+      <button class="nav-btn" data-panel="goalsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M13 3.055a9 9 0 1 0 7.941 7.945"/><path d="M15 6v3h3l3-3h-3v-3z"/><path d="M15 9l-3 3"/></svg>Goals</button>
       <button class="nav-btn" data-panel="subjectsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>Subjects</button>
       <button class="nav-btn" data-panel="historyPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>History</button>
       <button class="nav-btn" data-panel="profilePanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>My Profile</button>
@@ -255,7 +261,7 @@ input:disabled,select:disabled{background:var(--bg);color:var(--tx);opacity:1;-w
     <a href="#" id="out" class="logout-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H5v16h4"/><path d="m16 8 4 4-4 4M20 12H9"/></svg><span>Log out</span></a>
   </aside>
   <main class="main-area">
-    <header class="topbar own"><div><h1 id="pageTitle">Overview</h1></div><button class="icon-btn" id="themeToggle" type="button" aria-label="Switch between light and dark theme"><svg class="ico i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg><svg class="ico i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button></header>
+    <header class="topbar own"><div><h1 id="pageTitle">Overview</h1></div><div class="top-right"><span class="top-name" id="topName"></span><button class="icon-btn" id="themeToggle" type="button" aria-label="Switch between light and dark theme"><svg class="ico i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg><svg class="ico i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button></div></header>
     <section class="app-panel active" id="overview">
       
       <div class="stats" id="stats"></div>
@@ -738,6 +744,7 @@ async function uploadAvatar(file){
   }catch(e){m.textContent="Could not upload the photo. Run the new schema.sql in Supabase and try again."}
 }
 async function fillAccount(){
+  $("topName").textContent=$("pname").value.trim()||"Student";
   const {data}=await sb.auth.getUser(),u=data&&data.user;if(!u)return;
   $("acEmail").textContent=u.email||"";
   $("acJoined").textContent=u.created_at?new Date(u.created_at).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}):"";
