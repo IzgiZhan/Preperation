@@ -241,6 +241,12 @@ button.main,.hbtn,.chip{display:inline-flex;align-items:center;justify-content:c
 .quote-box .hbtn{padding:7px 12px;font-size:13px}
 .pub-quote{max-width:1040px;margin:0 auto;padding:0 clamp(20px,4vw,64px);color:var(--mu);font-style:italic}
 @media(max-width:820px){.prog-cols{grid-template-columns:1fr}.top-id{max-width:160px}.icon-btn span{display:none}.icon-btn{padding:0;width:44px;justify-content:center}.quote-in{width:130px}}
+.auth-row{display:flex;justify-content:flex-end;margin:-4px 0 16px}
+.auth-row a,.auth-switch a{color:var(--ac);font-weight:650;text-decoration:none}.auth-row a:hover,.auth-switch a:hover{text-decoration:underline}
+.auth-switch{margin:20px 0 0;color:var(--mu)}
+.auth-message{min-height:22px;margin:14px 0 0}.auth-message.ok{color:var(--ok)}
+.auth-form .auth-submit{width:100%;padding:15px 20px;font-size:17px}
+.auth-form .auth-submit:disabled{opacity:.6;cursor:wait}
 </style>
 </head>
 <body>
@@ -260,28 +266,34 @@ button.main,.hbtn,.chip{display:inline-flex;align-items:center;justify-content:c
   </div>
   <div class="auth-form">
     <div class="auth-mobile-logo"><span>Exam Prep</span></div>
-    
-    <h2 id="authTitle">Welcome back</h2>
-    <p class="auth-subtitle" id="authSubtitle">Log in to continue your learning journey.</p>
-    <div class="auth-tabs" role="tablist" aria-label="Account action">
-      <button type="button" class="auth-tab active" id="modeIn" role="tab" aria-selected="true">Log in</button>
-      <button type="button" class="auth-tab" id="modeUp" role="tab" aria-selected="false">Create account</button>
+    <div id="authMain">
+      <h2 id="authTitle">Log in</h2>
+      <p class="auth-subtitle" id="authSubtitle">Welcome back. Enter your email and password.</p>
+      <form id="authForm" novalidate>
+        <div class="auth-field"><label for="em">Email</label><input type="email" id="em" placeholder="you@example.com" autocomplete="email" inputmode="email"></div>
+        <div class="auth-field"><label for="pw">Password</label><div class="password-wrap"><input type="password" id="pw" placeholder="Password" autocomplete="current-password"><button type="button" class="password-toggle" id="togglePw" aria-label="Show password" aria-pressed="false">Show</button></div></div>
+        <div class="auth-field" id="pw2Wrap" hidden><label for="pw2">Confirm password</label><input type="password" id="pw2" placeholder="Repeat your password" autocomplete="new-password"></div>
+        <div class="auth-row" id="forgotRow"><a href="#" id="forgot">Forgot password?</a></div>
+        <button class="main auth-submit" id="authSubmit" type="submit">Log in</button>
+      </form>
+      <p class="auth-switch"><span id="switchText">New to Exam Prep?</span> <a href="#" id="switchLink">Create an account</a></p>
     </div>
-    <div class="auth-field">
-      <label for="em">Email address</label>
-      <input type="email" id="em" placeholder="you@example.com" autocomplete="email" required>
+    <div id="authSent" hidden>
+      <h2>Check your email</h2>
+      <p class="auth-subtitle">We sent a link to <b id="sentEmail"></b>. Open it to finish, then log in.</p>
+      <button class="main auth-submit" id="resend" type="button">Resend email</button>
+      <p class="auth-switch"><a href="#" id="backIn">Back to log in</a></p>
     </div>
-    <div class="auth-field">
-      <label for="pw">Password</label>
-      <div class="password-wrap">
-        <input type="password" id="pw" placeholder="Enter your password" autocomplete="current-password" required>
-        <button type="button" class="password-toggle" id="togglePw" aria-label="Show password" aria-pressed="false">Show</button>
-      </div>
+    <div id="authRecover" hidden>
+      <h2>Set a new password</h2>
+      <p class="auth-subtitle">Choose a new password for your account.</p>
+      <form id="recForm" novalidate>
+        <div class="auth-field"><label for="rp1">New password</label><input type="password" id="rp1" autocomplete="new-password"></div>
+        <div class="auth-field"><label for="rp2">Confirm password</label><input type="password" id="rp2" autocomplete="new-password"></div>
+        <button class="main auth-submit" type="submit">Save password</button>
+      </form>
     </div>
-    <button class="main auth-submit" id="bIn" type="button">Log in</button>
-    <button class="main auth-submit" id="bUp" type="button" hidden>Create account</button>
     <p class="auth-message" id="lmsg" role="status" aria-live="polite"></p>
-    <p class="auth-terms">By continuing, you agree to use this exam prep responsibly and keep your account details private.</p>
   </div>
 </section>
 <div id="app" hidden class="dashboard">
@@ -891,47 +903,97 @@ document.querySelectorAll("[data-theme-btn]").forEach(b=>b.onclick=()=>setTheme(
 
 
 function show(session){
+  if(recovering)return;
   document.body.classList.toggle("auth-mode",!session);
   $("login").hidden=!!session;$("app").hidden=!session;
   if(!session){uid=null;return}
   if(session.user.id!==uid){uid=session.user.id;loadProfile();load()}
 }
+let authMode="in",recovering=false,sentEmail="";
+const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,AI=p=>'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">'+p+'</svg>',
+AIC={login:AI('<path d="M15 4h4v16h-4"/><path d="m10 8 4 4-4 4M14 12H3"/>'),userplus:AI('<circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6M17 11v6M14 14h6"/>')};
+function amsg(t,ok){const m=$("lmsg");m.textContent=t||"";m.classList.toggle("ok",!!ok)}
 function setAuthMode(mode){
-  const signup=mode==="up";
-  $("modeIn").classList.toggle("active",!signup);
-  $("modeUp").classList.toggle("active",signup);
-  $("modeIn").setAttribute("aria-selected",String(!signup));
-  $("modeUp").setAttribute("aria-selected",String(signup));
-  $("bIn").hidden=signup;
-  $("bUp").hidden=!signup;
-  $("authTitle").textContent=signup?"Create your account":"Welcome back";
-  $("authSubtitle").textContent=signup?"Sign up to save and track your exam progress.":"Log in to continue your learning journey.";
-  $("pw").autocomplete=signup?"new-password":"current-password";
-  $("lmsg").textContent="";
+  authMode=mode;const up=mode==="up";
+  $("authMain").hidden=false;$("authSent").hidden=true;$("authRecover").hidden=true;
+  $("authTitle").textContent=up?"Create your account":"Log in";
+  $("authSubtitle").textContent=up?"It takes less than a minute.":"Welcome back. Enter your email and password.";
+  $("pw2Wrap").hidden=!up;$("forgotRow").hidden=up;$("pw").autocomplete=up?"new-password":"current-password";
+  $("authSubmit").innerHTML=AIC[up?"userplus":"login"]+"<span>"+(up?"Create account":"Log in")+"</span>";
+  $("switchText").textContent=up?"Already have an account?":"New to Exam Prep?";
+  $("switchLink").textContent=up?"Log in":"Create an account";
+  amsg("");
 }
-$("modeIn").onclick=()=>setAuthMode("in");
-$("modeUp").onclick=()=>setAuthMode("up");
+function authErr(e){
+  const m=((e&&e.message)||"").toLowerCase();
+  if(m.includes("invalid login"))return "Wrong email or password.";
+  if(m.includes("not confirmed"))return "CONFIRM";
+  if(m.includes("already registered"))return "EXISTS";
+  if(m.includes("rate limit")||(e&&e.status===429))return "Too many attempts. Wait a few minutes and try again.";
+  if(m.includes("signups not allowed")||m.includes("signup is disabled"))return "New accounts are turned off.";
+  if(m.includes("fetch")||m.includes("network"))return "No internet connection. Try again.";
+  if(m.includes("password")&&m.includes("least"))return "Use at least 6 characters for your password.";
+  return (e&&e.message)||"Something went wrong. Try again.";
+}
+function busy(on){const b=$("authSubmit");b.disabled=on;const sp=b.querySelector("span");if(sp)sp.textContent=on?"Please wait...":(authMode==="up"?"Create account":"Log in")}
+function showSent(email,note){$("authMain").hidden=true;$("authRecover").hidden=true;$("authSent").hidden=false;$("sentEmail").textContent=email;sentEmail=email;amsg(note||"")}
+function showRecover(){$("login").hidden=false;$("app").hidden=true;document.body.classList.add("auth-mode");$("authMain").hidden=true;$("authSent").hidden=true;$("authRecover").hidden=false;amsg("")}
+async function submitAuth(){
+  const email=$("em").value.trim().toLowerCase(),pw=$("pw").value,up=authMode==="up";
+  if(!email){amsg("Enter your email address.");$("em").focus();return}
+  if(!EMAIL_RE.test(email)){amsg("Enter a valid email address.");$("em").focus();return}
+  if(!pw){amsg("Enter your password.");$("pw").focus();return}
+  if(up){if(pw.length<6){amsg("Use at least 6 characters for your password.");$("pw").focus();return}if(pw!==$("pw2").value){amsg("The two passwords do not match.");$("pw2").focus();return}}
+  amsg("");busy(true);
+  try{
+    if(!up){
+      const {error}=await sb.auth.signInWithPassword({email,password:pw});
+      if(error){const t=authErr(error);if(t==="CONFIRM")showSent(email,"Your email is not confirmed yet. Open the link we sent, or resend it.");else amsg(t);return}
+      amsg("Welcome back!",true);
+    }else{
+      const {data,error}=await sb.auth.signUp({email,password:pw,options:{emailRedirectTo:location.origin+location.pathname}});
+      const exists=()=>{setAuthMode("in");$("em").value=email;amsg("This email already has an account. Log in instead.")};
+      if(error){const t=authErr(error);if(t==="EXISTS")exists();else amsg(t);return}
+      if(data.user&&data.user.identities&&data.user.identities.length===0){exists();return}
+      if(data.session)amsg("Account created. Opening your dashboard...",true);else showSent(email);
+    }
+  }catch(e){amsg("No internet connection. Try again.")}
+  finally{busy(false)}
+}
+$("authForm").onsubmit=e=>{e.preventDefault();submitAuth()};
+$("switchLink").onclick=e=>{e.preventDefault();setAuthMode(authMode==="in"?"up":"in")};
+$("backIn").onclick=e=>{e.preventDefault();setAuthMode("in")};
 $("togglePw").onclick=()=>{
-  const visible=$("pw").type==="password";
-  $("pw").type=visible?"text":"password";
-  $("togglePw").textContent=visible?"Hide":"Show";
-  $("togglePw").setAttribute("aria-label",visible?"Hide password":"Show password");
-  $("togglePw").setAttribute("aria-pressed",String(visible));
+  const v=$("pw").type==="password";$("pw").type=v?"text":"password";$("pw2").type=v?"text":"password";
+  $("togglePw").textContent=v?"Hide":"Show";$("togglePw").setAttribute("aria-label",v?"Hide password":"Show password");$("togglePw").setAttribute("aria-pressed",String(v));
+};
+$("resend").onclick=async()=>{
+  const {error}=await sb.auth.resend({type:"signup",email:sentEmail,options:{emailRedirectTo:location.origin+location.pathname}});
+  amsg(error?authErr(error):"Email sent again. Check your inbox and the spam folder.",!error);
+};
+$("forgot").onclick=async e=>{
+  e.preventDefault();const email=$("em").value.trim().toLowerCase();
+  if(!EMAIL_RE.test(email)){amsg("Enter your email above, then press Forgot password.");$("em").focus();return}
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+  amsg(error?authErr(error):"We sent a password reset link to "+email+". Check your inbox.",!error);
+};
+$("recForm").onsubmit=async e=>{
+  e.preventDefault();const a=$("rp1").value,b=$("rp2").value;
+  if(a.length<6){amsg("Use at least 6 characters for your password.");return}
+  if(a!==b){amsg("The two passwords do not match.");return}
+  const {error}=await sb.auth.updateUser({password:a});
+  if(error){amsg(authErr(error));return}
+  recovering=false;amsg("Password changed. Opening your dashboard...",true);
+  const {data}=await sb.auth.getSession();setTimeout(()=>{setAuthMode("in");show(data.session)},700);
 };
 setAuthMode("in");
 
-async function auth(kind){
-  const email=$("em").value.trim(),password=$("pw").value;
-  const {error}=kind==="in"?await sb.auth.signInWithPassword({email,password}):await sb.auth.signUp({email,password});
-  $("lmsg").textContent=error?error.message:(kind==="up"?"Done. If email confirmation is on, check your email.":"");
-}
-$("bIn").onclick=()=>auth("in");$("bUp").onclick=()=>auth("up");
 $("out").onclick=e=>{e.preventDefault();sb.auth.signOut()};
 
 setTheme(lsGet("theme","light"));setEx("IELTS");new MutationObserver(()=>requestAnimationFrame(iconize)).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:["hidden"]});iconize();
 const PUB=new URLSearchParams(location.search).get("u");
 if(PUB){document.body.classList.add("pub");loadPublic(PUB)}
-else{document.body.classList.add("auth-mode");sb.auth.onAuthStateChange((_ev,s)=>setTimeout(()=>show(s),0));sb.auth.getSession().then(({data})=>show(data.session))}
+else{document.body.classList.add("auth-mode");sb.auth.onAuthStateChange((_ev,s)=>{if(_ev==="PASSWORD_RECOVERY"){recovering=true;setTimeout(showRecover,0);return}setTimeout(()=>show(s),0)});sb.auth.getSession().then(({data})=>show(data.session))}
 </script>
 </body>
 </html>
