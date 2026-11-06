@@ -142,7 +142,7 @@ button.danger{background:var(--bad)}
 .auth-message{min-height:20px;color:var(--bad);font-size:14px;margin:12px 0 0}.auth-terms{color:var(--mu);font-size:12px;margin:14px 0 0}
 .pub .sidebar,.pub .own,.pub .x{display:none!important}
 .pub .dashboard{display:block}.pub .main-area{margin:0 auto;padding-top:12px;max-width:1040px}
-.pub #overview,.pub #addPanel,.pub #profilePanel,.pub #historyPanel,.pub #coachPanel,.pub #goalsPanel,.pub #subjectsPanel{display:none!important}
+.pub #overview,.pub #addPanel,.pub #profilePanel,.pub #historyPanel,.pub #coachPanel,.pub #goalsPanel,.pub #subjectsPanel,.pub #plannerPanel,.pub #notifPanel,.pub #plansPanel{display:none!important}
 .pub #progressPanel{display:block!important}
 .pub h1#ttl{display:block;font-size:30px;font-weight:800;max-width:1040px;margin:0 auto;padding:30px clamp(20px,4vw,64px) 6px;letter-spacing:-.04em}
 @media(max-width:1100px){.xcards,.trend-grid{grid-template-columns:1fr}.duo{grid-template-columns:1fr}}
@@ -247,34 +247,42 @@ button.main,.hbtn,.chip{display:inline-flex;align-items:center;justify-content:c
 .auth-message{min-height:22px;margin:14px 0 0}.auth-message.ok{color:var(--ok)}
 .auth-form .auth-submit{width:100%;padding:15px 20px;font-size:17px}
 .auth-form .auth-submit:disabled{opacity:.6;cursor:wait}
-/* v8: top bar, plans, reminders */
-.top-right{gap:14px}
-.top-user{display:flex;align-items:center;gap:14px;min-width:0;margin-right:clamp(8px,2.5vw,36px)}
-.top-av{width:54px;height:54px;flex:none;border:2px solid var(--card);box-shadow:var(--sh)}
-.top-name{font-size:18px;font-weight:700;max-width:30vw}
-.quote-btn{font-size:14px}
-.bell-wrap{position:relative;flex:none}
-.bell-btn{position:relative;width:46px;height:46px;border-radius:50%;border:1px solid var(--bd);background:var(--card);color:var(--tx);display:grid;place-items:center;box-shadow:var(--sh)}
-.bell-btn:hover,.bell-btn[aria-expanded=true]{border-color:var(--ac);color:var(--ac)}
-.bell-dot{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:var(--bad);color:#fff;font-size:12px;font-weight:700;line-height:1;display:grid;place-items:center}
-.notif-pop{position:absolute;right:0;top:56px;width:340px;max-height:70vh;overflow:auto;background:var(--card);border:1px solid var(--bd);border-radius:18px;box-shadow:var(--sh);padding:8px;z-index:30}
-.notif-pop h3{font-size:15px;padding:10px 12px 6px}
-.notif-it{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:12px}
-.notif-it.new{background:var(--ac2)}
-.notif-it .dot{height:34px}
-.notif-it p{margin:0;font-size:14px;font-weight:600}.notif-it small{color:var(--mu)}
-.notif-empty{margin:0;padding:12px;color:var(--mu);font-size:14px}
-.planbar{display:flex;align-items:center;gap:14px;padding:14px 18px;margin-bottom:20px;border-radius:18px;border-left:5px solid var(--c);background:color-mix(in srgb,var(--c) 12%,var(--card));cursor:pointer}
-.planbar:focus-visible{outline:3px solid var(--ac2);outline-offset:2px}
-.pb-text{display:flex;flex-direction:column;min-width:0}.pb-text b{font-size:16px}.pb-text .mu{font-size:13px}
-.pb-days{margin-left:auto;padding:6px 14px;border-radius:99px;background:var(--c);color:#fff;font-size:14px;font-weight:700;white-space:nowrap}
-:root[data-theme=dark] .pb-days{color:#0b1220}
-.dl-pill{padding:5px 12px;border-radius:99px;background:var(--ac2);color:var(--ac);font-size:13px;font-weight:700;white-space:nowrap}
-.dl-pill.soon{background:var(--badbg);color:var(--bad)}.dl-pill.past{background:var(--bg);color:var(--mu)}
-.it.past{opacity:.55}
-.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(16px + env(safe-area-inset-top,0px));z-index:40;max-width:min(92vw,420px);padding:12px 18px;border-radius:14px;background:var(--ink);color:#fff;font-size:14px;font-weight:600;box-shadow:var(--sh)}
-.pub #plansPanel{display:none!important}
-@media(max-width:820px){.top-av{width:44px;height:44px}.top-name{font-size:16px}.top-id{max-width:110px}.top-user{gap:10px;margin-right:6px}.bell-btn{width:44px;height:44px}.notif-pop{position:fixed;left:12px;right:12px;top:calc(76px + env(safe-area-inset-top,0px));width:auto}.planbar{padding:12px 14px;flex-wrap:wrap}}
+/* top-right profile: bigger and shifted left */
+.top-right{gap:18px}
+.top-av{width:54px;height:54px;border-radius:50%;object-fit:cover;flex:none}
+.top-av.letter{display:grid;place-items:center;background:var(--ink);color:#fff;font-size:24px;font-weight:700}
+.top-id{align-items:flex-start;margin-right:28px;max-width:340px;line-height:1.3}
+.top-name{font-size:19px;font-weight:700;max-width:100%}
+.quote-btn{font-size:14.5px;text-align:left}
+.quote-in{width:230px;font-size:15px}
+@media(max-width:820px){.top-right{gap:10px}.top-av{width:42px;height:42px}.top-av.letter{font-size:19px}.top-id{margin-right:6px;max-width:150px}.top-name{font-size:16px}.quote-btn{font-size:12.5px}}
+/* planner + notifications */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.wday{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border:1px solid var(--bd);border-radius:14px;background:var(--card);color:var(--tx)}
+.wday span{font-size:12px;color:var(--mu);font-weight:600}.wday b{font-size:20px}.wday i{font-style:normal;font-size:11px;color:var(--mu);min-height:14px}
+.wday:hover{border-color:var(--ac)}.wday.today{border-color:var(--ac);box-shadow:0 0 0 3px var(--ac2)}.wday.sel{background:var(--ac);border-color:var(--ac);color:#fff}.wday.sel span,.wday.sel i{color:#dbeafe}
+.task{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--bd)}.task:first-of-type{border-top:0}
+.task .m{flex:1;min-width:0}.task .m small{color:var(--mu)}.task.done .m b{text-decoration:line-through;color:var(--mu)}
+.pcheck{width:30px;height:30px;border-radius:50%;border:2px solid var(--bd);background:var(--card);color:transparent;display:grid;place-items:center;padding:0;flex:none}.pcheck .ico{width:16px;height:16px}.pcheck:hover{border-color:var(--ok)}.pcheck.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;color:#fff;font-size:12px;font-weight:700;margin-left:8px;vertical-align:middle}
+.task.edit{flex-direction:column;align-items:stretch}.task-edit{display:grid;gap:12px}
+h2.bad{color:var(--bad)}
+.nbadge{margin-left:auto;background:var(--bad);color:#fff;border-radius:99px;font-size:12px;font-weight:700;min-width:20px;height:20px;display:grid;place-items:center;padding:0 6px}
+.notif-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.notif{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--bd);cursor:pointer}.notif:first-child{border-top:0}
+.nic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none}.nic.warn{background:#ea580c}.nic.ok{background:var(--ok)}.nic.info{background:var(--ac)}.nic.bad{background:var(--bad)}
+.notif b{display:block}.notif .dot2{width:9px;height:9px;border-radius:50%;background:var(--bad);margin-left:auto;flex:none;margin-top:8px}.notif.read{opacity:.6}
+@media(max-width:820px){.week{gap:4px}.wday b{font-size:16px}.wday i{display:none}.app-nav{overflow-x:auto;scrollbar-width:none}.nav-btn{flex:1 0 44px;position:relative}.nbadge{position:absolute;top:2px;right:4px;font-size:10px;min-width:16px;height:16px;padding:0 4px}}
+/* plans, banner, day details */
+.next-exam{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 20px;padding:13px 18px;border:0;border-radius:16px;background:var(--ac2);color:var(--ac);font-size:15px;text-align:left}
+.next-exam .ne-text{flex:1;min-width:0}.next-exam .ne-text b{font-weight:800}.next-exam .ne-days{font-weight:800;white-space:nowrap}
+.next-exam.warm{background:color-mix(in srgb,#ff9f0a 18%,var(--card));color:#b36200}.next-exam.hot{background:var(--badbg);color:var(--bad)}
+:root[data-theme=dark] .next-exam.warm{color:#ffb340}
+.plan{display:flex;align-items:center;gap:14px;margin-bottom:12px;padding:18px 22px}.plan .m{flex:1;min-width:0}.plan.past{opacity:.55}.plan .m b{font-size:18px}
+.delta.flat{background:var(--bg);color:var(--mu)}.delta.warn{background:color-mix(in srgb,#ff9f0a 20%,var(--card));color:#b36200}
+.hc[data-d]{cursor:pointer}.hc.sel{outline:2px solid var(--tx);outline-offset:1px}
+.heat-info{margin-top:14px;padding:14px 16px;border-radius:14px;background:var(--bg)}.hi-head{display:block;margin-bottom:6px}
+.hi-row{display:flex;gap:10px;align-items:center;padding:8px 0}.hi-row .dot{height:24px}
 </style>
 </head>
 <body>
@@ -334,14 +342,16 @@ button.main,.hbtn,.chip{display:inline-flex;align-items:center;justify-content:c
       <button class="nav-btn" data-panel="goalsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M13 3.055a9 9 0 1 0 7.941 7.945"/><path d="M15 6v3h3l3-3h-3v-3z"/><path d="M15 9l-3 3"/></svg>Goals</button>
       <button class="nav-btn" data-panel="plansPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4M12 13v4M10 15h4"/></svg>Plans</button>
       <button class="nav-btn" data-panel="subjectsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>Subjects</button>
+      <button class="nav-btn" data-panel="plannerPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/><path d="m9 15 2 2 4-4"/></svg>Planner</button>
       <button class="nav-btn" data-panel="historyPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>History</button>
+      <button class="nav-btn" data-panel="notifPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Notifications<span class="nbadge" id="nBadge" hidden></span></button>
       <button class="nav-btn" data-panel="profilePanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>My Profile</button>
     </nav>
     <a href="#" id="out" class="logout-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H5v16h4"/><path d="m16 8 4 4-4 4M20 12H9"/></svg><span>Log out</span></a>
   </aside>
   <main class="main-area">
-    <header class="topbar own"><div><h1 id="pageTitle">Overview</h1></div><div class="top-right"><div class="top-user"><img class="top-av" id="topAv" alt="" hidden><div class="top-id"><span class="top-name" id="topName"></span><button class="quote-btn" id="quoteBtn" type="button">Add a quote</button><div class="quote-box" id="quoteBox" hidden></div></div></div><div class="bell-wrap"><button class="bell-btn" id="bellBtn" type="button" aria-label="Reminders" aria-expanded="false"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg><span class="bell-dot" id="bellDot" hidden></span></button><div class="notif-pop" id="notifPop" hidden></div></div><button class="icon-btn" id="themeToggle" type="button" aria-label="Switch between light and dark theme"><svg class="ico i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg><svg class="ico i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="themeLbl"></span></button></div></header>
-    <div class="planbar own" id="planBar" role="button" tabindex="0" hidden></div>
+    <header class="topbar own"><div><h1 id="pageTitle">Overview</h1></div><div class="top-right"><img class="top-av" id="topAv" alt="" hidden><span class="top-av letter" id="topAvLetter">S</span><div class="top-id"><span class="top-name" id="topName"></span><button class="quote-btn" id="quoteBtn" type="button">Add a quote</button><div class="quote-box" id="quoteBox" hidden></div></div><button class="icon-btn" id="themeToggle" type="button" aria-label="Switch between light and dark theme"><svg class="ico i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg><svg class="ico i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="themeLbl"></span></button></div></header>
+    <button class="next-exam own" id="nextExam" type="button" hidden></button>
     <section class="app-panel active" id="overview">
       
       <div class="stats" id="stats"></div>
@@ -364,7 +374,25 @@ button.main,.hbtn,.chip{display:inline-flex;align-items:center;justify-content:c
 </section>
 
     <section class="app-panel" id="goalsPanel"><div class="page-intro"><h2>Goals and exam dates</h2><p class="mu">Set a goal score and an exam date for each exam. Overview shows them.</p></div><div class="card own"><div id="goals" class="goals"></div></div></section>
-    <section class="app-panel" id="subjectsPanel"><div class="page-intro"><h2>My subjects</h2><p class="mu">Add your own subjects, log results and follow your progress.</p></div>
+    <section class="app-panel" id="plannerPanel"><div class="page-intro"><h2>Study planner</h2></div>
+<div class="card own"><div class="row"><div><label>Task</label><input id="pTitle" maxlength="80" placeholder="Reading practice, 20 new words..."></div><div><label>Subject</label><select id="pExam"><option value="">General</option><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">ҰБТ</option></select></div></div>
+<div class="row"><div><label>Date</label><div id="pDate"></div></div><div></div></div><button class="main" id="pAdd" type="button">Add task</button><p class="mu" id="pMsg"></p></div>
+<div class="block"><div class="week" id="pWeek"></div></div>
+<div id="pList"></div></section>
+<section class="app-panel" id="notifPanel"><div class="page-intro"><h2>Notifications</h2></div>
+<div class="card own"><div class="notif-head"><h3 class="sub-h" style="margin:0">Inbox</h3><button class="hbtn" id="nRead" type="button">Mark all as read</button></div><div id="nList"></div></div>
+<div class="card own"><h3 class="sub-h">Reminders</h3>
+<label class="switch"><input type="checkbox" id="nDaily"> Daily study reminder</label>
+<div class="row"><div><label>Reminder time</label><select id="nTime"></select></div><div></div></div>
+<label class="switch"><input type="checkbox" id="nStreak"> Streak reminders</label>
+<label class="switch"><input type="checkbox" id="nGoals"> Goal and exam date alerts</label>
+<label class="switch"><input type="checkbox" id="nImprove"> Improvement alerts</label>
+<label class="switch"><input type="checkbox" id="nPlan"> Planner task alerts</label>
+<button class="main" id="nBrowser" type="button">Turn on browser notifications</button><p class="mu" id="nMsg"></p></div></section>
+<section class="app-panel" id="plansPanel"><div class="page-intro"><h2>Exam plans</h2><p class="mu">Choose the exam you want to take and its date. The next exam is shown on every screen, and alerts come as the day gets closer.</p></div>
+<div class="card own"><div class="chips" id="planExam"></div><div><label>Exam date</label><div id="planDate"></div></div><button class="main" id="planAdd" type="button" style="margin-top:16px">Add plan</button><p class="mu" id="planMsg"></p></div>
+<div id="planList"></div></section>
+<section class="app-panel" id="subjectsPanel"><div class="page-intro"><h2>My subjects</h2><p class="mu">Add your own subjects, log results and follow your progress.</p></div>
 <div class="card own"><div class="row"><div><label>Subject name</label><input id="sName" maxlength="40" placeholder="Physics, Essay writing..."></div><div><label>Maximum score</label><input id="sMax" type="number" min="1" value="100"></div></div><button class="main" id="sAdd" type="button">Add subject</button><p class="mu" id="sMsg"></p></div>
 <div id="subjList"></div></section>
 
@@ -377,11 +405,6 @@ button.main,.hbtn,.chip{display:inline-flex;align-items:center;justify-content:c
 <button class="main" id="psaveBtn" type="button">Save profile</button><p class="mu" id="pmsg"></p></div>
 <div class="card own"><h3 class="sub-h">Change password</h3><div class="row"><div><label>Current password</label><input type="password" id="oldpw" autocomplete="current-password"></div><div><label>New password</label><input type="password" id="newpw" autocomplete="new-password"></div></div><button class="main" id="pwBtn" type="button">Change password</button><p class="mu" id="pwMsg"></p></div>
 <input id="pslug" type="hidden"><input id="plink" type="hidden"><select id="sub1" hidden></select><select id="sub2" hidden></select><div id="shareRow" hidden></div><button id="psave" hidden></button>
-</section>
-    <section class="app-panel" id="plansPanel"><div class="page-intro"><h2>Exam plans</h2><p class="mu">Choose the exam you want to take and its date. The nearest exam shows on every screen, and reminders start 30 days before.</p></div>
-<div class="card own"><div class="chips" id="planChips"></div><div class="row"><div><label>Exam date</label><div id="planDate"></div></div><div><label>Note (optional)</label><input id="planNote" maxlength="60" placeholder="Test center, registration..."></div></div><button class="main" id="planAdd" type="button">Add plan</button><p class="mu" id="planMsg"></p><p class="mu" id="planStore" hidden>Plans are saved only on this device until the exam_plans table is added in Supabase.</p></div>
-<div class="card own"><h3 class="sub-h">My exams</h3><div id="planList"></div></div>
-<div class="card own"><h3 class="sub-h">Reminders</h3><p class="mu" id="notifState"></p><button class="hbtn" id="notifBtn" type="button" style="margin-top:10px">Turn on alerts</button></div>
 </section>
     <section class="app-panel" id="historyPanel"><div class="page-intro"><h2>History</h2></div><div class="card"><div class="chips" id="hFilter"></div><div class="row"><div><input id="hSearch" type="search" placeholder="Search by exam, section or date"></div><div><select id="hSort"><option value="dnew">Newest first</option><option value="dold">Oldest first</option><option value="shigh">Highest score</option><option value="slow">Lowest score</option></select></div></div><div id="list"></div></div></section>
   </main>
@@ -411,7 +434,7 @@ const TT={
 kk:{plan:"Жоспар",mock:"Сынақ тесттері",tips:"Кеңестер",words:"Үйренетін сөздер мен терминдер",every:n=>"Әр "+n+" күн сайын сынақ тест тапсыр.",next:"Келесі сынақ тест: ",today:"бүгін",ex:"Мысал: ",think:"Ойланып жатырмын...",err:"Көмекші қазір қолжетімсіз. Кейінірек қайталап көр."},
 ru:{plan:"План",mock:"Пробные тесты",tips:"Советы",words:"Слова и термины для изучения",every:n=>"Сдавай пробник каждые "+n+" дн.",next:"Следующий пробник: ",today:"сегодня",ex:"Пример: ",think:"Думаю...",err:"Помощник сейчас недоступен. Попробуй позже."},
 en:{plan:"Your plan",mock:"Mock tests",tips:"Tips",words:"Words to learn",every:n=>"Take a mock test every "+n+" days.",next:"Next mock test: ",today:"today",ex:"Example: ",think:"Thinking...",err:"The coach is not available now. Try again later."}};
-let rangeSel="all",hFil="all",subjects=[],subRes=[],coachEx="IELTS",uid=null,viewUid=null,entLang=lsGet("ent_lang","ru"),entSubs=[],chartSub="full";
+let heatSel="",rangeSel="all",hFil="all",subjects=[],subRes=[],coachEx="IELTS",uid=null,viewUid=null,entLang=lsGet("ent_lang","ru"),entSubs=[],chartSub="full";
 const L=()=>chartEx==="ENT"?TT[entLang]:TT.en;
 const maxOf=(ex,sub)=>ex==="ENT"&&sub&&SUBJ[sub]?SUBJ[sub].max:ex==="SAT"&&sub?800:EX[ex].max;
 const subName=id=>SUBJ[id]?SUBJ[id][entLang]:id;
@@ -556,18 +579,18 @@ function chart(){
   const {pts,ex,mx,goal}=chartPoints(),T0=trendOf(pts,mx),pill=$("trendPill"),X=chartEx;
   pill.hidden=pts.length<2;pill.className="trend-pill "+T0.k;pill.innerHTML=pts.length>1?IC(T0.k)+"<span>"+T0.label+"</span>":"";
   if(!pts.length){$("chart").innerHTML='<p class="mu">No records yet.</p>';return}
-  const W=Math.max(520,$("chart").clientWidth||520),H=Math.round(Math.min(420,Math.max(260,W*.34))),L=50,R=16,T=28,B=34,iw=W-L-R,ih=H-T-B,slot=iw/pts.length,bw=Math.min(72,slot*.62),y=v=>T+(1-v/mx)*ih;
+  const W=Math.max(480,$("chart").clientWidth||480),H=Math.round(Math.min(300,Math.max(210,W*.26))),L=44,R=12,T=24,B=28,iw=W-L-R,ih=H-T-B,slot=iw/pts.length,bw=Math.min(34,slot*.5),y=v=>T+(1-v/mx)*ih,gid="gr"+X;
   const step=mx<=10?1:mx<=20?5:mx<=60?10:mx<=150?20:mx<=1000?200:400,every=Math.ceil(pts.length/12);
-  let s=`<svg viewBox="0 0 ${W} ${H}">`;
-  for(let v=0;v<=mx+1e-9;v+=step){const yy=y(v);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="var(--bd)"/><text x="${L-8}" y="${yy+4}" text-anchor="end" font-size="11" fill="var(--mu)">${fs(X,+v.toFixed(1))}</text>`}
-  pts.forEach((p,i)=>{const x0=L+slot*i+(slot-bw)/2,h=Math.max(2,ih*p.score/mx);
-    s+=`<g class="bar"><title>${fmtD(p.date)}: ${fs(X,p.score)} / ${fs(X,mx)}</title><rect x="${x0}" y="${T+ih-h}" width="${bw}" height="${h}" rx="7" fill="${ex.c}" opacity="${i===pts.length-1?1:.6}"/></g>`});
-  if(goal&&goal<=mx)s+=`<line x1="${L}" x2="${W-R}" y1="${y(goal)}" y2="${y(goal)}" stroke="var(--ok)" stroke-width="2" stroke-dasharray="6 5"/><text x="${W-R}" y="${y(goal)-6}" text-anchor="end" font-size="12" font-weight="700" fill="var(--ok)">Goal ${fs(X,goal)}</text>`;
-  if(pts.length>1){const cx=i=>L+slot*i+slot/2,cl=v=>y(Math.min(mx,Math.max(0,v))),x1=cx(0),y1=cl(T0.f0),x2=cx(pts.length-1),y2=cl(T0.f1),col=T0.k==="up"?"var(--ok)":T0.k==="down"?"var(--bad)":"var(--mu)",an=Math.atan2(y2-y1,x2-x1),hl=14;
-    s+=`<g><line x1="${x1}" y1="${y1}" x2="${x2-4*Math.cos(an)}" y2="${y2-4*Math.sin(an)}" stroke="${col}" stroke-width="3.5" stroke-linecap="round"/><polygon fill="${col}" points="${x2},${y2} ${x2-hl*Math.cos(an-.42)},${y2-hl*Math.sin(an-.42)} ${x2-hl*Math.cos(an+.42)},${y2-hl*Math.sin(an+.42)}"/></g>`}
-  pts.forEach((p,i)=>{const x0=L+slot*i+(slot-bw)/2,h=Math.max(2,ih*p.score/mx),last=i===pts.length-1;
-    if(i%every===0||last)s+=`<text x="${x0+bw/2}" y="${H-12}" text-anchor="middle" font-size="11" fill="var(--mu)">${fmtD(p.date).slice(0,5)}</text>`;
-    if(pts.length<=14||last)s+=`<text x="${x0+bw/2}" y="${T+ih-h-7}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--tx)" stroke="var(--card)" stroke-width="4" paint-order="stroke">${fs(X,p.score)}</text>`});
+  let s=`<svg viewBox="0 0 ${W} ${H}"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:${ex.c}"/><stop offset="1" style="stop-color:${ex.c};stop-opacity:.5"/></linearGradient></defs>`;
+  for(let v=0;v<=mx+1e-9;v+=step){const yy=y(v);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="var(--bd)" stroke-dasharray="3 5"/><text x="${L-8}" y="${yy+3.5}" text-anchor="end" font-size="10.5" fill="var(--mu)">${fs(X,+v.toFixed(1))}</text>`}
+  pts.forEach((p,i)=>{const x0=L+slot*i+(slot-bw)/2,h=Math.max(3,ih*p.score/mx),r=Math.min(9,bw/2,h),yt=T+ih-h,last=i===pts.length-1;
+    s+=`<g class="bar"><title>${fmtD(p.date)}: ${fs(X,p.score)} / ${fs(X,mx)}</title><rect x="${x0}" y="${T}" width="${bw}" height="${ih}" rx="${bw/2}" fill="var(--bg)"/><path d="M${x0},${T+ih}V${yt+r}Q${x0},${yt} ${x0+r},${yt}H${x0+bw-r}Q${x0+bw},${yt} ${x0+bw},${yt+r}V${T+ih}Z" fill="url(#${gid})" opacity="${last?1:.7}"/></g>`});
+  if(goal&&goal<=mx)s+=`<line x1="${L}" x2="${W-R}" y1="${y(goal)}" y2="${y(goal)}" stroke="var(--ok)" stroke-width="1.8" stroke-dasharray="6 5"/><text x="${W-R}" y="${y(goal)-5}" text-anchor="end" font-size="11" font-weight="700" fill="var(--ok)">Goal ${fs(X,goal)}</text>`;
+  if(pts.length>1){const cx=i=>L+slot*i+slot/2,cl=v=>y(Math.min(mx,Math.max(0,v))),x1=cx(0),y1=cl(T0.f0),x2=cx(pts.length-1),y2=cl(T0.f1),col=T0.k==="up"?"var(--ok)":T0.k==="down"?"var(--bad)":"var(--mu)",an=Math.atan2(y2-y1,x2-x1),hl=12;
+    s+=`<g><line x1="${x1}" y1="${y1}" x2="${x2-3*Math.cos(an)}" y2="${y2-3*Math.sin(an)}" stroke="${col}" stroke-width="3" stroke-linecap="round"/><polygon fill="${col}" points="${x2},${y2} ${x2-hl*Math.cos(an-.42)},${y2-hl*Math.sin(an-.42)} ${x2-hl*Math.cos(an+.42)},${y2-hl*Math.sin(an+.42)}"/></g>`}
+  pts.forEach((p,i)=>{const x0=L+slot*i+(slot-bw)/2,h=Math.max(3,ih*p.score/mx),last=i===pts.length-1;
+    if(i%every===0||last)s+=`<text x="${x0+bw/2}" y="${H-9}" text-anchor="middle" font-size="10.5" fill="var(--mu)">${fmtD(p.date).slice(0,5)}</text>`;
+    if(pts.length<=10||last)s+=`<text x="${x0+bw/2}" y="${T+ih-h-6}" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--tx)" stroke="var(--card)" stroke-width="4" paint-order="stroke">${fs(X,p.score)}</text>`});
   $("chart").innerHTML=s+"</svg>";
 }
 function freq(){
@@ -580,8 +603,9 @@ function freq(){
     let lab="";if(mo!==pv&&w-lastL>=3){lab=MONTHS[mo].slice(0,3);lastL=w}months+=`<span style="grid-column:${w+1}">${lab}</span>`}
   for(let w=0;w<wk;w++)for(let r=0;r<7;r++){const dn=start+w*7+r;if(dn>t){cells+='<i class="hc" style="visibility:hidden"></i>';continue}
     const iso=new Date(dn*864e5).toISOString().slice(0,10),n=cnt[iso]||0;total+=n;
-    cells+=`<i class="hc l${Math.min(n,4)}" title="${n?n+(n===1?" test":" tests"):"No tests"}, ${fmtLong(iso)}"></i>`}
-  box.innerHTML=`<div class="heat" style="--wk:${wk}"><div class="heat-m">${months}</div><div class="heat-g">${cells}</div></div><p class="mu">${total} ${total===1?"test":"tests"} in the last ${wk===52?"year":"6 months"}</p>`;
+    cells+=`<i class="hc l${Math.min(n,4)}" data-d="${iso}" title="${n?n+(n===1?" test":" tests"):"No tests"}, ${fmtLong(iso)}"></i>`}
+  box.innerHTML=`<div class="heat" style="--wk:${wk}"><div class="heat-m">${months}</div><div class="heat-g">${cells}</div></div><div class="heat-info" id="heatInfo" hidden></div><p class="mu">${total} ${total===1?"test":"tests"} in the last ${wk===52?"year":"6 months"}</p>`;
+  box.querySelector(".heat-g").onclick=e=>{const c=e.target.closest(".hc");if(!c||!c.dataset.d)return;heatSel=heatSel===c.dataset.d?"":c.dataset.d;showHeat()};showHeat();
 }
 const inRange=d=>rangeSel==="all"||dayNum(d)>dayNum(today())-(rangeSel==="week"?7:30);
 function rangeUI(){const b=$("rangeChips");if(!b)return;b.className="seg";b.innerHTML="";[["week","Week"],["month","Month"],["all","All time"]].forEach(([k,n])=>{const c=document.createElement("button");c.className="seg-btn"+(k===rangeSel?" on":"");c.innerHTML=IC(k)+"<span>"+n+"</span>";c.onclick=()=>{rangeSel=k;render()};b.appendChild(c)})}
@@ -673,7 +697,7 @@ function renderSubjects(){
 }
 function render(){
   chips($("exChips"),cur,setEx);chips($("chartChips"),chartEx,k=>{chartEx=k;chartSub="full";render()});
-  countdown();renderGoals();stats();renderTrend();chart();freq();list();rangeUI();renderProgressExtra();renderSubjects();langUI();
+  countdown();renderGoals();stats();renderTrend();chart();freq();list();rangeUI();renderProgressExtra();renderSubjects();renderPlanner();renderPlans();renderNextExam();renderNotif();langUI();
 }
 
 const SUPABASE_URL = "https://stzqldduufxspzqywbeh.supabase.co";
@@ -685,7 +709,7 @@ async function load(){
   if(error){alert(error.message);return}
   entries=e.map(r=>({id:r.id,exam:r.exam,subject:r.subject,date:r.entry_date,kind:r.kind,score:Number(r.score),ts:Date.parse(r.created_at)}));
   const {data:t}=await sb.from("targets").select("*").eq("user_id",viewUid||uid);
-  targets={};deadlines={};(t||[]).forEach(r=>{if(r.target!=null)targets[r.exam]=Number(r.target);if(r.deadline)deadlines[r.exam]=r.deadline});if(!viewUid)await loadSubjects();
+  targets={};deadlines={};(t||[]).forEach(r=>{if(r.target!=null)targets[r.exam]=Number(r.target);if(r.deadline)deadlines[r.exam]=r.deadline});if(!viewUid){await loadSubjects();await loadPlanner();await loadPlans()}
   render();
 }
 async function add(){
@@ -719,11 +743,15 @@ login:'<path d="M15 4h4v16h-4"/><path d="m10 8 4 4-4 4M14 12H3"/>',userplus:'<ci
 week:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',month:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4M8 14h2M14 14h2M8 17h2"/>',
 all:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
 clip:'<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 14l2 2 4-4"/>',flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
-lang:'<path d="M4 5h9M8 3v2M6 5c0 5 3 8 7 9M12 5c0 4-3 7-7 9M13 21l4-9 4 9M14.5 18h5"/>'};
+lang:'<path d="M4 5h9M8 3v2M6 5c0 5 3 8 7 9M12 5c0 4-3 7-7 9M13 21l4-9 4 9M14.5 18h5"/>',
+bell:'<path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+flame:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+target:'<circle cx="12" cy="12" r="1"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M13 3.055a9 9 0 1 0 7.941 7.945"/><path d="M15 6v3h3l3-3h-3v-3z"/><path d="M15 9l-3 3"/>',
+cal:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/><path d="m9 15 2 2 4-4"/>'};
 const IC=n=>'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">'+ICP[n]+'</svg>',EXICON={IELTS:"globe",SAT:"clip",ENT:"flag"};
 const fs=(ex,v)=>ex==="IELTS"&&v!=null&&v!==""&&!isNaN(v)?Number(v).toFixed(1):v;
 const fd=(ex,d)=>(d>0?"+":"")+(ex==="IELTS"?Number(d).toFixed(1):d);
-const BI=[[/^save/i,"save"],[/^edit/i,"edit"],[/^add/i,"plus"],[/^cancel/i,"cancel"],[/^details/i,"details"],[/^hide/i,"hide"],[/^change photo/i,"camera"],[/^change password/i,"key"],[/^share/i,"share"],[/^log in/i,"login"],[/^create account/i,"userplus"]];
+const BI=[[/^save/i,"save"],[/^edit/i,"edit"],[/^add/i,"plus"],[/^cancel/i,"cancel"],[/^details/i,"details"],[/^hide/i,"hide"],[/^change photo/i,"camera"],[/^change password/i,"key"],[/^share/i,"share"],[/^log in/i,"login"],[/^create account/i,"userplus"],[/^mark/i,"save"],[/^turn/i,"bell"]];
 function iconize(){document.querySelectorAll("button:not(.auth-tab):not(.password-toggle):not(.nav-btn):not(.chip):not(.seg-btn):not(.icon-btn):not(.x):not(.quote-btn)").forEach(b=>{
   if(b.hidden||b.querySelector("svg"))return;const t=b.textContent.trim(),m=BI.find(r=>r[0].test(t));
   if(m){const sp=document.createElement("span");sp.textContent=t;b.textContent="";b.insertAdjacentHTML("afterbegin",IC(m[1]));b.appendChild(sp)}})}
@@ -771,6 +799,55 @@ function el(t,x,c){const e=document.createElement(t);if(x!=null)e.textContent=x;
 const lab=(t,i)=>{const w=el("div");w.append(el("label",t),i);return w};
 const FLAME='<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
 const ICON_X='<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg><span>Delete</span>';
+let plans=[],planEx="IELTS";
+const planDateSel=dateSel("",null,Y0,Y0+3),daysTo=d=>dayNum(d)-dayNum(today()),daysText=d=>d<0?"Passed":d===0?"Today":d===1?"Tomorrow":d+" days left";
+async function loadPlans(){
+  const r=await sb.from("plans").select("*").order("plan_date");
+  if(r.error){plans=[];$("planMsg").textContent="Plans need a new database table. Run the updated schema.sql in Supabase.";return}
+  $("planMsg").textContent="";plans=r.data.map(p=>({id:p.id,exam:p.exam,date:p.plan_date}));
+}
+async function addPlan(){
+  const d=planDateSel.get(),m=$("planMsg");
+  if(!d){m.textContent="Choose the day, month and year of your exam.";return}
+  if(daysTo(d)<0){m.textContent="Choose a date that has not passed.";return}
+  const {error}=await sb.from("plans").insert({exam:planEx,plan_date:d});
+  if(error){m.textContent=/plans/i.test(error.message)?"Plans need a new database table. Run the updated schema.sql in Supabase.":error.message;return}
+  planDateSel.set("");m.textContent="Plan added.";load();
+}
+function renderPlans(){
+  const c=$("planExam"),box=$("planList");if(!c||!box||viewUid)return;
+  chips(c,planEx,k=>{planEx=k;render()});box.replaceChildren();
+  if(!plans.length){box.appendChild(el("p","No plans yet. Add the exam you want to take.","mu"));return}
+  const up=plans.filter(p=>daysTo(p.date)>=0),past=plans.filter(p=>daysTo(p.date)<0).reverse();
+  [...up,...past].forEach(p=>{const d=daysTo(p.date),w=el("div",null,"block plan"+(d<0?" past":"")),n=el("b",EX[p.exam].n),info=el("div",null,"m"),del=el("button",null,"x");
+    n.style.color="var(--"+p.exam.toLowerCase()+")";info.append(n,document.createElement("br"),el("small",fmtLong(p.date),"mu"));
+    del.innerHTML=ICON_X;del.onclick=async()=>{await sb.from("plans").delete().eq("id",p.id);load()};
+    w.append(info,el("span",daysText(d),"delta "+(d<0?"flat":d<=3?"down":d<=7?"warn":"up")),del);box.appendChild(w)});
+}
+function renderNextExam(){
+  const b=$("nextExam");if(!b)return;
+  const up=plans.filter(p=>daysTo(p.date)>=0).sort((a,c)=>a.date<c.date?-1:1)[0];
+  if(!up||viewUid){b.hidden=true;return}
+  const d=daysTo(up.date);b.hidden=false;b.className="next-exam own"+(d<=3?" hot":d<=7?" warm":"");
+  b.innerHTML=IC("week")+'<span class="ne-text"><b></b> exam on <span></span></span><span class="ne-days"></span>';
+  b.querySelector("b").textContent=EX[up.exam].n;b.querySelector(".ne-text span").textContent=fmtLong(up.date);b.querySelector(".ne-days").textContent=daysText(d);
+}
+function showHeat(){
+  const box=$("heatInfo");if(!box)return;
+  document.querySelectorAll(".hc.sel").forEach(x=>x.classList.remove("sel"));
+  if(!heatSel){box.hidden=true;return}
+  const c=document.querySelector('.hc[data-d="'+heatSel+'"]');if(c)c.classList.add("sel");
+  box.hidden=false;box.replaceChildren();const d=heatSel,g={};
+  entries.filter(e=>e.date===d).forEach(e=>(g[e.exam]??=[]).push(e));
+  box.appendChild(el("b",new Date(d+"T00:00:00Z").toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}),"hi-head"));
+  let any=false;
+  Object.keys(g).forEach(k=>{any=true;const rows=g[k],sum=rows.reduce((p,r)=>p+r.score,0),tot=k==="IELTS"?Math.round(sum/rows.length*2)/2:sum,mx=k==="IELTS"?9:rows.reduce((p,r)=>p+maxOf(k,r.subject||null),0);
+    const line=el("div",null,"hi-row"),dot=el("span",null,"dot"),m=el("div",null,"m");dot.style.background="var(--"+k.toLowerCase()+")";
+    m.append(el("b",EX[k].n+": "+fs(k,tot)+" / "+fs(k,mx)),document.createElement("br"),el("small",rows.map(r=>partName(k,r.subject)+" "+fs(k,r.score)).join(", "),"mu"));line.append(dot,m);box.appendChild(line)});
+  subRes.filter(r=>r.date===d).forEach(r=>{any=true;const s0=subjects.find(x=>x.id===r.subject_id)||{},line=el("div",null,"hi-row"),dot=el("span",null,"dot"),m=el("div",null,"m");
+    dot.style.background="var(--ac)";m.append(el("b",(s0.name||"Subject")+": "+r.score+(s0.max_score?" / "+s0.max_score:"")));line.append(dot,m);box.appendChild(line)});
+  if(!any)box.appendChild(el("p","No tests on this day.","mu"));
+}
 const goalEdit={};
 function infoRow(a,b){const r=el("div",null,"info-row");r.append(el("span",a),el("b",b));return r}
 function renderGoals(){
@@ -830,7 +907,89 @@ async function coach(force){
   cache[key]={sig,data};lsSet("coach_cache",cache);
   if(coachEx===ex)showCoach(data,T,mine);
 }
-function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"My Profile",subjectsPanel:"Subjects",goalsPanel:"Goals",plansPanel:"Plans",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel()}window.openPanel=openPanel;
+let tasks=[],planDay=null,planEdit=null;
+const DAYN=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],isoOf=n=>new Date(n*864e5).toISOString().slice(0,10);
+const shortD=iso=>{const p=iso.split("-");return +p[2]+" "+MONTHS[+p[1]-1].slice(0,3)};
+async function loadPlanner(){
+  const r=await sb.from("planner_tasks").select("*").order("task_date");
+  if(r.error){tasks=[];$("pMsg").textContent="The planner needs a new database table. Run the updated schema.sql in Supabase.";return}
+  $("pMsg").textContent="";tasks=r.data.map(x=>({id:x.id,title:x.title,date:x.task_date,exam:x.exam,done:x.done}));
+}
+function editRow(t){
+  const r=el("div",null,"task edit"),ti=document.createElement("input"),ex=document.createElement("select"),g=el("div",null,"task-edit"),bar=el("div",null,"chips");
+  ti.value=t.title;ti.maxLength=80;ex.innerHTML='<option value="">General</option><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">\u04b0\u0411\u0422</option>';ex.value=t.exam||"";
+  const dp=dateSel(t.date,null,Y0-1,Y0+2),ok=el("button","Save","main"),no=el("button","Cancel","hbtn gray");ok.style.minWidth="0";
+  no.onclick=()=>{planEdit=null;renderPlanner()};
+  ok.onclick=async()=>{const v=ti.value.trim();if(!v){alert("Write the task name.");return}await sb.from("planner_tasks").update({title:v,exam:ex.value||null,task_date:dp.get()||t.date}).eq("id",t.id);planEdit=null;load()};
+  g.append(lab("Task",ti),lab("Subject",ex),lab("Date",dp.el));bar.append(ok,no);r.append(g,bar);return r;
+}
+function taskRow(t){
+  if(planEdit===t.id)return editRow(t);
+  const r=el("div",null,"task"+(t.done?" done":"")),chk=el("button",null,"pcheck"+(t.done?" on":"")),m=el("div",null,"m"),tt=el("b",t.title),ed=el("button","Edit","hbtn amber"),del=el("button",null,"x");
+  chk.innerHTML=IC("save");chk.setAttribute("aria-label","Mark as done");chk.onclick=async()=>{await sb.from("planner_tasks").update({done:!t.done}).eq("id",t.id);load()};
+  if(t.exam&&EX[t.exam]){const g=el("span",EX[t.exam].n,"tag");g.style.background="var(--"+t.exam.toLowerCase()+")";tt.appendChild(g)}
+  m.append(tt,document.createElement("br"),el("small",shortD(t.date)));
+  ed.onclick=()=>{planEdit=t.id;renderPlanner()};
+  del.innerHTML=ICON_X;del.title="Delete";del.onclick=async()=>{if(confirm("Delete this task?")){await sb.from("planner_tasks").delete().eq("id",t.id);load()}};
+  r.append(chk,m,ed,del);return r;
+}
+function renderPlanner(){
+  const wk=$("pWeek"),box=$("pList");if(!wk||viewUid)return;
+  const td=today(),t0=dayNum(td),ws=t0-(new Date().getDay()+6)%7;
+  wk.replaceChildren();
+  for(let i=0;i<7;i++){const iso=isoOf(ws+i),ts=tasks.filter(x=>x.date===iso),open=ts.filter(x=>!x.done).length,b=el("button",null,"wday"+(iso===td?" today":"")+(planDay===iso?" sel":""));
+    b.innerHTML="<span>"+DAYN[i]+"</span><b>"+(+iso.slice(8))+"</b><i>"+(ts.length?(open?open+" to do":"Done"):"")+"</i>";
+    b.onclick=()=>{planDay=planDay===iso?null:iso;renderPlanner()};wk.appendChild(b)}
+  box.replaceChildren();
+  const sec=(title,arr,cls)=>{if(!arr.length)return;const b=el("div",null,"block"),h=el("h2",title);if(cls)h.className=cls;b.appendChild(h);arr.forEach(t=>b.appendChild(taskRow(t)));box.appendChild(b)};
+  if(planDay)sec(fmtLong(planDay),tasks.filter(t=>t.date===planDay).sort((a,b)=>a.done-b.done));
+  else{const open=tasks.filter(t=>!t.done);
+    sec("Overdue",open.filter(t=>t.date<td),"bad");sec("Today",tasks.filter(t=>t.date===td).sort((a,b)=>a.done-b.done));
+    sec("Upcoming",open.filter(t=>t.date>td));sec("Done",tasks.filter(t=>t.done&&t.date!==td).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8))}
+  if(!box.children.length)box.appendChild(el("p","No tasks here yet. Add a task above.","mu"));
+}
+function nSet(){return Object.assign({daily:true,time:"18:00",streak:true,goals:true,improve:true,plan:true,browser:false},lsGet("notif",{}))}
+function streakOf(set){let t=dayNum(today());if(!set.has(isoOf(t)))t--;let n=0;while(set.has(isoOf(t))){n++;t--}return n}
+function buildNotifs(){
+  if(!uid)return [];
+  const S=nSet(),out=[],td=today(),t0=dayNum(td),act=new Set();entries.forEach(e=>act.add(e.date));subRes.forEach(r=>act.add(r.date));
+  const doneToday=act.has(td),[hh,mm]=S.time.split(":").map(Number),d=new Date(),past=d.getHours()*60+d.getMinutes()>=hh*60+mm,st=streakOf(act);
+  if(S.streak&&st>0&&!doneToday)out.push({id:"streak:"+td,k:"warn",ic:"flame",title:"Your "+st+"-day streak is at risk",text:"Add a result today to keep it going.",go:"addPanel",push:past});
+  if(S.daily&&!doneToday&&past)out.push({id:"daily:"+td,k:"info",ic:"bell",title:"Time to study",text:"You have not added a result today.",go:"addPanel",push:true});
+  if(S.goals)Object.keys(EX).forEach(k=>{const dl=deadlines[k];if(!dl)return;const dd=dayNum(dl)-t0;if(dd<0||dd>30)return;
+    const at=attemptsOf(k),l=at[at.length-1],g=targets[k]>0?targets[k]:null,left=g&&l?+(g-l.score).toFixed(2):null;
+    out.push({id:"goal:"+k+":"+(dd<=1?1:dd<=7?7:30),k:dd<=7?"bad":"warn",ic:"target",title:EX[k].n+" goal date is "+(dd===0?"today":dd===1?"tomorrow":"in "+dd+" days"),text:left>0?fs(k,left)+" points left to reach your goal.":g&&l?"You have reached your goal. Great job!":"Keep practicing.",go:"goalsPanel",push:dd<=1})});
+  if(S.improve)Object.keys(EX).forEach(k=>{const a=attemptsOf(k);if(a.length<2)return;const l=a[a.length-1],p=a[a.length-2];
+    if(l.score>p.score&&t0-dayNum(l.date)<=7)out.push({id:"imp:"+k+":"+l.date,k:"ok",ic:"up",title:EX[k].n+" is improving",text:fd(k,+(l.score-p.score).toFixed(2))+" points since the previous attempt. Keep going!",go:"progressPanel"})});
+  if(S.plan){const open=tasks.filter(t=>!t.done),over=open.filter(t=>t.date<td).length,tod=open.filter(t=>t.date===td).length;
+    if(over)out.push({id:"over:"+td,k:"bad",ic:"cal",title:over+(over===1?" task is overdue":" tasks are overdue"),text:"Open the planner to catch up.",go:"plannerPanel",push:past});
+    if(tod)out.push({id:"today:"+td,k:"info",ic:"cal",title:tod+(tod===1?" task for today":" tasks for today"),text:"Finish them to keep your plan on track.",go:"plannerPanel",push:past})}
+  if(S.goals)plans.forEach(p=>{const d=dayNum(p.date)-t0;if(d<0||d>30)return;const b=[0,1,2,3,7,14,30].find(x=>d<=x);
+    out.push({id:"plan:"+p.id+":"+b,k:d<=3?"bad":d<=7?"warn":"info",ic:"cal",title:EX[p.exam].n+" exam "+(d===0?"is today":d===1?"is tomorrow":"is in "+d+" days"),text:fmtLong(p.date)+(d===0?". Good luck!":""),go:"plansPanel",push:d<=3})});
+  return out;
+}
+function renderNotif(){
+  const list=buildNotifs(),read=lsGet("notif_read",{}),un=list.filter(n=>!read[n.id]).length,b=$("nBadge");
+  if(b){b.hidden=!un;b.textContent=un}
+  const box=$("nList");if(!box)return;box.replaceChildren();
+  if(!list.length){box.appendChild(el("p","You are all caught up.","mu"));return}
+  list.forEach(n=>{const r=el("div",null,"notif"+(read[n.id]?" read":"")),ic=el("div",null,"nic "+n.k),m=el("div");ic.innerHTML=IC(n.ic);
+    m.append(el("b",n.title),el("span",n.text,"mu"));r.append(ic,m);if(!read[n.id])r.appendChild(el("span",null,"dot2"));
+    r.onclick=()=>{read[n.id]=true;lsSet("notif_read",read);renderNotif();if(n.go)openPanel(n.go)};box.appendChild(r)});
+  maybeNotify();
+}
+function maybeNotify(){
+  const S=nSet();if(!S.browser||!uid||!("Notification" in window)||Notification.permission!=="granted")return;
+  const key="notif_sent_"+today(),sent=lsGet(key,{});
+  buildNotifs().filter(n=>n.push&&!sent[n.id]).forEach(n=>{try{new Notification(n.title,{body:n.text,icon:"icon-192.png"})}catch(e){}sent[n.id]=true});
+  lsSet(key,sent);
+}
+function loadNotifUI(){
+  const S=nSet();$("nDaily").checked=S.daily;$("nStreak").checked=S.streak;$("nGoals").checked=S.goals;$("nImprove").checked=S.improve;$("nPlan").checked=S.plan;$("nTime").value=S.time;
+  const on=S.browser&&("Notification" in window)&&Notification.permission==="granted";$("nBrowser").textContent=on?"Turn off browser notifications":"Turn on browser notifications";
+}
+function saveNotifUI(){lsSet("notif",Object.assign(nSet(),{daily:$("nDaily").checked,streak:$("nStreak").checked,goals:$("nGoals").checked,improve:$("nImprove").checked,plan:$("nPlan").checked,time:$("nTime").value}));renderNotif()}
+function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"My Profile",subjectsPanel:"Subjects",plannerPanel:"Planner",notifPanel:"Notifications",plansPanel:"Plans",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel()}window.openPanel=openPanel;
 function updateShare(){const sl=$("pslug").value.trim().toLowerCase();if(sl)$("plink").value=location.origin+location.pathname+"?u="+sl}
 async function loadProfile(){
   const {data:p}=await sb.from("profiles").select("*").eq("user_id",uid).maybeSingle();
@@ -871,7 +1030,7 @@ function setProfileEdit(on){
   if(!on){$("vName").textContent=$("pname").value.trim()||"Student";$("vGrade").textContent=$("pgrade").value||"Not set";$("vBirth").textContent=fmtLong(birth.get());$("vPub").textContent=$("ppub").checked?"On":"Off";}
   $("psaveBtn").textContent=on?"Save profile":"Edit profile";
 }
-function showAvatar(url){const ta=$("topAv");if(ta){ta.src=url||"";ta.hidden=!url}const im=$("avatarImg");if(url){im.src=url;im.hidden=false;$("avatarLetter").hidden=true}else{im.hidden=true;$("avatarLetter").hidden=false}}
+function showAvatar(url){const ta=$("topAv");if(ta){ta.src=url||"";ta.hidden=!url}const tl=$("topAvLetter");if(tl)tl.hidden=!!url;const im=$("avatarImg");if(url){im.src=url;im.hidden=false;$("avatarLetter").hidden=true}else{im.hidden=true;$("avatarLetter").hidden=false}}
 function loadImg(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);res(i)};i.onerror=()=>rej(new Error("This image format is not supported. Use a JPG or PNG photo"));i.src=u})}
 async function uploadAvatar(file){
   if(!file)return;const m=$("pmsg");
@@ -889,7 +1048,7 @@ async function uploadAvatar(file){
   }catch(e){m.textContent="Could not upload the photo: "+(e&&e.message?e.message:e)+". If it mentions a bucket or a policy, run the new schema.sql in Supabase."}
 }
 async function fillAccount(){
-  $("topName").textContent=$("pname").value.trim()||"Student";
+  {const nm=$("pname").value.trim()||"Student";$("topName").textContent=nm;$("topAvLetter").textContent=nm[0].toUpperCase()}
   const {data}=await sb.auth.getUser(),u=data&&data.user;if(!u)return;
   $("acEmail").textContent=u.email||"";
   $("acJoined").textContent=u.created_at?new Date(u.created_at).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}):"";
@@ -916,7 +1075,22 @@ async function loadPublic(slug){
 $("entElective1").onchange=()=>{entSubs[0]=$("entElective1").value;fillEntElectives();saveEntElectives();renderExamParts()};$("entElective2").onchange=()=>{entSubs[1]=$("entElective2").value;fillEntElectives();saveEntElectives();renderExamParts()};$("subj").onchange=updScore;$("csub").onchange=()=>{chartSub=$("csub").value;render()};
 document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>openPanel(b.dataset.panel)));
 let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{chart();freq()},150)});
-$("quoteBtn").onclick=editQuote;setQuote(lsGet("quote",""));$("hSearch").oninput=list;$("hSort").onchange=list;
+const pDate=dateSel(today(),null,Y0-1,Y0+2);$("pDate").appendChild(pDate.el);
+$("pAdd").onclick=async()=>{const v=$("pTitle").value.trim(),m=$("pMsg");if(!v){m.textContent="Write the task name first.";return}
+  const {error}=await sb.from("planner_tasks").insert({title:v,task_date:pDate.get()||today(),exam:$("pExam").value||null});
+  if(error){m.textContent=error.message;return}$("pTitle").value="";m.textContent="";load()};
+for(let h=6;h<24;h++)["00","30"].forEach(m=>{const o=document.createElement("option");o.value=o.textContent=String(h).padStart(2,"0")+":"+m;$("nTime").appendChild(o)});
+loadNotifUI();["nDaily","nStreak","nGoals","nImprove","nPlan","nTime"].forEach(id=>$(id).onchange=saveNotifUI);
+$("nRead").onclick=()=>{const r=lsGet("notif_read",{});buildNotifs().forEach(n=>r[n.id]=true);lsSet("notif_read",r);renderNotif()};
+$("nBrowser").onclick=async()=>{const S=nSet(),m=$("nMsg");
+  if(!("Notification" in window)){m.textContent="This browser does not support notifications.";return}
+  if(S.browser){lsSet("notif",Object.assign(S,{browser:false}));m.textContent="Browser notifications are off.";loadNotifUI();return}
+  const p=Notification.permission==="granted"?"granted":await Notification.requestPermission();
+  if(p==="granted"){lsSet("notif",Object.assign(S,{browser:true}));m.textContent="Browser notifications are on. They appear while Exam Prep is open in your browser or installed as an app.";try{new Notification("Exam Prep",{body:"Notifications are on.",icon:"icon-192.png"})}catch(e){}}
+  else m.textContent="Notifications are blocked. Allow them in your browser settings for this site.";
+  loadNotifUI()};
+setInterval(maybeNotify,60000);
+$("quoteBtn").onclick=editQuote;$("nextExam").onclick=()=>openPanel("plansPanel");$("planDate").appendChild(planDateSel.el);$("planAdd").onclick=addPlan;setQuote(lsGet("quote",""));$("hSearch").oninput=list;$("hSort").onchange=list;
 $("sAdd").onclick=async()=>{const n=$("sName").value.trim(),m=parseFloat($("sMax").value);if(!n||isNaN(m)||m<=0){$("sMsg").textContent="Enter a name and a maximum score above 0.";return}const {error}=await sb.from("subjects").insert({name:n,max_score:m});if(error){$("sMsg").textContent=error.message;return}$("sName").value="";$("sMsg").textContent="";load()};
 const birth=dateSel("",null,Y0-40,Y0-5);$("pbirth").appendChild(birth.el);
 $("pgrade").innerHTML='<option value="">Select grade</option>'+[...Array(11)].map((_,i)=>`<option>Grade ${i+1}</option>`).join("")+'<option>College</option><option>University</option><option>Finished school</option>';
@@ -942,7 +1116,7 @@ function show(session){
   document.body.classList.toggle("auth-mode",!session);
   $("login").hidden=!!session;$("app").hidden=!session;
   if(!session){uid=null;return}
-  if(session.user.id!==uid){uid=session.user.id;loadProfile();load();loadPlans()}
+  if(session.user.id!==uid){uid=session.user.id;loadProfile();load()}
 }
 let authMode="in",recovering=false,sentEmail="";
 const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,AI=p=>'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">'+p+'</svg>',
@@ -1024,113 +1198,6 @@ $("recForm").onsubmit=async e=>{
 setAuthMode("in");
 
 $("out").onclick=e=>{e.preventDefault();sb.auth.signOut()};
-
-/* ===== Plans, nearest exam banner, reminders ===== */
-let plans=[],planEx="IELTS",planLocal=false,toastT;
-const planDp=dateSel("",null,Y0,Y0+2);$("planDate").appendChild(planDp.el);
-const MILES=[30,14,7,3,1,0],planKey=()=>"exam_plans:"+uid;
-const dleft=p=>dayNum(p.date)-dayNum(today());
-const leftTxt=d=>d<0?"Passed":d===0?"Today":d===1?"Tomorrow":d+" days left";
-const miles=d=>d<0||d>30?null:MILES.filter(m=>m>=d).pop();
-const upcoming=()=>plans.filter(p=>dleft(p)>=0).sort((a,b)=>a.date<b.date?-1:1);
-const remNotes=()=>upcoming().map(p=>{const d=dleft(p);return {p,d,m:miles(d)}}).filter(x=>x.m!==null);
-function planText(p,d){
-  const n=EX[p.exam].n;
-  if(d===0)return "Today is your "+n+" exam. Good luck!";
-  if(d===1)return n+" is tomorrow. Check your documents and get some rest.";
-  if(d<=3)return n+" in "+d+" days. Do one last practice test and stay calm.";
-  if(d<=7)return n+" in "+d+" days. A good time for a full practice test.";
-  if(d<=14)return d+" days to "+n+". Time to check your weak sections.";
-  return d+" days until "+n+". Keep your study streak going.";
-}
-function toast(m){let t=$("toast");if(!t){t=el("div",null,"toast");t.id="toast";t.setAttribute("role","status");document.body.append(t)}t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},7000)}
-function drawPlanChips(){chips($("planChips"),planEx,k=>{planEx=k;drawPlanChips()})}
-async function loadPlans(){
-  if(viewUid||!uid)return;
-  const {data,error}=await sb.from("exam_plans").select("*").eq("user_id",uid).order("exam_date");
-  if(error){planLocal=true;plans=lsGet(planKey(),[])}
-  else{planLocal=false;plans=data.map(r=>({id:r.id,exam:r.exam,date:r.exam_date,note:r.note||""})).filter(p=>EX[p.exam])}
-  $("planStore").hidden=!planLocal;renderPlanUI();
-}
-async function addPlan(){
-  const d=planDp.get(),m=$("planMsg");
-  if(!d){m.textContent="Choose the day, month and year.";return}
-  if(d<today()){m.textContent="This date has already passed.";return}
-  const note=$("planNote").value.trim();
-  if(planLocal){plans.push({id:"l"+Date.now(),exam:planEx,date:d,note});lsSet(planKey(),plans)}
-  else{const {error}=await sb.from("exam_plans").insert({exam:planEx,exam_date:d,note:note||null});if(error){m.textContent=error.message;return}await loadPlans()}
-  planDp.set("");$("planNote").value="";m.textContent="Plan added.";renderPlanUI();
-}
-async function delPlan(p){
-  if(!confirm("Delete this plan?"))return;
-  if(planLocal){plans=plans.filter(x=>x.id!==p.id);lsSet(planKey(),plans);renderPlanUI();return}
-  const {error}=await sb.from("exam_plans").delete().eq("id",p.id);
-  if(error){$("planMsg").textContent=error.message;return}
-  await loadPlans();
-}
-function renderPlanList(){
-  const box=$("planList");box.replaceChildren();
-  const all=[...plans].sort((a,b)=>a.date<b.date?-1:1);
-  if(!all.length){box.append(el("p","No plans yet. Choose an exam and a date above.","mu"));return}
-  all.forEach(p=>{
-    const d=dleft(p),r=el("div",null,"it"+(d<0?" past":"")),dt=el("span",null,"dot"),m=el("div",null,"m"),x=el("button",null,"x");
-    dt.style.background="var(--"+p.exam.toLowerCase()+")";
-    m.append(el("b",EX[p.exam].n),document.createElement("br"),el("small",fmtLong(p.date)+(p.note?", "+p.note:"")));
-    x.innerHTML=ICON_X;x.title="Delete plan";x.onclick=()=>delPlan(p);
-    r.append(dt,m,el("span",leftTxt(d),"dl-pill"+(d<0?" past":d<=3?" soon":"")),x);box.append(r);
-  });
-}
-function renderNotifPop(notes,seen){
-  const pop=$("notifPop");pop.replaceChildren(el("h3","Reminders"));
-  if(!notes.length){pop.append(el("p","Nothing yet. Reminders start 30 days before an exam you add in Plans.","notif-empty"));return}
-  notes.forEach(x=>{
-    const r=el("div",null,"notif-it"+(seen[x.p.id]!==x.m?" new":"")),dt=el("span",null,"dot"),m=el("div");
-    dt.style.background="var(--"+x.p.exam.toLowerCase()+")";
-    m.append(el("p",planText(x.p,x.d)),el("small",fmtLong(x.p.date)));r.append(dt,m);pop.append(r);
-  });
-}
-function pushAlerts(unread){
-  if(!unread.length)return;
-  const key="plan_pushed:"+uid,done=lsGet(key,{}),fresh=unread.filter(x=>done[x.p.id]!==x.m);
-  if(!fresh.length)return;
-  fresh.forEach(x=>{done[x.p.id]=x.m});lsSet(key,done);
-  toast(planText(fresh[0].p,fresh[0].d));
-  if("Notification" in window&&Notification.permission==="granted")fresh.forEach(x=>{try{new Notification("Exam Prep",{body:planText(x.p,x.d),icon:"icon-192.png"})}catch(e){}});
-}
-function renderPlanUI(){
-  if(viewUid||!uid)return;
-  const nx=upcoming()[0],bar=$("planBar");
-  if(nx){
-    const d=dleft(nx),n=EX[nx.exam].n,t=el("div",null,"pb-text");
-    bar.hidden=false;bar.style.setProperty("--c","var(--"+nx.exam.toLowerCase()+")");
-    t.append(el("b",d===0?"Exam today: "+n:"Next exam: "+n+", "+fmtLong(nx.date)));
-    if(nx.note)t.append(el("span",nx.note,"mu"));
-    bar.replaceChildren(t,el("span",leftTxt(d),"pb-days"));
-  }else bar.hidden=true;
-  const seen=lsGet("plan_seen:"+uid,{}),notes=remNotes(),unread=notes.filter(x=>seen[x.p.id]!==x.m),dot=$("bellDot");
-  dot.hidden=!unread.length;dot.textContent=unread.length;
-  renderNotifPop(notes,seen);renderPlanList();pushAlerts(unread);
-}
-function markSeen(){const k="plan_seen:"+uid,seen=lsGet(k,{});remNotes().forEach(x=>{seen[x.p.id]=x.m});lsSet(k,seen);$("bellDot").hidden=true}
-function notifState(){
-  const s=$("notifState"),b=$("notifBtn");
-  if(!("Notification" in window)){s.textContent="This browser does not support alerts. Reminders still show under the bell.";b.hidden=true;return}
-  const p=Notification.permission;b.hidden=p==="granted"||p==="denied";
-  s.textContent=p==="granted"?"Alerts are on. You get them when you open the site.":p==="denied"?"Alerts are blocked in your browser settings. Reminders still show under the bell.":"Reminders show under the bell. Turn on alerts to also get them as browser or phone notifications.";
-}
-$("notifBtn").onclick=async()=>{try{await Notification.requestPermission()}catch(e){}notifState()};
-$("planAdd").onclick=addPlan;
-$("bellBtn").onclick=e=>{
-  e.stopPropagation();const pop=$("notifPop"),open=pop.hidden;
-  pop.hidden=!open;$("bellBtn").setAttribute("aria-expanded",String(open));
-  if(open)markSeen();else renderPlanUI();
-};
-document.addEventListener("click",e=>{const pop=$("notifPop");if(!pop.hidden&&!pop.contains(e.target)){pop.hidden=true;$("bellBtn").setAttribute("aria-expanded","false");renderPlanUI()}});
-$("planBar").onclick=()=>openPanel("plansPanel");
-$("planBar").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openPanel("plansPanel")}};
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)renderPlanUI()});
-setInterval(renderPlanUI,6e5);
-drawPlanChips();notifState();
 
 setTheme(lsGet("theme","light"));setEx("IELTS");new MutationObserver(()=>requestAnimationFrame(iconize)).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:["hidden"]});iconize();
 const PUB=new URLSearchParams(location.search).get("u");
