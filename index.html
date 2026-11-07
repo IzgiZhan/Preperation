@@ -390,8 +390,8 @@ h2.bad{color:var(--bad)}
 
     <section class="app-panel" id="goalsPanel"><div class="page-intro"><h2>Goals and exam dates</h2><p class="mu">Set a goal score and an exam date for each exam. Overview shows them.</p></div><div class="card own"><div id="goals" class="goals"></div></div></section>
     <section class="app-panel" id="plannerPanel"><div class="page-intro"><h2>Plans</h2></div>
-<div class="card own"><div class="row"><div><label>Task</label><input id="pTitle" maxlength="80" placeholder="Reading practice, 20 new words..."></div><div><label>Subject</label><select id="pExam"><option value="">General</option><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">ҰБТ</option></select></div></div>
-<div class="row"><div><label>Date</label><div id="pDate"></div></div><div id="pSecWrap" hidden><label>Sections</label><div id="pSecBox"></div></div></div><button class="main" id="pAdd" type="button">Add task</button><p class="mu" id="pMsg"></p></div>
+<div class="card own"><div class="row"><div><label>Exam</label><select id="pExam"><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">ҰБТ</option></select></div><div><label>Date</label><div id="pDate"></div></div></div>
+<div class="row"><div id="pSecWrap"><label>Sections</label><div id="pSecBox"></div></div><div></div></div><button class="main" id="pAdd" type="button">Add plan</button><p class="mu" id="pMsg"></p></div>
 <div class="block"><div class="week" id="pWeek"></div></div>
 <div id="pList"></div></section>
 <section class="app-panel" id="notifPanel"><div class="page-intro"><h2>Notifications</h2></div>
@@ -937,12 +937,12 @@ async function loadPlanner(){
   $("pMsg").textContent="";tasks=r.data.map(x=>({id:x.id,title:x.title,date:x.task_date,exam:x.exam,section:x.section||null,done:x.done}));
 }
 function editRow(t){
-  const r=el("div",null,"task edit"),ti=document.createElement("input"),ex=document.createElement("select"),g=el("div",null,"task-edit"),bar=el("div",null,"chips");
-  ti.value=t.title;ti.maxLength=80;ex.innerHTML='<option value="">General</option><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">\u04b0\u0411\u0422</option>';ex.value=t.exam||"";const sc=secCtl(t.exam,t.section),scw=lab("Sections",sc.el);ex.onchange=()=>{sc.setEx(ex.value);scw.hidden=!ex.value};
+  const r=el("div",null,"task edit"),ex=document.createElement("select"),g=el("div",null,"task-edit"),bar=el("div",null,"chips");
+  ex.innerHTML='<option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">\u04b0\u0411\u0422</option>';ex.value=t.exam||"IELTS";const sc=secCtl(ex.value,t.section),scw=lab("Sections",sc.el);ex.onchange=()=>{sc.setEx(ex.value)};
   const dp=dateSel(t.date,null,Y0-1,Y0+2,today()),ok=el("button","Save","main"),no=el("button","Cancel","hbtn gray");ok.style.minWidth="0";
   no.onclick=()=>{planEdit=null;renderPlanner()};
-  ok.onclick=async()=>{const v=ti.value.trim();if(!v){alert("Write the task name.");return}await saveTaskRow(x=>sb.from("planner_tasks").update(x).eq("id",t.id),{title:v,exam:ex.value||null,section:ex.value?sc.get():null,task_date:dp.get()||t.date});planEdit=null;load()};
-  g.append(lab("Task",ti),lab("Subject",ex),scw,lab("Date",dp.el));scw.hidden=!ex.value;bar.append(ok,no);r.append(g,bar);return r;
+  ok.onclick=async()=>{await saveTaskRow(x=>sb.from("planner_tasks").update(x).eq("id",t.id),{exam:ex.value,section:sc.get(),task_date:dp.get()||t.date});planEdit=null;load()};
+  g.append(lab("Exam",ex),scw,lab("Date",dp.el));bar.append(ok,no);r.append(g,bar);return r;
 }
 function taskRow(t){
   if(planEdit===t.id)return editRow(t);
@@ -1096,12 +1096,12 @@ async function loadPublic(slug){
 $("entElective1").onchange=()=>{entSubs[0]=$("entElective1").value;fillEntElectives();saveEntElectives();renderExamParts()};$("entElective2").onchange=()=>{entSubs[1]=$("entElective2").value;fillEntElectives();saveEntElectives();renderExamParts()};$("subj").onchange=updScore;$("csub").onchange=()=>{chartSub=$("csub").value;render()};
 document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>openPanel(b.dataset.panel)));
 let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{chart();freq()},150)});
-const pDate=dateSel(today(),null,Y0-1,Y0+2,today());$("pDate").appendChild(pDate.el);const pSec=secCtl("","");$("pSecBox").appendChild(pSec.el);$("pExam").onchange=()=>{pSec.setEx($("pExam").value);$("pSecWrap").hidden=!$("pExam").value};
-$("pAdd").onclick=async()=>{const v=$("pTitle").value.trim(),m=$("pMsg");if(!v){m.textContent="Write the task name first.";return}
-  const row={title:v,task_date:pDate.get()||today(),exam:$("pExam").value||null,section:$("pExam").value?pSec.get():null};
+const pDate=dateSel(today(),null,Y0-1,Y0+2,today());$("pDate").appendChild(pDate.el);const pSec=secCtl("IELTS","");$("pSecBox").appendChild(pSec.el);$("pExam").onchange=()=>{pSec.setEx($("pExam").value)};
+$("pAdd").onclick=async()=>{const m=$("pMsg");
+  const row={title:"Practice",task_date:pDate.get()||today(),exam:$("pExam").value,section:pSec.get()};
   const r=await saveTaskRow(x=>sb.from("planner_tasks").insert(x),row);
   if(r.error){m.textContent=r.error.message;return}
-  $("pTitle").value="";m.textContent="";load().then(()=>{if(r.dropped&&row.section)m.textContent="Saved without the section. Run the updated schema.sql in Supabase to keep sections."})};
+  m.textContent="";load().then(()=>{if(r.dropped&&row.section)m.textContent="Saved without the section. Run the updated schema.sql in Supabase to keep sections."})};
 for(let h=6;h<24;h++)["00","30"].forEach(m=>{const o=document.createElement("option");o.value=o.textContent=String(h).padStart(2,"0")+":"+m;$("nTime").appendChild(o)});
 loadNotifUI();["nDaily","nStreak","nGoals","nImprove","nPlan","nTime"].forEach(id=>$(id).onchange=saveNotifUI);
 $("nRead").onclick=()=>{const r=lsGet("notif_read",{});buildNotifs().forEach(n=>r[n.id]=true);lsSet("notif_read",r);renderNotif()};
