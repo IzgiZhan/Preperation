@@ -283,6 +283,21 @@ h2.bad{color:var(--bad)}
 .hc[data-d]{cursor:pointer}.hc.sel{outline:2px solid var(--tx);outline-offset:1px}
 .heat-info{margin-top:14px;padding:14px 16px;border-radius:14px;background:var(--bg)}.hi-head{display:block;margin-bottom:6px}
 .hi-row{display:flex;gap:10px;align-items:center;padding:8px 0}.hi-row .dot{height:24px}
+/* v9 */
+.av-wrap{position:relative;display:block;width:54px;height:54px;border-radius:50%;overflow:hidden;flex:none;background:var(--ink)}
+.av-wrap img.top-av,.av-wrap .top-av.letter{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0}
+.av-wrap img.top-av{transform:scale(1.14)}.avatar img{transform:scale(1.14);border:0}
+.top-id{max-width:min(440px,42vw)}
+.quote-btn{white-space:normal;overflow:visible;text-overflow:clip;text-align:left;line-height:1.35;word-break:break-word}
+#freq{overflow:visible}.heat{position:relative}
+.heat-pop{position:absolute;transform:translateX(-50%);width:220px;max-width:90vw;padding:12px 14px;border-radius:14px;background:var(--card);border:1px solid var(--bd);box-shadow:0 12px 36px rgba(0,0,0,.22);z-index:6;font-size:13.5px}
+.hp-date{display:block;margin-bottom:6px;font-size:14px}.hp-row{display:grid;grid-template-columns:50px 1fr auto;gap:8px;align-items:center;padding:4px 0}.hp-sub{margin-top:6px;color:var(--mu);font-size:12.5px}
+.prog-cols{display:block}.prog-cols>div+div{margin-top:28px}
+.tbl{width:100%}.tbl-h,.tbl-r{display:grid;grid-template-columns:var(--cols);gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid var(--bd)}
+.tbl-h{color:var(--mu);font-size:13px;font-weight:600}.tbl-r:last-child{border-bottom:0}
+.tbl .n{text-align:right;justify-self:end;font-variant-numeric:tabular-nums;font-weight:650}.tbl-r b{overflow-wrap:anywhere}
+.tbl .delta{padding:3px 9px;font-size:13px}
+@media(max-width:820px){.av-wrap{width:42px;height:42px}.top-id{max-width:46vw}.tbl-h,.tbl-r{gap:6px;font-size:13px;padding:10px 0}.tbl .delta{padding:2px 6px;font-size:11.5px}}
 </style>
 </head>
 <body>
@@ -350,7 +365,7 @@ h2.bad{color:var(--bad)}
     <a href="#" id="out" class="logout-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H5v16h4"/><path d="m16 8 4 4-4 4M20 12H9"/></svg><span>Log out</span></a>
   </aside>
   <main class="main-area">
-    <header class="topbar own"><div><h1 id="pageTitle">Overview</h1></div><div class="top-right"><img class="top-av" id="topAv" alt="" hidden><span class="top-av letter" id="topAvLetter">S</span><div class="top-id"><span class="top-name" id="topName"></span><button class="quote-btn" id="quoteBtn" type="button">Add a quote</button><div class="quote-box" id="quoteBox" hidden></div></div><button class="icon-btn" id="themeToggle" type="button" aria-label="Switch between light and dark theme"><svg class="ico i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg><svg class="ico i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="themeLbl"></span></button></div></header>
+    <header class="topbar own"><div><h1 id="pageTitle">Overview</h1></div><div class="top-right"><span class="av-wrap"><img class="top-av" id="topAv" alt="" hidden><span class="top-av letter" id="topAvLetter">S</span></span><div class="top-id"><span class="top-name" id="topName"></span><button class="quote-btn" id="quoteBtn" type="button">Add a quote</button><div class="quote-box" id="quoteBox" hidden></div></div><button class="icon-btn" id="themeToggle" type="button" aria-label="Switch between light and dark theme"><svg class="ico i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg><svg class="ico i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="themeLbl"></span></button></div></header>
     <button class="next-exam own" id="nextExam" type="button" hidden></button>
     <section class="app-panel active" id="overview">
       
@@ -385,12 +400,12 @@ h2.bad{color:var(--bad)}
 <label class="switch"><input type="checkbox" id="nDaily"> Daily study reminder</label>
 <div class="row"><div><label>Reminder time</label><select id="nTime"></select></div><div></div></div>
 <label class="switch"><input type="checkbox" id="nStreak"> Streak reminders</label>
-<label class="switch"><input type="checkbox" id="nGoals"> Goal and exam date alerts</label>
+<label class="switch"><input type="checkbox" id="nGoals"> Goal and practice date alerts</label>
 <label class="switch"><input type="checkbox" id="nImprove"> Improvement alerts</label>
 <label class="switch"><input type="checkbox" id="nPlan"> Planner task alerts</label>
 <button class="main" id="nBrowser" type="button">Turn on browser notifications</button><p class="mu" id="nMsg"></p></div></section>
-<section class="app-panel" id="plansPanel"><div class="page-intro"><h2>Exam plans</h2><p class="mu">Choose the exam you want to take and its date. The next exam is shown on every screen, and alerts come as the day gets closer.</p></div>
-<div class="card own"><div class="chips" id="planExam"></div><div><label>Exam date</label><div id="planDate"></div></div><button class="main" id="planAdd" type="button" style="margin-top:16px">Add plan</button><p class="mu" id="planMsg"></p></div>
+<section class="app-panel" id="plansPanel"><div class="page-intro"><h2>Practice plans</h2><p class="mu">Choose the exam you want to practice and the date. The next practice is shown on every screen, and alerts come as the day gets closer.</p></div>
+<div class="card own"><div class="chips" id="planExam"></div><div><label>Practice date</label><div id="planDate"></div></div><button class="main" id="planAdd" type="button" style="margin-top:16px">Add plan</button><p class="mu" id="planMsg"></p></div>
 <div id="planList"></div></section>
 <section class="app-panel" id="subjectsPanel"><div class="page-intro"><h2>My subjects</h2><p class="mu">Add your own subjects, log results and follow your progress.</p></div>
 <div class="card own"><div class="row"><div><label>Subject name</label><input id="sName" maxlength="40" placeholder="Physics, Essay writing..."></div><div><label>Maximum score</label><input id="sMax" type="number" min="1" value="100"></div></div><button class="main" id="sAdd" type="button">Add subject</button><p class="mu" id="sMsg"></p></div>
@@ -579,23 +594,29 @@ function chart(){
   const {pts,ex,mx,goal}=chartPoints(),T0=trendOf(pts,mx),pill=$("trendPill"),X=chartEx;
   pill.hidden=pts.length<2;pill.className="trend-pill "+T0.k;pill.innerHTML=pts.length>1?IC(T0.k)+"<span>"+T0.label+"</span>":"";
   if(!pts.length){$("chart").innerHTML='<p class="mu">No records yet.</p>';return}
-  const W=Math.max(480,$("chart").clientWidth||480),H=Math.round(Math.min(300,Math.max(210,W*.26))),L=44,R=12,T=24,B=28,iw=W-L-R,ih=H-T-B,slot=iw/pts.length,bw=Math.min(34,slot*.5),y=v=>T+(1-v/mx)*ih,gid="gr"+X;
+  const W=Math.max(480,$("chart").clientWidth||480),H=Math.round(Math.min(300,Math.max(210,W*.26))),L=44,R=12,T=24,B=28,iw=W-L-R,ih=H-T-B,slot=iw/pts.length,bw=Math.min(14,slot*.36),y=v=>T+(1-v/mx)*ih,gid="gr"+X;
   const step=mx<=10?1:mx<=20?5:mx<=60?10:mx<=150?20:mx<=1000?200:400,every=Math.ceil(pts.length/12);
   let s=`<svg viewBox="0 0 ${W} ${H}"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:${ex.c}"/><stop offset="1" style="stop-color:${ex.c};stop-opacity:.5"/></linearGradient></defs>`;
   for(let v=0;v<=mx+1e-9;v+=step){const yy=y(v);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="var(--bd)" stroke-dasharray="3 5"/><text x="${L-8}" y="${yy+3.5}" text-anchor="end" font-size="10.5" fill="var(--mu)">${fs(X,+v.toFixed(1))}</text>`}
   pts.forEach((p,i)=>{const x0=L+slot*i+(slot-bw)/2,h=Math.max(3,ih*p.score/mx),r=Math.min(9,bw/2,h),yt=T+ih-h,last=i===pts.length-1;
     s+=`<g class="bar"><title>${fmtD(p.date)}: ${fs(X,p.score)} / ${fs(X,mx)}</title><rect x="${x0}" y="${T}" width="${bw}" height="${ih}" rx="${bw/2}" fill="var(--bg)"/><path d="M${x0},${T+ih}V${yt+r}Q${x0},${yt} ${x0+r},${yt}H${x0+bw-r}Q${x0+bw},${yt} ${x0+bw},${yt+r}V${T+ih}Z" fill="url(#${gid})" opacity="${last?1:.7}"/></g>`});
   if(goal&&goal<=mx)s+=`<line x1="${L}" x2="${W-R}" y1="${y(goal)}" y2="${y(goal)}" stroke="var(--ok)" stroke-width="1.8" stroke-dasharray="6 5"/><text x="${W-R}" y="${y(goal)-5}" text-anchor="end" font-size="11" font-weight="700" fill="var(--ok)">Goal ${fs(X,goal)}</text>`;
-  if(pts.length>1){const cx=i=>L+slot*i+slot/2,cl=v=>y(Math.min(mx,Math.max(0,v))),x1=cx(0),y1=cl(T0.f0),x2=cx(pts.length-1),y2=cl(T0.f1),col=T0.k==="up"?"var(--ok)":T0.k==="down"?"var(--bad)":"var(--mu)",an=Math.atan2(y2-y1,x2-x1),hl=12;
-    s+=`<g><line x1="${x1}" y1="${y1}" x2="${x2-3*Math.cos(an)}" y2="${y2-3*Math.sin(an)}" stroke="${col}" stroke-width="3" stroke-linecap="round"/><polygon fill="${col}" points="${x2},${y2} ${x2-hl*Math.cos(an-.42)},${y2-hl*Math.sin(an-.42)} ${x2-hl*Math.cos(an+.42)},${y2-hl*Math.sin(an+.42)}"/></g>`}
+  if(pts.length>1){
+    const cx=i=>L+slot*i+slot/2,ty=i=>y(pts[i].score)-6,eps=mx*0.005,m=Math.min(16,slot*.3),hl=8;
+    for(let i=0;i<pts.length-1;i++){
+      const dv=pts[i+1].score-pts[i].score,kk=Math.abs(dv)<=eps?"flat":dv>0?"up":"down",col=kk==="up"?"var(--ok)":kk==="down"?"var(--bad)":"var(--mu)";
+      let x1=cx(i),y1=ty(i),x2=cx(i+1),y2=ty(i+1);const an=Math.atan2(y2-y1,x2-x1);
+      x1+=m*Math.cos(an);y1+=m*Math.sin(an);x2-=m*Math.cos(an);y2-=m*Math.sin(an);
+      s+=`<g><line x1="${x1}" y1="${y1}" x2="${x2-hl*.6*Math.cos(an)}" y2="${y2-hl*.6*Math.sin(an)}" stroke="${col}" stroke-width="2.2" stroke-linecap="round"/><polygon fill="${col}" points="${x2},${y2} ${x2-hl*Math.cos(an-.5)},${y2-hl*Math.sin(an-.5)} ${x2-hl*Math.cos(an+.5)},${y2-hl*Math.sin(an+.5)}"/></g>`}
+  }
   pts.forEach((p,i)=>{const x0=L+slot*i+(slot-bw)/2,h=Math.max(3,ih*p.score/mx),last=i===pts.length-1;
     if(i%every===0||last)s+=`<text x="${x0+bw/2}" y="${H-9}" text-anchor="middle" font-size="10.5" fill="var(--mu)">${fmtD(p.date).slice(0,5)}</text>`;
-    if(pts.length<=10||last)s+=`<text x="${x0+bw/2}" y="${T+ih-h-6}" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--tx)" stroke="var(--card)" stroke-width="4" paint-order="stroke">${fs(X,p.score)}</text>`});
+    if(pts.length<=10||last)s+=`<text x="${x0+bw/2}" y="${T+ih-h-9}" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--tx)" stroke="var(--card)" stroke-width="4" paint-order="stroke">${fs(X,p.score)}</text>`});
   $("chart").innerHTML=s+"</svg>";
 }
 function freq(){
   const box=$("freq");if(!box)return;
-  const cnt={},g={};entries.forEach(e=>{g[e.exam+"|"+e.date]=e.date});Object.values(g).forEach(d=>cnt[d]=(cnt[d]||0)+1);
+  const cnt={},g={};entries.forEach(e=>{g[e.exam+"|"+e.date+"|"+e.ts]=e.date});Object.values(g).forEach(d=>cnt[d]=(cnt[d]||0)+1);
   subRes.forEach(r=>cnt[r.date]=(cnt[r.date]||0)+1);
   const wk=(box.clientWidth||700)<560?26:52,t=dayNum(today()),dow=(new Date().getDay()+6)%7,start=t-dow-(wk-1)*7;
   let total=0,cells="",months="",lastL=-9;
@@ -604,7 +625,7 @@ function freq(){
   for(let w=0;w<wk;w++)for(let r=0;r<7;r++){const dn=start+w*7+r;if(dn>t){cells+='<i class="hc" style="visibility:hidden"></i>';continue}
     const iso=new Date(dn*864e5).toISOString().slice(0,10),n=cnt[iso]||0;total+=n;
     cells+=`<i class="hc l${Math.min(n,4)}" data-d="${iso}" title="${n?n+(n===1?" test":" tests"):"No tests"}, ${fmtLong(iso)}"></i>`}
-  box.innerHTML=`<div class="heat" style="--wk:${wk}"><div class="heat-m">${months}</div><div class="heat-g">${cells}</div></div><div class="heat-info" id="heatInfo" hidden></div><p class="mu">${total} ${total===1?"test":"tests"} in the last ${wk===52?"year":"6 months"}</p>`;
+  box.innerHTML=`<div class="heat" style="--wk:${wk}"><div class="heat-m">${months}</div><div class="heat-g">${cells}</div><div class="heat-pop" id="heatInfo" hidden></div></div><p class="mu">${total} ${total===1?"test":"tests"} in the last ${wk===52?"year":"6 months"}</p>`;
   box.querySelector(".heat-g").onclick=e=>{const c=e.target.closest(".hc");if(!c||!c.dataset.d)return;heatSel=heatSel===c.dataset.d?"":c.dataset.d;showHeat()};showHeat();
 }
 const inRange=d=>rangeSel==="all"||dayNum(d)>dayNum(today())-(rangeSel==="week"?7:30);
@@ -614,15 +635,22 @@ function subMine(){return subRes.map(r=>{const s=subjects.find(x=>x.id===r.subje
 function renderProgressExtra(){
   if(!$("cmpBox"))return;
   const k=chartEx,a=attemptsOf(k).filter(x=>inRange(x.date));
-  const row=(n,x,base)=>{const d=base!=null?+(x.score-base).toFixed(2):0;return `<div class="cmp-row"><span>${n} <small class="mu">${fmtD(x.date)}</small></span><b>${fs(k,x.score)}</b>${d?`<span class="delta ${d>0?"up":"down"}">${arrow(d>0)}${fd(k,d)}</span>`:"<span></span>"}</div>`};
-  if(!a.length)$("cmpBox").innerHTML='<p class="mu">\u2014</p>';
-  else{const f=a[0],l=a[a.length-1],p=a.length>1?a[a.length-2]:null,b=a.reduce((m,x)=>x.score>m.score?x:m,a[0]);
-    $("cmpBox").innerHTML=row("First",f,null)+(p&&p!==f?row("Previous",p,f.score):"")+(l!==f?row("Latest",l,f.score):"")+row("Best",b,f.score)}
-  $("secStats").innerHTML=examPartsFor(k).map(p=>{
+  const chg=d=>d?`<span class="delta ${d>0?"up":"down"}">${arrow(d>0)}${fd(k,d)}</span>`:'<span class="mu">\u2014</span>';
+  const C1="--cols:minmax(0,1.2fr) minmax(0,1fr) 90px 110px";
+  let h=`<div class="tbl"><div class="tbl-h" style="${C1}"><span>Attempt</span><span>Date</span><span class="n">Score</span><span class="n">Change</span></div>`;
+  if(!a.length)h+=`<div class="tbl-r" style="${C1}"><span class="mu">No attempts yet</span></div>`;
+  else{const f=a[0],l=a[a.length-1],p=a.length>1?a[a.length-2]:null,b=a.reduce((m,x)=>x.score>m.score?x:m,a[0]),rows=[["First",f,0]];
+    if(p&&p!==f)rows.push(["Previous",p,+(p.score-f.score).toFixed(2)]);if(l!==f)rows.push(["Latest",l,+(l.score-f.score).toFixed(2)]);rows.push(["Best",b,+(b.score-f.score).toFixed(2)]);
+    rows.forEach(([n,x,d])=>{h+=`<div class="tbl-r" style="${C1}"><b>${n}</b><span class="mu">${fmtD(x.date)}</span><span class="n">${fs(k,x.score)}</span><span class="n">${chg(d)}</span></div>`})}
+  $("cmpBox").innerHTML=h+"</div>";
+  const C2="--cols:minmax(0,1.5fr) repeat(3,minmax(0,1fr)) 110px";
+  let g=`<div class="tbl"><div class="tbl-h" style="${C2}"><span>Section</span><span class="n">Latest</span><span class="n">Best</span><span class="n">Average</span><span class="n">Change</span></div>`;
+  examPartsFor(k).forEach(p=>{
     const v=entries.filter(e=>e.exam===k&&e.subject===p.id&&inRange(e.date)).sort((x,y)=>x.date<y.date?-1:1).map(e=>e.score);
-    if(!v.length)return `<div class="sec-row"><b>${p.name}</b><span class="mu">\u2014</span></div>`;
+    if(!v.length){g+=`<div class="tbl-r" style="${C2}"><b>${p.name}</b><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span></div>`;return}
     const l=v[v.length-1],d=v.length>1?+(l-v[v.length-2]).toFixed(2):0,avg=+(v.reduce((t,x)=>t+x,0)/v.length).toFixed(2);
-    return `<div class="sec-row"><b>${p.name}</b><span>Latest <b>${fs(k,l)}</b>/${fs(k,maxOf(k,p.id))}</span><span>Best ${fs(k,Math.max(...v))}</span><span>Avg ${fs(k,avg)}</span>${d?`<span class="delta ${d>0?"up":"down"}">${arrow(d>0)}${fd(k,d)}</span>`:"<span></span>"}</div>`}).join("")||'<p class="mu">\u2014</p>';
+    g+=`<div class="tbl-r" style="${C2}"><b>${p.name}</b><span class="n">${fs(k,l)}</span><span class="n">${fs(k,Math.max(...v))}</span><span class="n">${fs(k,avg)}</span><span class="n">${chg(d)}</span></div>`});
+  $("secStats").innerHTML=g+"</div>";
 }
 function partName(ex,id){if(!id||id==="full")return "Total";if(ex==="ENT")return subName(id);const f=examPartsFor(ex).find(p=>p.id===id);return f?f.name:id[0].toUpperCase()+id.slice(1)}
 function hFilterUI(){const b=$("hFilter");b.innerHTML="";[["all","All"],...Object.keys(EX).map(k=>[k,EX[k].n])].forEach(([k,n])=>{const c=el("button",null,"chip"+(k===hFil?" on":""));if(k!=="all")c.dataset.ex=k;c.innerHTML=IC(k==="all"?"list":EXICON[k])+"<span>"+n+"</span>";c.onclick=()=>{hFil=k;list()};b.appendChild(c)})}
@@ -808,7 +836,7 @@ async function loadPlans(){
 }
 async function addPlan(){
   const d=planDateSel.get(),m=$("planMsg");
-  if(!d){m.textContent="Choose the day, month and year of your exam.";return}
+  if(!d){m.textContent="Choose the day, month and year of your practice.";return}
   if(daysTo(d)<0){m.textContent="Choose a date that has not passed.";return}
   const {error}=await sb.from("plans").insert({exam:planEx,plan_date:d});
   if(error){m.textContent=/plans/i.test(error.message)?"Plans need a new database table. Run the updated schema.sql in Supabase.":error.message;return}
@@ -817,7 +845,7 @@ async function addPlan(){
 function renderPlans(){
   const c=$("planExam"),box=$("planList");if(!c||!box||viewUid)return;
   chips(c,planEx,k=>{planEx=k;render()});box.replaceChildren();
-  if(!plans.length){box.appendChild(el("p","No plans yet. Add the exam you want to take.","mu"));return}
+  if(!plans.length){box.appendChild(el("p","No plans yet. Add your first practice.","mu"));return}
   const up=plans.filter(p=>daysTo(p.date)>=0),past=plans.filter(p=>daysTo(p.date)<0).reverse();
   [...up,...past].forEach(p=>{const d=daysTo(p.date),w=el("div",null,"block plan"+(d<0?" past":"")),n=el("b",EX[p.exam].n),info=el("div",null,"m"),del=el("button",null,"x");
     n.style.color="var(--"+p.exam.toLowerCase()+")";info.append(n,document.createElement("br"),el("small",fmtLong(p.date),"mu"));
@@ -829,24 +857,27 @@ function renderNextExam(){
   const up=plans.filter(p=>daysTo(p.date)>=0).sort((a,c)=>a.date<c.date?-1:1)[0];
   if(!up||viewUid){b.hidden=true;return}
   const d=daysTo(up.date);b.hidden=false;b.className="next-exam own"+(d<=3?" hot":d<=7?" warm":"");
-  b.innerHTML=IC("week")+'<span class="ne-text"><b></b> exam on <span></span></span><span class="ne-days"></span>';
+  b.innerHTML=IC("week")+'<span class="ne-text"><b></b> practice on <span></span></span><span class="ne-days"></span>';
   b.querySelector("b").textContent=EX[up.exam].n;b.querySelector(".ne-text span").textContent=fmtLong(up.date);b.querySelector(".ne-days").textContent=daysText(d);
 }
 function showHeat(){
-  const box=$("heatInfo");if(!box)return;
+  const pop=$("heatInfo");if(!pop)return;
   document.querySelectorAll(".hc.sel").forEach(x=>x.classList.remove("sel"));
-  if(!heatSel){box.hidden=true;return}
-  const c=document.querySelector('.hc[data-d="'+heatSel+'"]');if(c)c.classList.add("sel");
-  box.hidden=false;box.replaceChildren();const d=heatSel,g={};
-  entries.filter(e=>e.date===d).forEach(e=>(g[e.exam]??=[]).push(e));
-  box.appendChild(el("b",new Date(d+"T00:00:00Z").toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}),"hi-head"));
-  let any=false;
-  Object.keys(g).forEach(k=>{any=true;const rows=g[k],sum=rows.reduce((p,r)=>p+r.score,0),tot=k==="IELTS"?Math.round(sum/rows.length*2)/2:sum,mx=k==="IELTS"?9:rows.reduce((p,r)=>p+maxOf(k,r.subject||null),0);
-    const line=el("div",null,"hi-row"),dot=el("span",null,"dot"),m=el("div",null,"m");dot.style.background="var(--"+k.toLowerCase()+")";
-    m.append(el("b",EX[k].n+": "+fs(k,tot)+" / "+fs(k,mx)),document.createElement("br"),el("small",rows.map(r=>partName(k,r.subject)+" "+fs(k,r.score)).join(", "),"mu"));line.append(dot,m);box.appendChild(line)});
-  subRes.filter(r=>r.date===d).forEach(r=>{any=true;const s0=subjects.find(x=>x.id===r.subject_id)||{},line=el("div",null,"hi-row"),dot=el("span",null,"dot"),m=el("div",null,"m");
-    dot.style.background="var(--ac)";m.append(el("b",(s0.name||"Subject")+": "+r.score+(s0.max_score?" / "+s0.max_score:"")));line.append(dot,m);box.appendChild(line)});
-  if(!any)box.appendChild(el("p","No tests on this day.","mu"));
+  if(!heatSel){pop.hidden=true;return}
+  const cell=document.querySelector('.hc[data-d="'+heatSel+'"]');if(!cell){pop.hidden=true;return}
+  cell.classList.add("sel");
+  const d=heatSel,g={};entries.filter(e=>e.date===d).forEach(e=>((g[e.exam]??={})[e.ts]??=[]).push(e));
+  pop.replaceChildren();
+  pop.appendChild(el("b",new Date(d+"T00:00:00Z").toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric",timeZone:"UTC"}),"hp-date"));
+  Object.keys(EX).forEach(k=>{
+    const at=Object.values(g[k]||{}),tot=at.map(rows=>{const sum=rows.reduce((p,r)=>p+r.score,0);return k==="IELTS"?Math.round(sum/rows.length*2)/2:sum}),best=tot.length?Math.max(...tot):null;
+    const r=el("div",null,"hp-row"),n=el("b",EX[k].n);n.style.color="var(--"+k.toLowerCase()+")";
+    r.append(n,el("span",at.length+(at.length===1?" test":" tests")),el("b",best===null?"\u2013":"Best "+fs(k,best)));pop.appendChild(r)});
+  const sr=subRes.filter(r=>r.date===d).length;if(sr)pop.appendChild(el("div",sr+(sr===1?" subject result":" subject results"),"hp-sub"));
+  pop.hidden=false;
+  const heat=cell.closest(".heat"),hr=heat.getBoundingClientRect(),cr=cell.getBoundingClientRect(),pw=pop.offsetWidth||220,cx=cr.left-hr.left+cr.width/2;
+  pop.style.left=Math.max(pw/2,Math.min(hr.width-pw/2,cx))+"px";
+  pop.style.top=((cr.top-hr.top>pop.offsetHeight+16)?cr.top-hr.top-pop.offsetHeight-8:cr.bottom-hr.top+8)+"px";
 }
 const goalEdit={};
 function infoRow(a,b){const r=el("div",null,"info-row");r.append(el("span",a),el("b",b));return r}
@@ -965,7 +996,7 @@ function buildNotifs(){
     if(over)out.push({id:"over:"+td,k:"bad",ic:"cal",title:over+(over===1?" task is overdue":" tasks are overdue"),text:"Open the planner to catch up.",go:"plannerPanel",push:past});
     if(tod)out.push({id:"today:"+td,k:"info",ic:"cal",title:tod+(tod===1?" task for today":" tasks for today"),text:"Finish them to keep your plan on track.",go:"plannerPanel",push:past})}
   if(S.goals)plans.forEach(p=>{const d=dayNum(p.date)-t0;if(d<0||d>30)return;const b=[0,1,2,3,7,14,30].find(x=>d<=x);
-    out.push({id:"plan:"+p.id+":"+b,k:d<=3?"bad":d<=7?"warn":"info",ic:"cal",title:EX[p.exam].n+" exam "+(d===0?"is today":d===1?"is tomorrow":"is in "+d+" days"),text:fmtLong(p.date)+(d===0?". Good luck!":""),go:"plansPanel",push:d<=3})});
+    out.push({id:"plan:"+p.id+":"+b,k:d<=3?"bad":d<=7?"warn":"info",ic:"cal",title:EX[p.exam].n+" practice "+(d===0?"is today":d===1?"is tomorrow":"is in "+d+" days"),text:fmtLong(p.date)+(d===0?". Good luck!":""),go:"plansPanel",push:d<=3})});
   return out;
 }
 function renderNotif(){
@@ -1038,7 +1069,7 @@ async function uploadAvatar(file){
   m.textContent="Uploading photo...";
   try{
     const im=await loadImg(file),S=256,c=document.createElement("canvas");c.width=c.height=S;
-    const w=im.naturalWidth||im.width,h=im.naturalHeight||im.height,r=Math.min(w,h);
+    const w=im.naturalWidth||im.width,h=im.naturalHeight||im.height,r=Math.min(w,h)*0.9;
     c.getContext("2d").drawImage(im,(w-r)/2,(h-r)/2,r,r,0,0,S,S);
     const blob=await new Promise(res=>c.toBlob(res,"image/jpeg",.88));if(!blob)throw new Error("Could not process the image");
     const path=uid+"/avatar.jpg",up=await sb.storage.from("avatars").upload(path,blob,{upsert:true,contentType:"image/jpeg"});if(up.error)throw up.error;
@@ -1090,7 +1121,7 @@ $("nBrowser").onclick=async()=>{const S=nSet(),m=$("nMsg");
   else m.textContent="Notifications are blocked. Allow them in your browser settings for this site.";
   loadNotifUI()};
 setInterval(maybeNotify,60000);
-$("quoteBtn").onclick=editQuote;$("nextExam").onclick=()=>openPanel("plansPanel");$("planDate").appendChild(planDateSel.el);$("planAdd").onclick=addPlan;setQuote(lsGet("quote",""));$("hSearch").oninput=list;$("hSort").onchange=list;
+$("quoteBtn").onclick=editQuote;document.addEventListener("click",e=>{if(heatSel&&!e.target.closest(".heat")){heatSel="";showHeat()}});$("nextExam").onclick=()=>openPanel("plansPanel");$("planDate").appendChild(planDateSel.el);$("planAdd").onclick=addPlan;setQuote(lsGet("quote",""));$("hSearch").oninput=list;$("hSort").onchange=list;
 $("sAdd").onclick=async()=>{const n=$("sName").value.trim(),m=parseFloat($("sMax").value);if(!n||isNaN(m)||m<=0){$("sMsg").textContent="Enter a name and a maximum score above 0.";return}const {error}=await sb.from("subjects").insert({name:n,max_score:m});if(error){$("sMsg").textContent=error.message;return}$("sName").value="";$("sMsg").textContent="";load()};
 const birth=dateSel("",null,Y0-40,Y0-5);$("pbirth").appendChild(birth.el);
 $("pgrade").innerHTML='<option value="">Select grade</option>'+[...Array(11)].map((_,i)=>`<option>Grade ${i+1}</option>`).join("")+'<option>College</option><option>University</option><option>Finished school</option>';
