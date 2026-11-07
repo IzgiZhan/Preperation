@@ -855,7 +855,7 @@ function renderNextExam(){
   if(!up||viewUid){b.hidden=true;return}
   const d=daysTo(up.date);b.hidden=false;b.className="next-exam own"+(d<=1?" hot":d<=3?" warm":"");
   b.innerHTML=IC("week")+'<span class="ne-text"><b>Next practice:</b> <span></span></span><span class="ne-days"></span>';
-  b.querySelector(".ne-text span").textContent=(up.exam?EX[up.exam].n+(up.section?" "+partName(up.exam,up.section):"")+", ":"")+up.title+", "+fmtLong(up.date);
+  b.querySelector(".ne-text span").textContent=(up.exam?EX[up.exam].n+(up.section?" "+partName(up.exam,up.section):"")+", ":up.title+", ")+fmtLong(up.date);
   b.querySelector(".ne-days").textContent=daysText(d);
 }
 function showHeat(){
