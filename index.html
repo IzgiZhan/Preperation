@@ -645,8 +645,9 @@ function renderProgressExtra(){
   const C1="--cols:minmax(0,1.2fr) minmax(0,1fr) 90px 110px";
   let h=`<div class="tbl"><div class="tbl-h" style="${C1}"><span>Attempt</span><span>Date</span><span class="n">Score</span><span class="n">Change</span></div>`;
   if(!a.length)h+=`<div class="tbl-r" style="${C1}"><span class="mu">No attempts yet</span></div>`;
-  else{const f=a[0],l=a[a.length-1],p=a.length>1?a[a.length-2]:null,b=a.reduce((m,x)=>x.score>m.score?x:m,a[0]),rows=[["First",f,0]];
-    if(p&&p!==f)rows.push(["Previous",p,+(p.score-f.score).toFixed(2)]);if(l!==f)rows.push(["Latest",l,+(l.score-f.score).toFixed(2)]);rows.push(["Best",b,+(b.score-f.score).toFixed(2)]);
+  else{const f=a[0],l=a[a.length-1],p=a.length>1?a[a.length-2]:null,b=a.reduce((m,x)=>x.score>m.score?x:m,a[0]),merge=l!==f&&l.score===b.score,fb=b===f;rows=[[fb&&!merge&&a.length>1?"First \u00b7 Best":"First",f,0]];
+    if(p&&p!==f)rows.push(["Previous",p,+(p.score-f.score).toFixed(2)]);
+    if(l!==f)rows.push([merge?"Latest \u00b7 Best":"Latest",l,+(l.score-f.score).toFixed(2)]);if(!merge&&!fb)rows.push(["Best",b,+(b.score-f.score).toFixed(2)]);
     rows.forEach(([n,x,d])=>{h+=`<div class="tbl-r" style="${C1}"><b>${n}</b><span class="mu">${fmtD(x.date)}</span><span class="n">${fs(k,x.score)}${x.rc!=null?` <small class="mu">(${x.rc}/${x.rt})</small>`:""}</span><span class="n">${chg(d)}</span></div>`})}
   $("cmpBox").innerHTML=h+"</div>";
   const C2="--cols:minmax(0,1.4fr) repeat(3,minmax(0,.8fr)) 64px 78px";
