@@ -482,7 +482,13 @@ function examParts(){
  return [];
 }
 document.addEventListener("keydown",e=>{if(e.target.matches&&e.target.matches(".raw-c")&&["-","+","e","E",".",","].includes(e.key))e.preventDefault()});
-document.addEventListener("input",e=>{const t=e.target;if(!t.matches||!t.matches(".raw-c")||t.value==="")return;t.value=String(Math.min(40,Math.max(1,Math.floor(+t.value))))});
+const IELTS_RAW={listening:{"9.0":[39,40],"8.5":[37,38],"8.0":[35,36],"7.5":[32,34],"7.0":[30,31],"6.5":[26,29],"6.0":[23,25],"5.5":[18,22],"5.0":[16,17],"4.5":[13,15],"4.0":[10,12],"3.5":[8,9],"3.0":[6,7],"2.5":[4,5]},reading:{"9.0":[39,40],"8.5":[37,38],"8.0":[35,36],"7.5":[33,34],"7.0":[30,32],"6.5":[27,29],"6.0":[23,26],"5.5":[19,22],"5.0":[15,18],"4.5":[13,14],"4.0":[10,12],"3.5":[8,9],"3.0":[6,7],"2.5":[4,5]}};
+const ieltsRaw=(part,band)=>cur==="IELTS"&&band!==""&&!isNaN(band)?(IELTS_RAW[part]||{})[Number(band).toFixed(1)]||null:null;
+function rawRangeUI(raw,r){raw.min=r?r[0]:1;raw.max=r?r[1]:40;raw.placeholder=r?(r[0]===r[1]?r[0]:r[0]+"–"+r[1]):"1–40"}
+document.addEventListener("input",e=>{const t=e.target;if(!t.matches)return;
+ if(t.matches(".part-value")&&cur==="IELTS"){const raw=t.closest(".part-score")?.querySelector(".raw-c");if(raw){const r=ieltsRaw(t.dataset.part,t.value);rawRangeUI(raw,r);if(r&&raw.value&&(+raw.value<r[0]||+raw.value>r[1]))raw.value=""}}
+ else if(t.matches(".raw-c")&&t.value!=="")t.value=String(Math.min(40,Math.max(1,Math.floor(+t.value))))});
+document.addEventListener("change",e=>{const t=e.target;if(t.matches&&t.matches(".raw-c")&&t.value!==""){t.value=String(Math.min(+t.max||40,Math.max(+t.min||1,Math.floor(+t.value))))}});
 function examPartsFor(ex){
  if(ex==="IELTS")return [{id:"listening",name:"Listening"},{id:"reading",name:"Reading"},{id:"writing",name:"Writing"},{id:"speaking",name:"Speaking"}];
  if(ex==="SAT")return SAT_PARTS;
@@ -518,7 +524,7 @@ function renderExamParts(){
  $("partsTitle").textContent=cur==="IELTS"?"IELTS sections":cur==="ENT"?"ҰБТ пәндері":"SAT sections";
  $("partsList").innerHTML=parts.map(p=>{
   const scoreControl=cur==="IELTS"
-   ?`<select class="part-value" data-part="${p.id}"><option value="">—</option>${Array.from({length:17},(_,i)=>{const v=(i+2)/2;return `<option value="${v.toFixed(1)}">${v.toFixed(1)}</option>`}).join("")}</select>`
+   ?`<input type="number" class="part-value" data-part="${p.id}" min="1" max="9" step="0.5" inputmode="decimal" placeholder="1–9">`
    :`<input type="number" class="part-value" data-part="${p.id}" min="${p.min??0}" max="${p.max}" step="${p.step}" placeholder="${p.min??0}–${p.max}">`;
   const rn=cur==="IELTS"&&(p.id==="listening"||p.id==="reading")?40:0;
   return `<div class="part-row"><label class="part-check"><input type="checkbox" class="part-toggle" value="${p.id}"> ${p.name}</label><div class="part-score" hidden>${scoreControl}${rn?`<input type="number" class="raw-c" data-part="${p.id}" min="1" max="40" step="1" inputmode="numeric" placeholder="1–40"><input type="hidden" class="raw-t" data-part="${p.id}" value="40">`:""}</div></div>`;
@@ -758,7 +764,7 @@ async function add(){
    const valid=def&&!isNaN(score)&&score>=(def.min??0)&&score<=def.max&&(def.step!==0.5||Math.round(score*2)===score*2)&&(def.step!==10||score%10===0);
    if(!valid){alert("Enter a valid "+(def?.name||"subject")+" score from "+(def?.min??0)+" to "+(def?.max||"")+".");return}
    const rc=document.querySelector(`.raw-c[data-part="${part}"]`)?.value??"",rt=document.querySelector(`.raw-t[data-part="${part}"]`)?.value??"",rec={exam:cur,subject:part,entry_date:date,kind,score};
-   if(rc!==""){const a=+rc,b=+rt;if(!(b>0)||a<0||a>b||!Number.isInteger(a)||!Number.isInteger(b)){alert("Check correct answers for "+def.name+": it must be a whole number from 0 to the total.");return}rec.raw_correct=a;rec.raw_total=b}
+   if(rc!==""){const a=+rc,b=+rt;const rr=ieltsRaw(part,score);if(!(b>0)||a<1||a>b||!Number.isInteger(a)||(rr&&(a<rr[0]||a>rr[1]))){alert("Correct answers for "+def.name+" must be "+(rr?(rr[0]===rr[1]?rr[0]:rr[0]+"–"+rr[1]):"1–40")+" for band "+Number(score).toFixed(1)+".");return}rec.raw_correct=a;rec.raw_total=b}
    records.push(rec);
   }
  }else{
@@ -767,7 +773,7 @@ async function add(){
   records.push({exam:cur,subject:null,entry_date:date,kind,score})
  }
  const {error}=await sb.from("entries").insert(records);if(error){alert(error.message);return}
- $("score").value="";document.querySelectorAll(".part-toggle").forEach(c=>{c.checked=false;c.closest(".part-row").querySelector(".part-score").hidden=true});document.querySelectorAll(".part-value,.raw-c").forEach(i=>i.value="");updateCalculatedScore();chartEx=cur;chartSub="full";openPanel("historyPanel");load();
+ $("score").value="";document.querySelectorAll(".part-toggle").forEach(c=>{c.checked=false;c.closest(".part-row").querySelector(".part-score").hidden=true});document.querySelectorAll(".part-value,.raw-c").forEach(i=>i.value="");document.querySelectorAll(".raw-c").forEach(r=>rawRangeUI(r,null));updateCalculatedScore();chartEx=cur;chartSub="full";openPanel("historyPanel");load();
 }
 async function del(id){await sb.from("entries").delete().eq("id",id);load()}
 $("add").onclick=add;
