@@ -670,7 +670,7 @@ function hFilterUI(){const b=$("hFilter");b.innerHTML="";[["all","All"],...Objec
 function attemptCard(x){
   const w=el("div",null,"att"),head=el("div",null,"att-head"),dot=el("span",null,"dot"),m=el("div",null,"m"),sc=el("span",null,"sco");
   dot.style.background="var(--"+x.exam.toLowerCase()+")";
-  m.append(el("b",EX[x.exam].n),document.createElement("br"),el("small",fmtD(x.date)+", "+x.rows.length+(x.rows.length===1?" part":" parts")));
+  m.append(el("b",EX[x.exam].n),document.createElement("br"),el("small",fmtD(x.date)+(x.ts?" "+new Date(x.ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):"")+", "+x.rows.length+(x.rows.length===1?" part":" parts")));
   sc.append(document.createTextNode(fs(x.exam,x.total)),el("small","/"+fs(x.exam,x.max),"mu"));
   const bD=el("button","Details","hbtn"),bE=el("button","Edit","hbtn amber"),bX=el("button",null,"x");bX.innerHTML=ICON_X;bX.title="Delete";
   head.append(dot,m,sc,bD,bE,bX);w.appendChild(head);
@@ -696,11 +696,11 @@ function attemptCard(x){
 function list(){
   hFilterUI();
   const q=($("hSearch").value||"").trim().toLowerCase(),box=$("list"),g={};
-  entries.forEach(e=>{(g[e.exam+"|"+e.date]??={exam:e.exam,date:e.date,rows:[]}).rows.push(e)});
+  entries.forEach(e=>{(g[e.exam+"|"+e.date+"|"+(e.ts||0)]??={exam:e.exam,date:e.date,ts:e.ts||0,rows:[]}).rows.push(e)});
   let a=Object.values(g).filter(x=>hFil==="all"||x.exam===hFil).map(x=>({...x,total:x.exam==="IELTS"?Math.round(x.rows.reduce((p,r)=>p+r.score,0)/x.rows.length*2)/2:x.rows.reduce((p,r)=>p+r.score,0),max:x.exam==="IELTS"?9:x.rows.reduce((p,r)=>p+maxOf(x.exam,r.subject||null),0)}));
   if(q)a=a.filter(x=>(EX[x.exam].n+" "+x.date+" "+fmtD(x.date)+" "+x.rows.map(r=>partName(x.exam,r.subject)+" "+(r.note||"")).join(" ")).toLowerCase().includes(q));
   const so=$("hSort").value;
-  a.sort((x,y)=>so==="dold"?(x.date<y.date?-1:1):so==="shigh"?(y.total/y.max-x.total/x.max):so==="slow"?(x.total/x.max-y.total/y.max):(x.date<y.date?1:-1));
+  a.sort((x,y)=>so==="dold"?(x.date<y.date?-1:x.date>y.date?1:x.ts-y.ts):so==="shigh"?(y.total/y.max-x.total/x.max):so==="slow"?(x.total/x.max-y.total/y.max):(x.date<y.date?1:x.date>y.date?-1:y.ts-x.ts));
   box.replaceChildren();
   if(!a.length){box.appendChild(el("p","No results found.","mu"));return}
   a.forEach(x=>box.appendChild(attemptCard(x)));
@@ -809,8 +809,8 @@ function editQuote(){
   ok.onclick=async()=>{const q=inp.value.trim().replace(/^[\u201c"]+|[\u201d"]+$/g,"");setQuote(q);lsSet("quote",q);done();if(uid)await sb.from("profiles").update({quote:q||null}).eq("user_id",uid)};
 }
 function attemptsOf(k){
-  const g={};entries.filter(e=>e.exam===k).forEach(e=>{(g[e.date]??={date:e.date,v:[]}).v.push(e.score)});
-  return Object.values(g).sort((x,y)=>x.date<y.date?-1:1).map(a=>{const sum=a.v.reduce((p,c)=>p+c,0);return {date:a.date,score:k==="IELTS"?Math.round(sum/a.v.length*2)/2:sum}});
+  const g={};entries.filter(e=>e.exam===k).forEach(e=>{(g[e.date+"|"+(e.ts||0)]??={date:e.date,ts:e.ts||0,v:[]}).v.push(e.score)});
+  return Object.values(g).sort((x,y)=>x.date<y.date?-1:x.date>y.date?1:x.ts-y.ts).map(a=>{const sum=a.v.reduce((p,c)=>p+c,0);return {date:a.date,ts:a.ts,score:k==="IELTS"?Math.round(sum/a.v.length*2)/2:sum}});
 }
 const arrow=up=>'<svg class="ar'+(up?'':' dn')+'" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1 9 8H1z"/></svg>';
 function spark(v,up){
