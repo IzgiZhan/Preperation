@@ -95,7 +95,7 @@ button.danger{background:var(--bad)}
 .parts-box{margin:8px 0 18px}.parts-heading{padding:6px 0 8px;font-weight:700}
 .part-row{display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid var(--bd)}
 .part-check{flex:0 1 340px;display:flex;align-items:center;gap:12px;margin:0;color:var(--tx);font-size:16px;font-weight:600}
-.part-score{width:160px}
+.part-score{width:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.part-score[hidden]{display:none}.raw{display:flex;align-items:center;gap:4px;font-size:13px}.raw input{width:60px}
 .calculated-score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding:18px 20px;border-radius:16px;background:var(--bg)}
 .calculated-score span{color:var(--mu);font-weight:600}.calculated-score strong{font-size:40px;letter-spacing:-.04em}.calculated-score small{color:var(--mu)}
 #addPanel .card,#coachPanel .card{display:flex;flex-direction:column}#addPanel .main,#coachPanel .main{align-self:flex-start;min-width:240px}
@@ -518,7 +518,7 @@ function renderExamParts(){
   const scoreControl=cur==="IELTS"
    ?`<select class="part-value" data-part="${p.id}"><option value="">—</option>${Array.from({length:17},(_,i)=>{const v=(i+2)/2;return `<option value="${v.toFixed(1)}">${v.toFixed(1)}</option>`}).join("")}</select>`
    :`<input type="number" class="part-value" data-part="${p.id}" min="${p.min??0}" max="${p.max}" step="${p.step}" placeholder="${p.min??0}–${p.max}">`;
-  return `<div class="part-row"><label class="part-check"><input type="checkbox" class="part-toggle" value="${p.id}"> ${p.name}</label><div class="part-score" hidden>${scoreControl}</div></div>`;
+  return `<div class="part-row"><label class="part-check"><input type="checkbox" class="part-toggle" value="${p.id}"> ${p.name}</label><div class="part-score" hidden>${scoreControl}<span class="raw"><input type="number" class="raw-c" data-part="${p.id}" min="0" placeholder="correct"> / <input type="number" class="raw-t" data-part="${p.id}" min="1" placeholder="of" value="${cur==="IELTS"&&(p.id==="listening"||p.id==="reading")?40:""}"></span></div></div>`;
  }).join("");
  $("partsList").querySelectorAll(".part-toggle").forEach(c=>c.addEventListener("change",()=>{c.closest(".part-row").querySelector(".part-score").hidden=!c.checked;updateCalculatedScore()}));
  $("partsList").querySelectorAll(".part-value").forEach(i=>i.addEventListener("change",updateCalculatedScore));
@@ -638,7 +638,7 @@ function renderProgressExtra(){
   if(!a.length)h+=`<div class="tbl-r" style="${C1}"><span class="mu">No attempts yet</span></div>`;
   else{const f=a[0],l=a[a.length-1],p=a.length>1?a[a.length-2]:null,b=a.reduce((m,x)=>x.score>m.score?x:m,a[0]),rows=[["First",f,0]];
     if(p&&p!==f)rows.push(["Previous",p,+(p.score-f.score).toFixed(2)]);if(l!==f)rows.push(["Latest",l,+(l.score-f.score).toFixed(2)]);rows.push(["Best",b,+(b.score-f.score).toFixed(2)]);
-    rows.forEach(([n,x,d])=>{h+=`<div class="tbl-r" style="${C1}"><b>${n}</b><span class="mu">${fmtD(x.date)}</span><span class="n">${fs(k,x.score)}</span><span class="n">${chg(d)}</span></div>`})}
+    rows.forEach(([n,x,d])=>{h+=`<div class="tbl-r" style="${C1}"><b>${n}</b><span class="mu">${fmtD(x.date)}</span><span class="n">${fs(k,x.score)}${x.rc!=null?` <small class="mu">(${x.rc}/${x.rt})</small>`:""}</span><span class="n">${chg(d)}</span></div>`})}
   $("cmpBox").innerHTML=h+"</div>";
   const C2="--cols:minmax(0,1.5fr) repeat(3,minmax(0,1fr)) 110px";
   let g=`<div class="tbl"><div class="tbl-h" style="${C2}"><span>Section</span><span class="n">Latest</span><span class="n">Best</span><span class="n">Average</span><span class="n">Change</span></div>`;
@@ -732,7 +732,7 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 async function load(){
   const {data:e,error}=await sb.from("entries").select("*").eq("user_id",viewUid||uid).order("entry_date",{ascending:false});
   if(error){alert(error.message);return}
-  entries=e.map(r=>({id:r.id,exam:r.exam,subject:r.subject,date:r.entry_date,kind:r.kind,score:Number(r.score),ts:Date.parse(r.created_at)}));
+  entries=e.map(r=>({id:r.id,exam:r.exam,subject:r.subject,date:r.entry_date,kind:r.kind,score:Number(r.score),rc:r.raw_correct,rt:r.raw_total,ts:Date.parse(r.created_at)}));
   const {data:t}=await sb.from("targets").select("*").eq("user_id",viewUid||uid);
   targets={};deadlines={};(t||[]).forEach(r=>{if(r.target!=null)targets[r.exam]=Number(r.target);if(r.deadline)deadlines[r.exam]=r.deadline});if(!viewUid){await loadSubjects();await loadPlanner()}
   render();
@@ -747,7 +747,9 @@ async function add(){
    const part=c.value,def=defs.find(x=>x.id===part),input=document.querySelector(`.part-value[data-part="${part}"]`),score=parseFloat(input.value);
    const valid=def&&!isNaN(score)&&score>=(def.min??0)&&score<=def.max&&(def.step!==0.5||Math.round(score*2)===score*2)&&(def.step!==10||score%10===0);
    if(!valid){alert("Enter a valid "+(def?.name||"subject")+" score from "+(def?.min??0)+" to "+(def?.max||"")+".");return}
-   records.push({exam:cur,subject:part,entry_date:date,kind,score});
+   const rc=document.querySelector(`.raw-c[data-part="${part}"]`).value,rt=document.querySelector(`.raw-t[data-part="${part}"]`).value,rec={exam:cur,subject:part,entry_date:date,kind,score};
+   if(rc!==""){const a=+rc,b=+rt;if(!(b>0)||a<0||a>b||!Number.isInteger(a)||!Number.isInteger(b)){alert("Check correct answers for "+def.name+": it must be a whole number from 0 to the total.");return}rec.raw_correct=a;rec.raw_total=b}
+   records.push(rec);
   }
  }else{
   const score=parseFloat($("score").value),mx=maxOf(cur,null);
@@ -755,7 +757,7 @@ async function add(){
   records.push({exam:cur,subject:null,entry_date:date,kind,score})
  }
  const {error}=await sb.from("entries").insert(records);if(error){alert(error.message);return}
- $("score").value="";document.querySelectorAll(".part-toggle").forEach(c=>{c.checked=false;c.closest(".part-row").querySelector(".part-score").hidden=true});document.querySelectorAll(".part-value").forEach(i=>i.value="");updateCalculatedScore();chartEx=cur;chartSub="full";openPanel("historyPanel");load();
+ $("score").value="";document.querySelectorAll(".part-toggle").forEach(c=>{c.checked=false;c.closest(".part-row").querySelector(".part-score").hidden=true});document.querySelectorAll(".part-value,.raw-c").forEach(i=>i.value="");updateCalculatedScore();chartEx=cur;chartSub="full";openPanel("historyPanel");load();
 }
 async function del(id){await sb.from("entries").delete().eq("id",id);load()}
 $("add").onclick=add;
