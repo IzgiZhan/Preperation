@@ -481,9 +481,8 @@ function examParts(){
  if(cur==="ENT")return ["hist","math_l","read_l",...entSubs.filter(k=>ELECT.includes(k))].slice(0,5).map(id=>({id,name:subName(id),max:SUBJ[id].max,step:1}));
  return [];
 }
-const rawOptions=n=>'<option value="">–</option>'+Array.from({length:n},(_,i)=>'<option value="'+(i+1)+'">'+(i+1)+'</option>').join("");
-document.addEventListener("keydown",e=>{if(e.target.matches&&e.target.matches(".raw-t")&&["-","+","e","E",".",","].includes(e.key))e.preventDefault()});
-document.addEventListener("input",e=>{const t=e.target;if(!t.matches||!t.matches(".raw-t"))return;const w=t.closest(".raw"),c=w.querySelector(".raw-c"),old=c.value;if(t.value!=="")t.value=String(Math.min(300,Math.max(0,Math.floor(+t.value))));c.innerHTML=rawOptions(+t.value||0);if(old&&+old<=+t.value)c.value=old});
+document.addEventListener("keydown",e=>{if(e.target.matches&&e.target.matches(".raw-c")&&["-","+","e","E",".",","].includes(e.key))e.preventDefault()});
+document.addEventListener("input",e=>{const t=e.target;if(!t.matches||!t.matches(".raw-c")||t.value==="")return;t.value=String(Math.min(40,Math.max(1,Math.floor(+t.value))))});
 function examPartsFor(ex){
  if(ex==="IELTS")return [{id:"listening",name:"Listening"},{id:"reading",name:"Reading"},{id:"writing",name:"Writing"},{id:"speaking",name:"Speaking"}];
  if(ex==="SAT")return SAT_PARTS;
@@ -522,7 +521,7 @@ function renderExamParts(){
    ?`<select class="part-value" data-part="${p.id}"><option value="">—</option>${Array.from({length:17},(_,i)=>{const v=(i+2)/2;return `<option value="${v.toFixed(1)}">${v.toFixed(1)}</option>`}).join("")}</select>`
    :`<input type="number" class="part-value" data-part="${p.id}" min="${p.min??0}" max="${p.max}" step="${p.step}" placeholder="${p.min??0}–${p.max}">`;
   const rn=cur==="IELTS"&&(p.id==="listening"||p.id==="reading")?40:0;
-  return `<div class="part-row"><label class="part-check"><input type="checkbox" class="part-toggle" value="${p.id}"> ${p.name}</label><div class="part-score" hidden>${scoreControl}<span class="raw"><select class="raw-c" data-part="${p.id}">${rawOptions(rn)}</select> <i>/</i> <input type="number" class="raw-t" data-part="${p.id}" min="1" step="1" inputmode="numeric" placeholder="–" value="${rn||""}"></span></div></div>`;
+  return `<div class="part-row"><label class="part-check"><input type="checkbox" class="part-toggle" value="${p.id}"> ${p.name}</label><div class="part-score" hidden>${scoreControl}${rn?`<input type="number" class="raw-c" data-part="${p.id}" min="1" max="40" step="1" inputmode="numeric" placeholder="1–40"><input type="hidden" class="raw-t" data-part="${p.id}" value="40">`:""}</div></div>`;
  }).join("");
  $("partsList").querySelectorAll(".part-toggle").forEach(c=>c.addEventListener("change",()=>{c.closest(".part-row").querySelector(".part-score").hidden=!c.checked;updateCalculatedScore()}));
  $("partsList").querySelectorAll(".part-value").forEach(i=>i.addEventListener("change",updateCalculatedScore));
@@ -758,7 +757,7 @@ async function add(){
    const part=c.value,def=defs.find(x=>x.id===part),input=document.querySelector(`.part-value[data-part="${part}"]`),score=parseFloat(input.value);
    const valid=def&&!isNaN(score)&&score>=(def.min??0)&&score<=def.max&&(def.step!==0.5||Math.round(score*2)===score*2)&&(def.step!==10||score%10===0);
    if(!valid){alert("Enter a valid "+(def?.name||"subject")+" score from "+(def?.min??0)+" to "+(def?.max||"")+".");return}
-   const rc=document.querySelector(`.raw-c[data-part="${part}"]`).value,rt=document.querySelector(`.raw-t[data-part="${part}"]`).value,rec={exam:cur,subject:part,entry_date:date,kind,score};
+   const rc=document.querySelector(`.raw-c[data-part="${part}"]`)?.value??"",rt=document.querySelector(`.raw-t[data-part="${part}"]`)?.value??"",rec={exam:cur,subject:part,entry_date:date,kind,score};
    if(rc!==""){const a=+rc,b=+rt;if(!(b>0)||a<0||a>b||!Number.isInteger(a)||!Number.isInteger(b)){alert("Check correct answers for "+def.name+": it must be a whole number from 0 to the total.");return}rec.raw_correct=a;rec.raw_total=b}
    records.push(rec);
   }
