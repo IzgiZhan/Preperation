@@ -652,9 +652,9 @@ function renderProgressExtra(){
   const C2="--cols:minmax(0,1.4fr) repeat(3,minmax(0,.8fr)) 64px 78px";
   let g=`<div class="tbl"><div class="tbl-h" style="${C2}"><span>Section</span><span class="n">Latest</span><span class="n">Best</span><span class="n">Average</span><span class="n">Change</span><span class="n">To goal</span></div>`;
   const goal=typeof targets!=="undefined"&&targets[k]>0?targets[k]:null,D=examPartsFor(k).map(p=>{
-    const v=entries.filter(e=>e.exam===k&&e.subject===p.id&&inRange(e.date)).sort((x,y)=>x.date<y.date?-1:1).map(e=>e.score),mx=maxOf(k,p.id);
-    return {p,v,mx,l:v[v.length-1]}}),have=D.filter(x=>x.v.length),weak=have.length>1?have.reduce((a,b)=>b.l/b.mx<a.l/a.mx?b:a):null;
-  D.forEach(({p,v,mx,l})=>{
+    const es=entries.filter(e=>e.exam===k&&e.subject===p.id&&inRange(e.date)).sort((x,y)=>x.date<y.date?-1:x.date>y.date?1:(x.ts||0)-(y.ts||0)),v=es.map(e=>e.score),mx=maxOf(k,p.id);
+    return {p,v,mx,l:v[v.length-1],le:es[es.length-1]}}),have=D.filter(x=>x.v.length),weak=have.length>1?have.reduce((a,b)=>b.l/b.mx<a.l/a.mx?b:a):null;
+  D.forEach(({p,v,mx,l,le})=>{
     if(!v.length){g+=`<div class="tbl-r" style="${C2}"><b>${p.name}</b><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span></div>`;return}
     const d=v.length>1?+(l-v[v.length-2]).toFixed(2):0,avg=+(v.reduce((t,x)=>t+x,0)/v.length).toFixed(2),avgR=k==="IELTS"?Math.round(avg*2)/2:avg;
     let gap='<span class="n mu">\u2014</span>';
@@ -662,7 +662,7 @@ function renderProgressExtra(){
     const w=v.slice(-8);let sp="";
     if(w.length>1){const a=Math.min(...w),b=Math.max(...w),r=b-a||1;sp=`<svg width="90" height="18" viewBox="0 0 90 18" style="display:block;margin-top:3px"><polyline fill="none" stroke="currentColor" stroke-width="1.6" opacity=".6" points="${w.map((y,n)=>(n*90/(w.length-1)).toFixed(1)+","+(16-(y-a)/r*14).toFixed(1)).join(" ")}"/></svg>`}
     const tag="";
-    g+=`<div class="tbl-r" style="${C2}"><div><b>${p.name}</b>${tag}${sp}</div><span class="n">${fs(k,l)}</span><span class="n">${fs(k,Math.max(...v))}</span><span class="n">${fs(k,avgR)}</span><span class="n">${chg(d)}</span>${gap}</div>`});
+    g+=`<div class="tbl-r" style="${C2}"><div><b>${p.name}</b>${tag}${sp}</div><span class="n">${fs(k,l)}${le&&le.rc!=null?` <small class="mu">(${le.rc}/${le.rt})</small>`:""}</span><span class="n">${fs(k,Math.max(...v))}</span><span class="n">${fs(k,avgR)}</span><span class="n">${chg(d)}</span>${gap}</div>`});
   $("secStats").innerHTML=g+"</div>";
 }
 function partName(ex,id){if(!id||id==="full")return "Total";if(ex==="ENT")return subName(id);const f=examPartsFor(ex).find(p=>p.id===id);return f?f.name:id[0].toUpperCase()+id.slice(1)}
@@ -675,7 +675,7 @@ function attemptCard(x){
   const bD=el("button","Details","hbtn"),bE=el("button","Edit","hbtn amber"),bX=el("button",null,"x");bX.innerHTML=ICON_X;bX.title="Delete";
   head.append(dot,m,sc,bD,bE,bX);w.appendChild(head);
   const det=el("div",null,"att-parts");det.hidden=true;
-  x.rows.forEach(r=>{const l=el("div",null,"part-line");l.append(el("span",partName(x.exam,r.subject)),el("b",fs(x.exam,r.score)+" / "+fs(x.exam,maxOf(x.exam,r.subject||null))));det.appendChild(l)});
+  x.rows.forEach(r=>{const l=el("div",null,"part-line");l.append(el("span",partName(x.exam,r.subject)),el("b",fs(x.exam,r.score)+" / "+fs(x.exam,maxOf(x.exam,r.subject||null))));if(r.rc!=null)l.append(el("small","\u00b7 "+r.rc+"/"+r.rt+" correct","mu"));det.appendChild(l)});
   w.appendChild(det);
   bD.onclick=()=>{det.hidden=!det.hidden;bD.textContent=det.hidden?"Details":"Hide"};
   bX.onclick=async()=>{if(confirm("Delete this attempt?")){await sb.from("entries").delete().in("id",x.rows.map(r=>r.id));load()}};
