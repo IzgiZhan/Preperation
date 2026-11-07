@@ -773,6 +773,7 @@ async function add(){
   records.push({exam:cur,subject:null,entry_date:date,kind,score})
  }
  const {error}=await sb.from("entries").insert(records);if(error){alert(error.message);return}
+ await markPlansDone(cur,date,records);
  $("score").value="";document.querySelectorAll(".part-toggle").forEach(c=>{c.checked=false;c.closest(".part-row").querySelector(".part-score").hidden=true});document.querySelectorAll(".part-value,.raw-c").forEach(i=>i.value="");document.querySelectorAll(".raw-c").forEach(r=>rawRangeUI(r,null));updateCalculatedScore();chartEx=cur;chartSub="full";openPanel("historyPanel");load();
 }
 async function del(id){await sb.from("entries").delete().eq("id",id);load()}
@@ -946,6 +947,11 @@ function secCtl(ex,val){
   return {el:w,get:()=>mode==="part"&&e?(sel.value||null):null,setEx:x=>{e=x;mode="all";fill("");draw()}}
 }
 const secName=(ex,id)=>id?partName(ex,id):"All sections";
+async function markPlansDone(ex,date,recs){try{
+  const ids=new Set(recs.map(r=>r.subject)),all=examPartsFor(ex).map(p=>p.id),full=!all.length||all.every(i=>ids.has(i));
+  const r=await sb.from("planner_tasks").select("*").eq("exam",ex).eq("done",false).lte("task_date",date);
+  const hit=(r.data||[]).filter(t=>t.section?ids.has(t.section):full).map(t=>t.id);
+  if(hit.length)await sb.from("planner_tasks").update({done:true}).in("id",hit)}catch(e){}}
 async function saveTaskRow(fn,row){let r=await fn(row);if(r.error&&/section/i.test(r.error.message)){const {section,...rest}=row;r=await fn(rest);r.dropped=true}return r}
 const DAYN=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],isoOf=n=>new Date(n*864e5).toISOString().slice(0,10);
 const shortD=iso=>{const p=iso.split("-");return +p[2]+" "+MONTHS[+p[1]-1].slice(0,3)};
