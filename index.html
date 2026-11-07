@@ -410,10 +410,10 @@ h2.bad{color:var(--bad)}
 
     <section class="app-panel" id="profilePanel"><div class="page-intro"><h2>My Profile</h2></div>
 <div class="card own"><div class="prof-head"><div class="avatar" id="avatar"><img id="avatarImg" alt="" hidden><span id="avatarLetter">S</span></div><div><b id="acEmail"></b><div class="mu">Member since <span id="acJoined"></span></div><button class="hbtn" id="avatarBtn" type="button" style="margin-top:8px">Change photo</button><input type="file" id="avatarFile" accept="image/*" class="vh"></div></div>
-<div id="profForm"><div class="row"><div><label>Name</label><input id="pname" maxlength="40" placeholder="Your name"></div><div><label>Grade</label><select id="pgrade"></select></div></div>
+<div id="profForm"><div class="row"><div><label>Name</label><input id="pname" maxlength="40" placeholder="Your name"></div><div><label>Status</label><select id="pgrade"></select></div></div>
 <div class="row"><div><label>Birthday</label><div id="pbirth"></div></div><div></div></div>
 <label class="switch"><input type="checkbox" id="ppub" checked> Public profile</label></div>
-<div id="profView" class="info" hidden><div class="info-row"><span>Name</span><b id="vName"></b></div><div class="info-row"><span>Grade</span><b id="vGrade"></b></div><div class="info-row"><span>Birthday</span><b id="vBirth"></b></div><div class="info-row"><span>Public profile</span><b id="vPub"></b></div></div>
+<div id="profView" class="info" hidden><div class="info-row"><span>Name</span><b id="vName"></b></div><div class="info-row"><span>Status</span><b id="vGrade"></b></div><div class="info-row"><span>Birthday</span><b id="vBirth"></b></div><div class="info-row"><span>Public profile</span><b id="vPub"></b></div></div>
 <button class="main" id="psaveBtn" type="button">Save profile</button><p class="mu" id="pmsg"></p></div>
 <div class="card own"><h3 class="sub-h">Change password</h3><div class="row"><div><label>Current password</label><input type="password" id="oldpw" autocomplete="current-password"></div><div><label>New password</label><input type="password" id="newpw" autocomplete="new-password"></div></div><button class="main" id="pwBtn" type="button">Change password</button><p class="mu" id="pwMsg"></p></div>
 <input id="pslug" type="hidden"><input id="plink" type="hidden"><select id="sub1" hidden></select><select id="sub2" hidden></select><div id="shareRow" hidden></div><button id="psave" hidden></button>
@@ -1047,7 +1047,7 @@ async function loadProfile(){
   const {data:pi}=await sb.from("private_info").select("*").eq("user_id",uid).maybeSingle();
   entSubs=p&&Array.isArray(p.ent_subjects)?p.ent_subjects:lsGet("ent_subjects",[]);
   $("pname").value=p?.display_name||"";$("pslug").value=p?.slug||"";$("ppub").checked=p?!!p.is_public:true;
-  $("pgrade").value=pi?.grade||"";birth.set(pi?.birthday||"");showAvatar(p?.avatar_url||"");setQuote(p&&p.quote!=null?p.quote:lsGet("quote",""));
+  $("pgrade").value=/^Grade/.test(pi?.grade||"")?"School student":/^(College|University)$/.test(pi?.grade||"")?"University student":(pi?.grade||"");birth.set(pi?.birthday||"");showAvatar(p?.avatar_url||"");setQuote(p&&p.quote!=null?p.quote:lsGet("quote",""));
   fillElect();renderExamParts();fillAccount();setProfileEdit(!pi);
   if(!p||!p.slug){await saveProfileSettings(true);return}
   $("plink").value=location.origin+location.pathname+"?u="+p.slug;
@@ -1069,7 +1069,7 @@ async function saveProfileSettings(auto){
   if(row.is_public)drawProfileQr($("plink").value);else showPrivate();
   if(!auto){
     const r2=await sb.from("private_info").upsert({user_id:uid,birthday:birth.get()||null,grade:$("pgrade").value||null},{onConflict:"user_id"});
-    if(r2.error){m.textContent="Could not save birthday and grade. Run the new schema.sql in Supabase.";return}
+    if(r2.error){m.textContent="Could not save birthday and status. Run the new schema.sql in Supabase.";return}
     m.textContent="Saved.";setProfileEdit(false);
   }
   fillAccount();
@@ -1146,7 +1146,7 @@ setInterval(maybeNotify,60000);
 $("quoteBtn").onclick=editQuote;document.addEventListener("click",e=>{if(heatSel&&!e.target.closest(".heat")){heatSel="";showHeat()}});$("nextExam").onclick=()=>openPanel("plannerPanel");setQuote(lsGet("quote",""));$("hSearch").oninput=list;$("hSort").onchange=list;
 $("sAdd").onclick=async()=>{const n=$("sName").value.trim(),m=parseFloat($("sMax").value);if(!n||isNaN(m)||m<=0){$("sMsg").textContent="Enter a name and a maximum score above 0.";return}const {error}=await sb.from("subjects").insert({name:n,max_score:m});if(error){$("sMsg").textContent=error.message;return}$("sName").value="";$("sMsg").textContent="";load()};
 const birth=dateSel("",null,Y0-40,Y0-5);$("pbirth").appendChild(birth.el);
-$("pgrade").innerHTML='<option value="">Select grade</option>'+[...Array(11)].map((_,i)=>`<option>Grade ${i+1}</option>`).join("")+'<option>College</option><option>University</option><option>Finished school</option>';
+$("pgrade").innerHTML='<option value="">Select status</option><option>School student</option><option>University student</option><option>Worker</option>';
 $("psaveBtn").onclick=()=>profEdit?saveProfileSettings(false):setProfileEdit(true);
 $("avatarBtn").onclick=()=>$("avatarFile").click();$("avatarFile").onchange=e=>{uploadAvatar(e.target.files[0]);e.target.value=""};
 $("pwBtn").onclick=async()=>{
