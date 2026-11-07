@@ -142,7 +142,7 @@ button.danger{background:var(--bad)}
 .auth-message{min-height:20px;color:var(--bad);font-size:14px;margin:12px 0 0}.auth-terms{color:var(--mu);font-size:12px;margin:14px 0 0}
 .pub .sidebar,.pub .own,.pub .x{display:none!important}
 .pub .dashboard{display:block}.pub .main-area{margin:0 auto;padding-top:12px;max-width:1040px}
-.pub #overview,.pub #addPanel,.pub #profilePanel,.pub #historyPanel,.pub #coachPanel,.pub #goalsPanel,.pub #subjectsPanel,.pub #plannerPanel,.pub #notifPanel,.pub #plansPanel{display:none!important}
+.pub #overview,.pub #addPanel,.pub #profilePanel,.pub #historyPanel,.pub #coachPanel,.pub #goalsPanel,.pub #subjectsPanel,.pub #plannerPanel,.pub #notifPanel{display:none!important}
 .pub #progressPanel{display:block!important}
 .pub h1#ttl{display:block;font-size:30px;font-weight:800;max-width:1040px;margin:0 auto;padding:30px clamp(20px,4vw,64px) 6px;letter-spacing:-.04em}
 @media(max-width:1100px){.xcards,.trend-grid{grid-template-columns:1fr}.duo{grid-template-columns:1fr}}
@@ -298,6 +298,7 @@ h2.bad{color:var(--bad)}
 .tbl .n{text-align:right;justify-self:end;font-variant-numeric:tabular-nums;font-weight:650}.tbl-r b{overflow-wrap:anywhere}
 .tbl .delta{padding:3px 9px;font-size:13px}
 @media(max-width:820px){.av-wrap{width:42px;height:42px}.top-id{max-width:46vw}.tbl-h,.tbl-r{gap:6px;font-size:13px;padding:10px 0}.tbl .delta{padding:2px 6px;font-size:11.5px}}
+.tag.soft{background:var(--bg)!important;color:var(--mu)!important;margin-left:6px}
 </style>
 </head>
 <body>
@@ -355,9 +356,8 @@ h2.bad{color:var(--bad)}
       <button class="nav-btn" data-panel="addPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>Add Exam</button>
       <button class="nav-btn" data-panel="progressPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>Progress</button>
       <button class="nav-btn" data-panel="goalsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M13 3.055a9 9 0 1 0 7.941 7.945"/><path d="M15 6v3h3l3-3h-3v-3z"/><path d="M15 9l-3 3"/></svg>Goals</button>
-      <button class="nav-btn" data-panel="plansPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4M12 13v4M10 15h4"/></svg>Plans</button>
       <button class="nav-btn" data-panel="subjectsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>Subjects</button>
-      <button class="nav-btn" data-panel="plannerPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/><path d="m9 15 2 2 4-4"/></svg>Planner</button>
+      <button class="nav-btn" data-panel="plannerPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/><path d="m9 15 2 2 4-4"/></svg>Plans</button>
       <button class="nav-btn" data-panel="historyPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>History</button>
       <button class="nav-btn" data-panel="notifPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Notifications<span class="nbadge" id="nBadge" hidden></span></button>
       <button class="nav-btn" data-panel="profilePanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>My Profile</button>
@@ -389,9 +389,9 @@ h2.bad{color:var(--bad)}
 </section>
 
     <section class="app-panel" id="goalsPanel"><div class="page-intro"><h2>Goals and exam dates</h2><p class="mu">Set a goal score and an exam date for each exam. Overview shows them.</p></div><div class="card own"><div id="goals" class="goals"></div></div></section>
-    <section class="app-panel" id="plannerPanel"><div class="page-intro"><h2>Study planner</h2></div>
+    <section class="app-panel" id="plannerPanel"><div class="page-intro"><h2>Plans</h2></div>
 <div class="card own"><div class="row"><div><label>Task</label><input id="pTitle" maxlength="80" placeholder="Reading practice, 20 new words..."></div><div><label>Subject</label><select id="pExam"><option value="">General</option><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">ҰБТ</option></select></div></div>
-<div class="row"><div><label>Date</label><div id="pDate"></div></div><div></div></div><button class="main" id="pAdd" type="button">Add task</button><p class="mu" id="pMsg"></p></div>
+<div class="row"><div><label>Date</label><div id="pDate"></div></div><div id="pSecWrap" hidden><label>Sections</label><div id="pSecBox"></div></div></div><button class="main" id="pAdd" type="button">Add task</button><p class="mu" id="pMsg"></p></div>
 <div class="block"><div class="week" id="pWeek"></div></div>
 <div id="pList"></div></section>
 <section class="app-panel" id="notifPanel"><div class="page-intro"><h2>Notifications</h2></div>
@@ -400,13 +400,10 @@ h2.bad{color:var(--bad)}
 <label class="switch"><input type="checkbox" id="nDaily"> Daily study reminder</label>
 <div class="row"><div><label>Reminder time</label><select id="nTime"></select></div><div></div></div>
 <label class="switch"><input type="checkbox" id="nStreak"> Streak reminders</label>
-<label class="switch"><input type="checkbox" id="nGoals"> Goal and practice date alerts</label>
+<label class="switch"><input type="checkbox" id="nGoals"> Goal date alerts</label>
 <label class="switch"><input type="checkbox" id="nImprove"> Improvement alerts</label>
-<label class="switch"><input type="checkbox" id="nPlan"> Planner task alerts</label>
+<label class="switch"><input type="checkbox" id="nPlan"> Plan task alerts</label>
 <button class="main" id="nBrowser" type="button">Turn on browser notifications</button><p class="mu" id="nMsg"></p></div></section>
-<section class="app-panel" id="plansPanel"><div class="page-intro"><h2>Practice plans</h2><p class="mu">Choose the exam you want to practice and the date. The next practice is shown on every screen, and alerts come as the day gets closer.</p></div>
-<div class="card own"><div class="chips" id="planExam"></div><div><label>Practice date</label><div id="planDate"></div></div><button class="main" id="planAdd" type="button" style="margin-top:16px">Add plan</button><p class="mu" id="planMsg"></p></div>
-<div id="planList"></div></section>
 <section class="app-panel" id="subjectsPanel"><div class="page-intro"><h2>My subjects</h2><p class="mu">Add your own subjects, log results and follow your progress.</p></div>
 <div class="card own"><div class="row"><div><label>Subject name</label><input id="sName" maxlength="40" placeholder="Physics, Essay writing..."></div><div><label>Maximum score</label><input id="sMax" type="number" min="1" value="100"></div></div><button class="main" id="sAdd" type="button">Add subject</button><p class="mu" id="sMsg"></p></div>
 <div id="subjList"></div></section>
@@ -725,7 +722,7 @@ function renderSubjects(){
 }
 function render(){
   chips($("exChips"),cur,setEx);chips($("chartChips"),chartEx,k=>{chartEx=k;chartSub="full";render()});
-  countdown();renderGoals();stats();renderTrend();chart();freq();list();rangeUI();renderProgressExtra();renderSubjects();renderPlanner();renderPlans();renderNextExam();renderNotif();langUI();
+  countdown();renderGoals();stats();renderTrend();chart();freq();list();rangeUI();renderProgressExtra();renderSubjects();renderPlanner();renderNextExam();renderNotif();langUI();
 }
 
 const SUPABASE_URL = "https://stzqldduufxspzqywbeh.supabase.co";
@@ -737,7 +734,7 @@ async function load(){
   if(error){alert(error.message);return}
   entries=e.map(r=>({id:r.id,exam:r.exam,subject:r.subject,date:r.entry_date,kind:r.kind,score:Number(r.score),ts:Date.parse(r.created_at)}));
   const {data:t}=await sb.from("targets").select("*").eq("user_id",viewUid||uid);
-  targets={};deadlines={};(t||[]).forEach(r=>{if(r.target!=null)targets[r.exam]=Number(r.target);if(r.deadline)deadlines[r.exam]=r.deadline});if(!viewUid){await loadSubjects();await loadPlanner();await loadPlans()}
+  targets={};deadlines={};(t||[]).forEach(r=>{if(r.target!=null)targets[r.exam]=Number(r.target);if(r.deadline)deadlines[r.exam]=r.deadline});if(!viewUid){await loadSubjects();await loadPlanner()}
   render();
 }
 async function add(){
@@ -827,38 +824,15 @@ function el(t,x,c){const e=document.createElement(t);if(x!=null)e.textContent=x;
 const lab=(t,i)=>{const w=el("div");w.append(el("label",t),i);return w};
 const FLAME='<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
 const ICON_X='<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg><span>Delete</span>';
-let plans=[],planEx="IELTS";
-const planDateSel=dateSel("",null,Y0,Y0+3),daysTo=d=>dayNum(d)-dayNum(today()),daysText=d=>d<0?"Passed":d===0?"Today":d===1?"Tomorrow":d+" days left";
-async function loadPlans(){
-  const r=await sb.from("plans").select("*").order("plan_date");
-  if(r.error){plans=[];$("planMsg").textContent="Plans need a new database table. Run the updated schema.sql in Supabase.";return}
-  $("planMsg").textContent="";plans=r.data.map(p=>({id:p.id,exam:p.exam,date:p.plan_date}));
-}
-async function addPlan(){
-  const d=planDateSel.get(),m=$("planMsg");
-  if(!d){m.textContent="Choose the day, month and year of your practice.";return}
-  if(daysTo(d)<0){m.textContent="Choose a date that has not passed.";return}
-  const {error}=await sb.from("plans").insert({exam:planEx,plan_date:d});
-  if(error){m.textContent=/plans/i.test(error.message)?"Plans need a new database table. Run the updated schema.sql in Supabase.":error.message;return}
-  planDateSel.set("");m.textContent="Plan added.";load();
-}
-function renderPlans(){
-  const c=$("planExam"),box=$("planList");if(!c||!box||viewUid)return;
-  chips(c,planEx,k=>{planEx=k;render()});box.replaceChildren();
-  if(!plans.length){box.appendChild(el("p","No plans yet. Add your first practice.","mu"));return}
-  const up=plans.filter(p=>daysTo(p.date)>=0),past=plans.filter(p=>daysTo(p.date)<0).reverse();
-  [...up,...past].forEach(p=>{const d=daysTo(p.date),w=el("div",null,"block plan"+(d<0?" past":"")),n=el("b",EX[p.exam].n),info=el("div",null,"m"),del=el("button",null,"x");
-    n.style.color="var(--"+p.exam.toLowerCase()+")";info.append(n,document.createElement("br"),el("small",fmtLong(p.date),"mu"));
-    del.innerHTML=ICON_X;del.onclick=async()=>{await sb.from("plans").delete().eq("id",p.id);load()};
-    w.append(info,el("span",daysText(d),"delta "+(d<0?"flat":d<=3?"down":d<=7?"warn":"up")),del);box.appendChild(w)});
-}
+const daysTo=d=>dayNum(d)-dayNum(today()),daysText=d=>d<0?"Passed":d===0?"Today":d===1?"Tomorrow":d+" days left";
 function renderNextExam(){
   const b=$("nextExam");if(!b)return;
-  const up=plans.filter(p=>daysTo(p.date)>=0).sort((a,c)=>a.date<c.date?-1:1)[0];
+  const td=today(),up=tasks.filter(t=>!t.done&&t.date>=td).sort((a,c)=>a.date<c.date?-1:1)[0];
   if(!up||viewUid){b.hidden=true;return}
-  const d=daysTo(up.date);b.hidden=false;b.className="next-exam own"+(d<=3?" hot":d<=7?" warm":"");
-  b.innerHTML=IC("week")+'<span class="ne-text"><b></b> practice on <span></span></span><span class="ne-days"></span>';
-  b.querySelector("b").textContent=EX[up.exam].n;b.querySelector(".ne-text span").textContent=fmtLong(up.date);b.querySelector(".ne-days").textContent=daysText(d);
+  const d=daysTo(up.date);b.hidden=false;b.className="next-exam own"+(d<=1?" hot":d<=3?" warm":"");
+  b.innerHTML=IC("week")+'<span class="ne-text"><b>Next practice:</b> <span></span></span><span class="ne-days"></span>';
+  b.querySelector(".ne-text span").textContent=(up.exam?EX[up.exam].n+(up.section?" "+partName(up.exam,up.section):"")+", ":"")+up.title+", "+fmtLong(up.date);
+  b.querySelector(".ne-days").textContent=daysText(d);
 }
 function showHeat(){
   const pop=$("heatInfo");if(!pop)return;
@@ -939,26 +913,36 @@ async function coach(force){
   if(coachEx===ex)showCoach(data,T,mine);
 }
 let tasks=[],planDay=null,planEdit=null;
+function fillSec(sel,ex,val){sel.innerHTML='<option value="">All sections</option>'+(ex?examPartsFor(ex).map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join(""):"");sel.value=val||""}
+function secCtl(ex,val){
+  const w=el("div"),seg=el("div",null,"seg"),sel=document.createElement("select");let mode=val?"part":"all",e=ex;
+  function fill(v){sel.innerHTML=(e?examPartsFor(e).map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join(""):"");sel.value=v||(sel.options[0]?sel.options[0].value:"")}
+  function draw(){seg.innerHTML="";[["all","All sections"],["part","Part"]].forEach(([k,n])=>{const b=el("button",n,"seg-btn"+(k===mode?" on":""));b.type="button";b.onclick=()=>{mode=k;draw()};seg.appendChild(b)});sel.hidden=mode!=="part"}
+  fill(val);draw();w.append(seg,sel);
+  return {el:w,get:()=>mode==="part"&&e?(sel.value||null):null,setEx:x=>{e=x;mode="all";fill("");draw()}}
+}
+const secName=(ex,id)=>id?partName(ex,id):"All sections";
+async function saveTaskRow(fn,row){let r=await fn(row);if(r.error&&/section/i.test(r.error.message)){const {section,...rest}=row;r=await fn(rest);r.dropped=true}return r}
 const DAYN=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],isoOf=n=>new Date(n*864e5).toISOString().slice(0,10);
 const shortD=iso=>{const p=iso.split("-");return +p[2]+" "+MONTHS[+p[1]-1].slice(0,3)};
 async function loadPlanner(){
   const r=await sb.from("planner_tasks").select("*").order("task_date");
-  if(r.error){tasks=[];$("pMsg").textContent="The planner needs a new database table. Run the updated schema.sql in Supabase.";return}
-  $("pMsg").textContent="";tasks=r.data.map(x=>({id:x.id,title:x.title,date:x.task_date,exam:x.exam,done:x.done}));
+  if(r.error){tasks=[];$("pMsg").textContent="Plans need a new database table. Run the updated schema.sql in Supabase.";return}
+  $("pMsg").textContent="";tasks=r.data.map(x=>({id:x.id,title:x.title,date:x.task_date,exam:x.exam,section:x.section||null,done:x.done}));
 }
 function editRow(t){
   const r=el("div",null,"task edit"),ti=document.createElement("input"),ex=document.createElement("select"),g=el("div",null,"task-edit"),bar=el("div",null,"chips");
-  ti.value=t.title;ti.maxLength=80;ex.innerHTML='<option value="">General</option><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">\u04b0\u0411\u0422</option>';ex.value=t.exam||"";
+  ti.value=t.title;ti.maxLength=80;ex.innerHTML='<option value="">General</option><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">\u04b0\u0411\u0422</option>';ex.value=t.exam||"";const sc=secCtl(t.exam,t.section),scw=lab("Sections",sc.el);ex.onchange=()=>{sc.setEx(ex.value);scw.hidden=!ex.value};
   const dp=dateSel(t.date,null,Y0-1,Y0+2),ok=el("button","Save","main"),no=el("button","Cancel","hbtn gray");ok.style.minWidth="0";
   no.onclick=()=>{planEdit=null;renderPlanner()};
-  ok.onclick=async()=>{const v=ti.value.trim();if(!v){alert("Write the task name.");return}await sb.from("planner_tasks").update({title:v,exam:ex.value||null,task_date:dp.get()||t.date}).eq("id",t.id);planEdit=null;load()};
-  g.append(lab("Task",ti),lab("Subject",ex),lab("Date",dp.el));bar.append(ok,no);r.append(g,bar);return r;
+  ok.onclick=async()=>{const v=ti.value.trim();if(!v){alert("Write the task name.");return}await saveTaskRow(x=>sb.from("planner_tasks").update(x).eq("id",t.id),{title:v,exam:ex.value||null,section:ex.value?sc.get():null,task_date:dp.get()||t.date});planEdit=null;load()};
+  g.append(lab("Task",ti),lab("Subject",ex),scw,lab("Date",dp.el));scw.hidden=!ex.value;bar.append(ok,no);r.append(g,bar);return r;
 }
 function taskRow(t){
   if(planEdit===t.id)return editRow(t);
   const r=el("div",null,"task"+(t.done?" done":"")),chk=el("button",null,"pcheck"+(t.done?" on":"")),m=el("div",null,"m"),tt=el("b",t.title),ed=el("button","Edit","hbtn amber"),del=el("button",null,"x");
   chk.innerHTML=IC("save");chk.setAttribute("aria-label","Mark as done");chk.onclick=async()=>{await sb.from("planner_tasks").update({done:!t.done}).eq("id",t.id);load()};
-  if(t.exam&&EX[t.exam]){const g=el("span",EX[t.exam].n,"tag");g.style.background="var(--"+t.exam.toLowerCase()+")";tt.appendChild(g)}
+  if(t.exam&&EX[t.exam]){const g=el("span",EX[t.exam].n,"tag");g.style.background="var(--"+t.exam.toLowerCase()+")";tt.appendChild(g);tt.appendChild(el("span",secName(t.exam,t.section),"tag soft"))}
   m.append(tt,document.createElement("br"),el("small",shortD(t.date)));
   ed.onclick=()=>{planEdit=t.id;renderPlanner()};
   del.innerHTML=ICON_X;del.title="Delete";del.onclick=async()=>{if(confirm("Delete this task?")){await sb.from("planner_tasks").delete().eq("id",t.id);load()}};
@@ -993,10 +977,10 @@ function buildNotifs(){
   if(S.improve)Object.keys(EX).forEach(k=>{const a=attemptsOf(k);if(a.length<2)return;const l=a[a.length-1],p=a[a.length-2];
     if(l.score>p.score&&t0-dayNum(l.date)<=7)out.push({id:"imp:"+k+":"+l.date,k:"ok",ic:"up",title:EX[k].n+" is improving",text:fd(k,+(l.score-p.score).toFixed(2))+" points since the previous attempt. Keep going!",go:"progressPanel"})});
   if(S.plan){const open=tasks.filter(t=>!t.done),over=open.filter(t=>t.date<td).length,tod=open.filter(t=>t.date===td).length;
-    if(over)out.push({id:"over:"+td,k:"bad",ic:"cal",title:over+(over===1?" task is overdue":" tasks are overdue"),text:"Open the planner to catch up.",go:"plannerPanel",push:past});
+    if(over)out.push({id:"over:"+td,k:"bad",ic:"cal",title:over+(over===1?" task is overdue":" tasks are overdue"),text:"Open Plans to catch up.",go:"plannerPanel",push:past});
     if(tod)out.push({id:"today:"+td,k:"info",ic:"cal",title:tod+(tod===1?" task for today":" tasks for today"),text:"Finish them to keep your plan on track.",go:"plannerPanel",push:past})}
-  if(S.goals)plans.forEach(p=>{const d=dayNum(p.date)-t0;if(d<0||d>30)return;const b=[0,1,2,3,7,14,30].find(x=>d<=x);
-    out.push({id:"plan:"+p.id+":"+b,k:d<=3?"bad":d<=7?"warn":"info",ic:"cal",title:EX[p.exam].n+" practice "+(d===0?"is today":d===1?"is tomorrow":"is in "+d+" days"),text:fmtLong(p.date)+(d===0?". Good luck!":""),go:"plansPanel",push:d<=3})});
+  if(S.plan)tasks.filter(t=>!t.done&&t.date>td).sort((a,b)=>a.date<b.date?-1:1).slice(0,3).forEach(t=>{const d=dayNum(t.date)-t0;if(d>7)return;const b=[1,2,3,7].find(x=>d<=x);
+    out.push({id:"task:"+t.id+":"+b,k:d<=1?"bad":d<=3?"warn":"info",ic:"cal",title:(t.exam?EX[t.exam].n+(t.section?" "+partName(t.exam,t.section):"")+" practice ":"Practice ")+(d===1?"is tomorrow":"is in "+d+" days"),text:t.title,go:"plannerPanel",push:d<=1})});
   return out;
 }
 function renderNotif(){
@@ -1020,7 +1004,7 @@ function loadNotifUI(){
   const on=S.browser&&("Notification" in window)&&Notification.permission==="granted";$("nBrowser").textContent=on?"Turn off browser notifications":"Turn on browser notifications";
 }
 function saveNotifUI(){lsSet("notif",Object.assign(nSet(),{daily:$("nDaily").checked,streak:$("nStreak").checked,goals:$("nGoals").checked,improve:$("nImprove").checked,plan:$("nPlan").checked,time:$("nTime").value}));renderNotif()}
-function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"My Profile",subjectsPanel:"Subjects",plannerPanel:"Planner",notifPanel:"Notifications",plansPanel:"Plans",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel()}window.openPanel=openPanel;
+function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"My Profile",subjectsPanel:"Subjects",plannerPanel:"Plans",notifPanel:"Notifications",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel()}window.openPanel=openPanel;
 function updateShare(){const sl=$("pslug").value.trim().toLowerCase();if(sl)$("plink").value=location.origin+location.pathname+"?u="+sl}
 async function loadProfile(){
   const {data:p}=await sb.from("profiles").select("*").eq("user_id",uid).maybeSingle();
@@ -1106,10 +1090,12 @@ async function loadPublic(slug){
 $("entElective1").onchange=()=>{entSubs[0]=$("entElective1").value;fillEntElectives();saveEntElectives();renderExamParts()};$("entElective2").onchange=()=>{entSubs[1]=$("entElective2").value;fillEntElectives();saveEntElectives();renderExamParts()};$("subj").onchange=updScore;$("csub").onchange=()=>{chartSub=$("csub").value;render()};
 document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>openPanel(b.dataset.panel)));
 let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{chart();freq()},150)});
-const pDate=dateSel(today(),null,Y0-1,Y0+2);$("pDate").appendChild(pDate.el);
+const pDate=dateSel(today(),null,Y0-1,Y0+2);$("pDate").appendChild(pDate.el);const pSec=secCtl("","");$("pSecBox").appendChild(pSec.el);$("pExam").onchange=()=>{pSec.setEx($("pExam").value);$("pSecWrap").hidden=!$("pExam").value};
 $("pAdd").onclick=async()=>{const v=$("pTitle").value.trim(),m=$("pMsg");if(!v){m.textContent="Write the task name first.";return}
-  const {error}=await sb.from("planner_tasks").insert({title:v,task_date:pDate.get()||today(),exam:$("pExam").value||null});
-  if(error){m.textContent=error.message;return}$("pTitle").value="";m.textContent="";load()};
+  const row={title:v,task_date:pDate.get()||today(),exam:$("pExam").value||null,section:$("pExam").value?pSec.get():null};
+  const r=await saveTaskRow(x=>sb.from("planner_tasks").insert(x),row);
+  if(r.error){m.textContent=r.error.message;return}
+  $("pTitle").value="";m.textContent="";load().then(()=>{if(r.dropped&&row.section)m.textContent="Saved without the section. Run the updated schema.sql in Supabase to keep sections."})};
 for(let h=6;h<24;h++)["00","30"].forEach(m=>{const o=document.createElement("option");o.value=o.textContent=String(h).padStart(2,"0")+":"+m;$("nTime").appendChild(o)});
 loadNotifUI();["nDaily","nStreak","nGoals","nImprove","nPlan","nTime"].forEach(id=>$(id).onchange=saveNotifUI);
 $("nRead").onclick=()=>{const r=lsGet("notif_read",{});buildNotifs().forEach(n=>r[n.id]=true);lsSet("notif_read",r);renderNotif()};
@@ -1121,7 +1107,7 @@ $("nBrowser").onclick=async()=>{const S=nSet(),m=$("nMsg");
   else m.textContent="Notifications are blocked. Allow them in your browser settings for this site.";
   loadNotifUI()};
 setInterval(maybeNotify,60000);
-$("quoteBtn").onclick=editQuote;document.addEventListener("click",e=>{if(heatSel&&!e.target.closest(".heat")){heatSel="";showHeat()}});$("nextExam").onclick=()=>openPanel("plansPanel");$("planDate").appendChild(planDateSel.el);$("planAdd").onclick=addPlan;setQuote(lsGet("quote",""));$("hSearch").oninput=list;$("hSort").onchange=list;
+$("quoteBtn").onclick=editQuote;document.addEventListener("click",e=>{if(heatSel&&!e.target.closest(".heat")){heatSel="";showHeat()}});$("nextExam").onclick=()=>openPanel("plannerPanel");setQuote(lsGet("quote",""));$("hSearch").oninput=list;$("hSort").onchange=list;
 $("sAdd").onclick=async()=>{const n=$("sName").value.trim(),m=parseFloat($("sMax").value);if(!n||isNaN(m)||m<=0){$("sMsg").textContent="Enter a name and a maximum score above 0.";return}const {error}=await sb.from("subjects").insert({name:n,max_score:m});if(error){$("sMsg").textContent=error.message;return}$("sName").value="";$("sMsg").textContent="";load()};
 const birth=dateSel("",null,Y0-40,Y0-5);$("pbirth").appendChild(birth.el);
 $("pgrade").innerHTML='<option value="">Select grade</option>'+[...Array(11)].map((_,i)=>`<option>Grade ${i+1}</option>`).join("")+'<option>College</option><option>University</option><option>Finished school</option>';
