@@ -95,7 +95,7 @@ button.danger{background:var(--bad)}
 .parts-box{margin:8px 0 18px}.parts-heading{padding:6px 0 8px;font-weight:700}
 .part-row{display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid var(--bd)}
 .part-check{flex:0 1 340px;display:flex;align-items:center;gap:12px;margin:0;color:var(--tx);font-size:16px;font-weight:600}
-.part-score{width:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.part-score[hidden]{display:none}.raw{display:flex;align-items:center;gap:4px;font-size:13px}.raw input{width:60px}
+.part-score{width:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.part-score[hidden]{display:none}.raw{display:inline-flex;align-items:center;border:1px solid rgba(128,128,128,.35);border-radius:12px;padding:0 10px;background:rgba(128,128,128,.08)}.raw input{width:44px;min-width:0;border:0;background:transparent;box-shadow:none;text-align:center;padding:9px 2px;font-weight:700;-moz-appearance:textfield}.raw input::-webkit-outer-spin-button,.raw input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.raw i{font-style:normal;opacity:.5;font-weight:600}
 .calculated-score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding:18px 20px;border-radius:16px;background:var(--bg)}
 .calculated-score span{color:var(--mu);font-weight:600}.calculated-score strong{font-size:40px;letter-spacing:-.04em}.calculated-score small{color:var(--mu)}
 #addPanel .card,#coachPanel .card{display:flex;flex-direction:column}#addPanel .main,#coachPanel .main{align-self:flex-start;min-width:240px}
@@ -518,7 +518,7 @@ function renderExamParts(){
   const scoreControl=cur==="IELTS"
    ?`<select class="part-value" data-part="${p.id}"><option value="">—</option>${Array.from({length:17},(_,i)=>{const v=(i+2)/2;return `<option value="${v.toFixed(1)}">${v.toFixed(1)}</option>`}).join("")}</select>`
    :`<input type="number" class="part-value" data-part="${p.id}" min="${p.min??0}" max="${p.max}" step="${p.step}" placeholder="${p.min??0}–${p.max}">`;
-  return `<div class="part-row"><label class="part-check"><input type="checkbox" class="part-toggle" value="${p.id}"> ${p.name}</label><div class="part-score" hidden>${scoreControl}<span class="raw"><input type="number" class="raw-c" data-part="${p.id}" min="0" placeholder="correct"> / <input type="number" class="raw-t" data-part="${p.id}" min="1" placeholder="of" value="${cur==="IELTS"&&(p.id==="listening"||p.id==="reading")?40:""}"></span></div></div>`;
+  return `<div class="part-row"><label class="part-check"><input type="checkbox" class="part-toggle" value="${p.id}"> ${p.name}</label><div class="part-score" hidden>${scoreControl}<span class="raw"><input type="number" class="raw-c" data-part="${p.id}" min="0" placeholder="0"> <i>/</i> <input type="number" class="raw-t" data-part="${p.id}" min="1" placeholder="40" value="${cur==="IELTS"&&(p.id==="listening"||p.id==="reading")?40:""}"></span></div></div>`;
  }).join("");
  $("partsList").querySelectorAll(".part-toggle").forEach(c=>c.addEventListener("change",()=>{c.closest(".part-row").querySelector(".part-score").hidden=!c.checked;updateCalculatedScore()}));
  $("partsList").querySelectorAll(".part-value").forEach(i=>i.addEventListener("change",updateCalculatedScore));
@@ -640,7 +640,7 @@ function renderProgressExtra(){
     if(p&&p!==f)rows.push(["Previous",p,+(p.score-f.score).toFixed(2)]);if(l!==f)rows.push(["Latest",l,+(l.score-f.score).toFixed(2)]);rows.push(["Best",b,+(b.score-f.score).toFixed(2)]);
     rows.forEach(([n,x,d])=>{h+=`<div class="tbl-r" style="${C1}"><b>${n}</b><span class="mu">${fmtD(x.date)}</span><span class="n">${fs(k,x.score)}${x.rc!=null?` <small class="mu">(${x.rc}/${x.rt})</small>`:""}</span><span class="n">${chg(d)}</span></div>`})}
   $("cmpBox").innerHTML=h+"</div>";
-  const C2="--cols:minmax(0,1.5fr) repeat(3,minmax(0,1fr)) 90px 90px";
+  const C2="--cols:minmax(0,1.4fr) repeat(3,minmax(0,.8fr)) 64px 78px";
   let g=`<div class="tbl"><div class="tbl-h" style="${C2}"><span>Section</span><span class="n">Latest</span><span class="n">Best</span><span class="n">Average</span><span class="n">Change</span><span class="n">To goal</span></div>`;
   const goal=typeof targets!=="undefined"&&targets[k]>0?targets[k]:null,D=examPartsFor(k).map(p=>{
     const v=entries.filter(e=>e.exam===k&&e.subject===p.id&&inRange(e.date)).sort((x,y)=>x.date<y.date?-1:1).map(e=>e.score),mx=maxOf(k,p.id);
@@ -649,7 +649,7 @@ function renderProgressExtra(){
     if(!v.length){g+=`<div class="tbl-r" style="${C2}"><b>${p.name}</b><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span></div>`;return}
     const d=v.length>1?+(l-v[v.length-2]).toFixed(2):0,avg=+(v.reduce((t,x)=>t+x,0)/v.length).toFixed(2),avgR=k==="IELTS"?Math.round(avg*2)/2:avg;
     let gap='<span class="n mu">\u2014</span>';
-    if(goal){const tg=goal*mx/EX[k].max;gap=l>=tg-1e-9?'<span class="n" style="color:#16a34a">\u2713</span>':`<span class="n">+${fs(k,+(tg-l).toFixed(k==="IELTS"?1:0))}</span>`}
+    if(goal){const tg=goal*mx/EX[k].max;gap=l>=tg-1e-9?'<span class="n" style="color:#16a34a">\u2713</span>':`<span class="n" style="display:inline-flex;align-items:center;justify-content:flex-end;gap:4px"><span style="width:13px;height:13px;display:inline-flex;opacity:.7">${IC("target")}</span>${fs(k,+(tg-l).toFixed(k==="IELTS"?1:0))}</span>`}
     const w=v.slice(-8);let sp="";
     if(w.length>1){const a=Math.min(...w),b=Math.max(...w),r=b-a||1;sp=`<svg width="90" height="18" viewBox="0 0 90 18" style="display:block;margin-top:3px"><polyline fill="none" stroke="currentColor" stroke-width="1.6" opacity=".6" points="${w.map((y,n)=>(n*90/(w.length-1)).toFixed(1)+","+(16-(y-a)/r*14).toFixed(1)).join(" ")}"/></svg>`}
     const tag=weak&&weak.p===p?' <small style="color:#dc2626">weakest</small>':"";
@@ -965,10 +965,10 @@ function taskRow(t){
 }
 function renderPlanner(){
   const wk=$("pWeek"),box=$("pList");if(!wk||viewUid)return;
-  const td=today(),t0=dayNum(td),ws=t0-(new Date().getDay()+6)%7;
+  const td=today(),t0=dayNum(td),ws=t0-3;
   wk.replaceChildren();
-  for(let i=0;i<7;i++){const iso=isoOf(ws+i),ts=tasks.filter(x=>x.date===iso),open=ts.filter(x=>!x.done).length,b=el("button",null,"wday"+(iso===td?" today":"")+(planDay===iso?" sel":""));
-    b.innerHTML="<span>"+DAYN[i]+"</span><b>"+(+iso.slice(8))+"</b><i>"+(ts.length?(open?open+" to do":"Done"):"")+"</i>";
+  for(let i=0;i<7;i++){const iso=isoOf(ws+i),wd=(new Date(iso+"T00:00:00").getDay()+6)%7,ts=tasks.filter(x=>x.date===iso),open=ts.filter(x=>!x.done).length,b=el("button",null,"wday"+(iso===td?" today":"")+(planDay===iso?" sel":""));
+    b.innerHTML="<span>"+DAYN[wd]+"</span><b>"+(+iso.slice(8))+"</b><i>"+(ts.length?(open?open+" to do":"Done"):"")+"</i>";
     b.onclick=()=>{planDay=planDay===iso?null:iso;renderPlanner()};wk.appendChild(b)}
   box.replaceChildren();
   const sec=(title,arr,cls)=>{if(!arr.length)return;const b=el("div",null,"block"),h=el("h2",title);if(cls)h.className=cls;b.appendChild(h);arr.forEach(t=>b.appendChild(taskRow(t)));box.appendChild(b)};
