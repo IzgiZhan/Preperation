@@ -640,13 +640,20 @@ function renderProgressExtra(){
     if(p&&p!==f)rows.push(["Previous",p,+(p.score-f.score).toFixed(2)]);if(l!==f)rows.push(["Latest",l,+(l.score-f.score).toFixed(2)]);rows.push(["Best",b,+(b.score-f.score).toFixed(2)]);
     rows.forEach(([n,x,d])=>{h+=`<div class="tbl-r" style="${C1}"><b>${n}</b><span class="mu">${fmtD(x.date)}</span><span class="n">${fs(k,x.score)}${x.rc!=null?` <small class="mu">(${x.rc}/${x.rt})</small>`:""}</span><span class="n">${chg(d)}</span></div>`})}
   $("cmpBox").innerHTML=h+"</div>";
-  const C2="--cols:minmax(0,1.5fr) repeat(3,minmax(0,1fr)) 110px";
-  let g=`<div class="tbl"><div class="tbl-h" style="${C2}"><span>Section</span><span class="n">Latest</span><span class="n">Best</span><span class="n">Average</span><span class="n">Change</span></div>`;
-  examPartsFor(k).forEach(p=>{
-    const v=entries.filter(e=>e.exam===k&&e.subject===p.id&&inRange(e.date)).sort((x,y)=>x.date<y.date?-1:1).map(e=>e.score);
-    if(!v.length){g+=`<div class="tbl-r" style="${C2}"><b>${p.name}</b><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span></div>`;return}
-    const l=v[v.length-1],d=v.length>1?+(l-v[v.length-2]).toFixed(2):0,avg=+(v.reduce((t,x)=>t+x,0)/v.length).toFixed(2),avgR=k==="IELTS"?Math.round(avg*2)/2:avg;
-    g+=`<div class="tbl-r" style="${C2}"><b>${p.name}</b><span class="n">${fs(k,l)}</span><span class="n">${fs(k,Math.max(...v))}</span><span class="n">${fs(k,avgR)}</span><span class="n">${chg(d)}</span></div>`});
+  const C2="--cols:minmax(0,1.5fr) repeat(3,minmax(0,1fr)) 90px 90px";
+  let g=`<div class="tbl"><div class="tbl-h" style="${C2}"><span>Section</span><span class="n">Latest</span><span class="n">Best</span><span class="n">Average</span><span class="n">Change</span><span class="n">To goal</span></div>`;
+  const goal=typeof targets!=="undefined"&&targets[k]>0?targets[k]:null,D=examPartsFor(k).map(p=>{
+    const v=entries.filter(e=>e.exam===k&&e.subject===p.id&&inRange(e.date)).sort((x,y)=>x.date<y.date?-1:1).map(e=>e.score),mx=maxOf(k,p.id);
+    return {p,v,mx,l:v[v.length-1]}}),have=D.filter(x=>x.v.length),weak=have.length>1?have.reduce((a,b)=>b.l/b.mx<a.l/a.mx?b:a):null;
+  D.forEach(({p,v,mx,l})=>{
+    if(!v.length){g+=`<div class="tbl-r" style="${C2}"><b>${p.name}</b><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span></div>`;return}
+    const d=v.length>1?+(l-v[v.length-2]).toFixed(2):0,avg=+(v.reduce((t,x)=>t+x,0)/v.length).toFixed(2),avgR=k==="IELTS"?Math.round(avg*2)/2:avg;
+    let gap='<span class="n mu">\u2014</span>';
+    if(goal){const tg=goal*mx/EX[k].max;gap=l>=tg-1e-9?'<span class="n" style="color:#16a34a">\u2713</span>':`<span class="n">+${fs(k,+(tg-l).toFixed(k==="IELTS"?1:0))}</span>`}
+    const w=v.slice(-8);let sp="";
+    if(w.length>1){const a=Math.min(...w),b=Math.max(...w),r=b-a||1;sp=`<svg width="90" height="18" viewBox="0 0 90 18" style="display:block;margin-top:3px"><polyline fill="none" stroke="currentColor" stroke-width="1.6" opacity=".6" points="${w.map((y,n)=>(n*90/(w.length-1)).toFixed(1)+","+(16-(y-a)/r*14).toFixed(1)).join(" ")}"/></svg>`}
+    const tag=weak&&weak.p===p?' <small style="color:#dc2626">weakest</small>':"";
+    g+=`<div class="tbl-r" style="${C2}"><div><b>${p.name}</b>${tag}${sp}</div><span class="n">${fs(k,l)}</span><span class="n">${fs(k,Math.max(...v))}</span><span class="n">${fs(k,avgR)}</span><span class="n">${chg(d)}</span>${gap}</div>`});
   $("secStats").innerHTML=g+"</div>";
 }
 function partName(ex,id){if(!id||id==="full")return "Total";if(ex==="ENT")return subName(id);const f=examPartsFor(ex).find(p=>p.id===id);return f?f.name:id[0].toUpperCase()+id.slice(1)}
