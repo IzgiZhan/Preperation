@@ -683,11 +683,17 @@ function attemptCard(x){
     det.hidden=false;det.replaceChildren();
     const dp=dateSel(x.date,null,Y0-3,Y0+1);det.appendChild(lab("Date",dp.el));
     const ins=x.rows.map(r=>{const i=document.createElement("input");i.type="number";i.step=x.exam==="IELTS"?0.5:1;i.min=0;i.max=maxOf(x.exam,r.subject||null);i.value=fs(x.exam,r.score);det.appendChild(lab(partName(x.exam,r.subject)+" (max "+i.max+")",i));return i});
+    const rg=k=>(IELTS_RAW[x.rows[k].subject]||{})[Number(ins[k].value).toFixed(1)]||null;
+    const raws=x.rows.map((r,k)=>{if(x.exam!=="IELTS"||!IELTS_RAW[r.subject])return null;const c=document.createElement("input");c.type="number";c.step=1;c.min=1;c.max=40;c.inputMode="numeric";c.value=r.rc??"";rawRangeUI(c,rg(k));
+      ins[k].addEventListener("input",()=>{const q=rg(k);rawRangeUI(c,q);if(q&&c.value&&(+c.value<q[0]||+c.value>q[1]))c.value=""});
+      det.appendChild(lab(partName(x.exam,r.subject)+" answers",c));return c});
     const ok=el("button","Save","main"),no=el("button","Cancel","hbtn gray"),bar=el("div",null,"chips");ok.style.minWidth="0";bar.append(ok,no);det.appendChild(bar);
     no.onclick=()=>list();
     ok.onclick=async()=>{
       if(ins.some(i=>{const v=parseFloat(i.value);return isNaN(v)||v<0||v>+i.max})){alert("Each score must be from 0 to its maximum.");return}
-      for(let k=0;k<ins.length;k++)await sb.from("entries").update({score:parseFloat(ins[k].value),entry_date:dp.get()||x.date}).eq("id",x.rows[k].id);
+      for(let k=0;k<raws.length;k++){const c=raws[k];if(!c||c.value==="")continue;const a=+c.value,q=rg(k);if(!Number.isInteger(a)||a<1||a>40||(q&&(a<q[0]||a>q[1]))){alert("Answers for "+partName(x.exam,x.rows[k].subject)+" must be "+(q?(q[0]===q[1]?q[0]:q[0]+"\u2013"+q[1]):"1\u201340")+" for band "+Number(ins[k].value).toFixed(1)+".");return}}
+      for(let k=0;k<ins.length;k++){const u={score:parseFloat(ins[k].value),entry_date:dp.get()||x.date};if(raws[k]){const v=raws[k].value;u.raw_correct=v===""?null:+v;u.raw_total=v===""?null:40}
+        const {error}=await sb.from("entries").update(u).eq("id",x.rows[k].id);if(error){alert(error.message);return}}
       load();
     };
   };
