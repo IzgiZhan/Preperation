@@ -658,10 +658,10 @@ function renderProgressExtra(){
     if(!v.length){g+=`<div class="tbl-r" style="${C2}"><b>${p.name}</b><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span></div>`;return}
     const d=v.length>1?+(l-v[v.length-2]).toFixed(2):0,avg=+(v.reduce((t,x)=>t+x,0)/v.length).toFixed(2),avgR=k==="IELTS"?Math.round(avg*2)/2:avg;
     let gap='<span class="n mu">\u2014</span>';
-    if(goal){const tg=goal*mx/EX[k].max;gap=l>=tg-1e-9?'<span class="n" style="color:#16a34a">\u2713</span>':`<span class="n" style="display:inline-flex;align-items:center;justify-content:flex-end;gap:4px">${fs(k,+(tg-l).toFixed(k==="IELTS"?1:0))}<span style="width:13px;height:13px;display:inline-flex;opacity:.7">${IC("target")}</span></span>`}
+    if(goal){const tg=goal*mx/EX[k].max;gap=l>=tg-1e-9?'<span class="n" style="color:#16a34a">\u2713</span>':`<span class="n" style="display:inline-flex;align-items:center;justify-content:flex-end;gap:4px">${fs(k,+(tg-l).toFixed(k==="IELTS"?1:0))}<span style="width:13px;height:13px;display:inline-flex;opacity:.7;position:relative;top:-3px">${IC("target")}</span></span>`}
     const w=v.slice(-8);let sp="";
     if(w.length>1){const a=Math.min(...w),b=Math.max(...w),r=b-a||1;sp=`<svg width="90" height="18" viewBox="0 0 90 18" style="display:block;margin-top:3px"><polyline fill="none" stroke="currentColor" stroke-width="1.6" opacity=".6" points="${w.map((y,n)=>(n*90/(w.length-1)).toFixed(1)+","+(16-(y-a)/r*14).toFixed(1)).join(" ")}"/></svg>`}
-    const tag=weak&&weak.p===p?' <small style="color:#dc2626">weakest</small>':"";
+    const tag="";
     g+=`<div class="tbl-r" style="${C2}"><div><b>${p.name}</b>${tag}${sp}</div><span class="n">${fs(k,l)}</span><span class="n">${fs(k,Math.max(...v))}</span><span class="n">${fs(k,avgR)}</span><span class="n">${chg(d)}</span>${gap}</div>`});
   $("secStats").innerHTML=g+"</div>";
 }
