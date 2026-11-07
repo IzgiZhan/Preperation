@@ -807,7 +807,8 @@ function countdown(){
     return `<div class="xcard" style="--c:var(--${k.toLowerCase()})"><div class="x-head"><b>${EX[k].n}</b>${delta}</div><div class="x-score">${l?fs(k,l.score):"–"}</div><div class="x-sub">${l?`<span>Best ${fs(k,best)}</span>`:"<span>No results yet</span>"}${g?`<span>Goal ${fs(k,g)}</span>`:""}</div>${spark(a.slice(-8).map(x=>x.score),!p||l.score>=p.score)}</div>`}).join("");
 }
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"],Y0=new Date().getFullYear();
-function dateSel(val,onchange,y1,y2){
+function dateSel(val,onchange,y1,y2,min){
+  if(min)y1=Math.max(y1,+min.slice(0,4));
   const vy=+(val||"").slice(0,4);if(vy){y1=Math.min(y1,vy);y2=Math.max(y2,vy)}
   const w=document.createElement("div"),d=document.createElement("select"),m=document.createElement("select"),y=document.createElement("select");w.className="datesel";
   const o=(sel,v,t)=>{const x=document.createElement("option");x.value=v;x.textContent=t;sel.appendChild(x)};
@@ -815,9 +816,14 @@ function dateSel(val,onchange,y1,y2){
   o(m,"","Month");MONTHS.forEach((n,i)=>o(m,i+1,n));
   o(y,"","Year");for(let i=y2;i>=y1;i--)o(y,i,i);
   const get=()=>{if(!d.value||!m.value||!y.value)return"";const D=+d.value,M=+m.value,Y=+y.value;return new Date(Date.UTC(Y,M-1,D)).getUTCMonth()===M-1?Y+"-"+String(M).padStart(2,"0")+"-"+String(D).padStart(2,"0"):""};
-  const set=v=>{const p=(v||"").split("-");y.value=p[0]||"";m.value=p[1]?+p[1]:"";d.value=p[2]?+p[2]:""};
+  const enforce=()=>{if(!min)return;const [mY,mM,mD]=min.split("-").map(Number),Y=+y.value;
+    let M=+m.value;[...m.options].forEach(op=>op.disabled=!!op.value&&Y===mY&&+op.value<mM);
+    if(Y===mY&&M&&M<mM){m.value=mM;M=mM}
+    [...d.options].forEach(op=>op.disabled=!!op.value&&Y===mY&&M===mM&&+op.value<mD);
+    if(Y===mY&&M===mM&&+d.value&&+d.value<mD)d.value=mD};
+  const set=v=>{const p=(v||"").split("-");y.value=p[0]||"";m.value=p[1]?+p[1]:"";d.value=p[2]?+p[2]:"";if(!v||v>=(min||""))enforce()};
   set(val);
-  const fire=()=>{if(onchange&&(get()||(!d.value&&!m.value&&!y.value)))onchange()};
+  const fire=()=>{enforce();if(onchange&&(get()||(!d.value&&!m.value&&!y.value)))onchange()};
   [d,m,y].forEach(x=>x.onchange=fire);w.append(d,m,y);return {el:w,get,set};
 }
 function el(t,x,c){const e=document.createElement(t);if(x!=null)e.textContent=x;if(c)e.className=c;return e}
@@ -933,7 +939,7 @@ async function loadPlanner(){
 function editRow(t){
   const r=el("div",null,"task edit"),ti=document.createElement("input"),ex=document.createElement("select"),g=el("div",null,"task-edit"),bar=el("div",null,"chips");
   ti.value=t.title;ti.maxLength=80;ex.innerHTML='<option value="">General</option><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">\u04b0\u0411\u0422</option>';ex.value=t.exam||"";const sc=secCtl(t.exam,t.section),scw=lab("Sections",sc.el);ex.onchange=()=>{sc.setEx(ex.value);scw.hidden=!ex.value};
-  const dp=dateSel(t.date,null,Y0-1,Y0+2),ok=el("button","Save","main"),no=el("button","Cancel","hbtn gray");ok.style.minWidth="0";
+  const dp=dateSel(t.date,null,Y0-1,Y0+2,today()),ok=el("button","Save","main"),no=el("button","Cancel","hbtn gray");ok.style.minWidth="0";
   no.onclick=()=>{planEdit=null;renderPlanner()};
   ok.onclick=async()=>{const v=ti.value.trim();if(!v){alert("Write the task name.");return}await saveTaskRow(x=>sb.from("planner_tasks").update(x).eq("id",t.id),{title:v,exam:ex.value||null,section:ex.value?sc.get():null,task_date:dp.get()||t.date});planEdit=null;load()};
   g.append(lab("Task",ti),lab("Subject",ex),scw,lab("Date",dp.el));scw.hidden=!ex.value;bar.append(ok,no);r.append(g,bar);return r;
@@ -1090,7 +1096,7 @@ async function loadPublic(slug){
 $("entElective1").onchange=()=>{entSubs[0]=$("entElective1").value;fillEntElectives();saveEntElectives();renderExamParts()};$("entElective2").onchange=()=>{entSubs[1]=$("entElective2").value;fillEntElectives();saveEntElectives();renderExamParts()};$("subj").onchange=updScore;$("csub").onchange=()=>{chartSub=$("csub").value;render()};
 document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>openPanel(b.dataset.panel)));
 let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{chart();freq()},150)});
-const pDate=dateSel(today(),null,Y0-1,Y0+2);$("pDate").appendChild(pDate.el);const pSec=secCtl("","");$("pSecBox").appendChild(pSec.el);$("pExam").onchange=()=>{pSec.setEx($("pExam").value);$("pSecWrap").hidden=!$("pExam").value};
+const pDate=dateSel(today(),null,Y0-1,Y0+2,today());$("pDate").appendChild(pDate.el);const pSec=secCtl("","");$("pSecBox").appendChild(pSec.el);$("pExam").onchange=()=>{pSec.setEx($("pExam").value);$("pSecWrap").hidden=!$("pExam").value};
 $("pAdd").onclick=async()=>{const v=$("pTitle").value.trim(),m=$("pMsg");if(!v){m.textContent="Write the task name first.";return}
   const row={title:v,task_date:pDate.get()||today(),exam:$("pExam").value||null,section:$("pExam").value?pSec.get():null};
   const r=await saveTaskRow(x=>sb.from("planner_tasks").insert(x),row);
