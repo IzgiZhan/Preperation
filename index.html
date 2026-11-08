@@ -828,7 +828,7 @@ function countdown(){
   $("cd").innerHTML=Object.keys(EX).map(k=>{
     const a=attemptsOf(k),l=a[a.length-1],p=a.length>1?a[a.length-2]:null,g=targets[k]>0?targets[k]:null;
     const d=l&&p?+(l.score-p.score).toFixed(2):0,best=a.length?Math.max(...a.map(x=>x.score)):null;
-    const avgRaw=a.length?a.reduce((t,x)=>t+x.score,0)/a.length:null,avg=avgRaw==null?null:+avgRaw.toFixed(2);
+    const avgRaw=a.length?a.reduce((t,x)=>t+x.score,0)/a.length:null,avg=avgRaw==null?null:(k==="IELTS"?Math.round(avgRaw*2)/2:+avgRaw.toFixed(2));
     const delta=d!==0?`<span class="delta ${d>0?"up":"down"}">${arrow(d>0)}${fd(k,d)}</span>`:"";
     return `<div class="xcard" style="--c:var(--${k.toLowerCase()})"><div class="x-head"><b>${EX[k].n}</b>${delta}</div><div class="x-score">${l?fs(k,l.score):"–"}</div><div class="x-sub">${l?`<span>Best ${fs(k,best)}</span><span>Average ${fs(k,avg)}</span>`:"<span>No results yet</span>"}${g?`<span>Goal ${fs(k,g)}</span>`:""}</div>${spark(a.slice(-8).map(x=>x.score),!p||l.score>=p.score)}</div>`}).join("");
 }
