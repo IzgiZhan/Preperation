@@ -299,6 +299,37 @@ h2.bad{color:var(--bad)}
 .tbl .delta{padding:3px 9px;font-size:13px}
 @media(max-width:820px){.av-wrap{width:42px;height:42px}.top-id{max-width:46vw}.tbl-h,.tbl-r{gap:6px;font-size:13px;padding:10px 0}.tbl .delta{padding:2px 6px;font-size:11.5px}}
 .tag.soft{background:var(--bg)!important;color:var(--mu)!important;margin-left:6px}
+
+
+.xcard.has-parts{cursor:pointer}
+.x-chev{width:18px;height:18px;color:var(--mu);transition:transform .25s;flex:none}
+.xcard.open .x-chev{transform:rotate(180deg)}
+.x-head{justify-content:flex-start;gap:8px}.x-head b{margin-right:auto}
+.x-parts{display:none;margin:14px 0 8px;border-top:1px solid var(--bd);padding-top:8px}
+.xcard.open .x-parts{display:block}
+.xp-h,.xp-r{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr) minmax(0,.7fr);gap:8px;padding:8px 0;align-items:center}
+.xp-h{color:var(--mu);font-size:13px;font-weight:600}
+.xp-r{border-top:1px solid var(--bd);font-size:15px}.xp-r b{overflow-wrap:anywhere}
+.xp-h span:not(:first-child),.xp-r span{text-align:right;font-variant-numeric:tabular-nums;font-weight:650}
+/* mobile readability */
+@media(max-width:820px){
+ body{font-size:16px;line-height:1.55}
+ .mu,.x-sub,.page-intro p{font-size:15px}
+ input,select,textarea{font-size:16px}
+ .hbtn,.quote-btn{font-size:14px;padding:9px 14px}
+ .tbl-h{display:none}
+ .tbl-r{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px 10px;padding:14px 0;font-size:15px}
+ .tbl-r>div:first-child{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:17px}
+ .tbl-r .n{justify-self:start;text-align:left;font-size:16px}
+ .tbl-r .n::before{display:block;font-size:12px;font-weight:600;color:var(--mu);margin-bottom:2px}
+ .tbl-r>.n:nth-child(2)::before{content:"Latest"}
+ .tbl-r>.n:nth-child(3)::before{content:"Best"}
+ .tbl-r>.n:nth-child(4)::before{content:"Average"}
+ .tbl-r>.n:nth-child(5)::before{content:"Change"}
+ .tbl-r>.n:nth-child(6)::before{content:"To goal"}
+ .tbl .delta{font-size:13px;padding:3px 8px}
+ .att-head .m{font-size:15px}
+}
 </style>
 </head>
 <body>
@@ -824,13 +855,28 @@ function spark(v,up){
   const pts=v.map((x,i)=>(4+i*(w-8)/(v.length-1)).toFixed(1)+","+(h-6-(x-mn)/r*(h-12)).toFixed(1)).join(" ");
   return `<svg class="spark ${up?"up":"down"}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}"/></svg>`;
 }
+const xOpen={};
+function xParts(k){
+  const rows=examPartsFor(k).map(p=>{
+    const v=entries.filter(e=>e.exam===k&&e.subject===p.id).map(e=>e.score);
+    if(!v.length)return `<div class="xp-r"><b>${p.name}</b><span class="mu">\u2014</span><span class="mu">\u2014</span></div>`;
+    const raw=v.reduce((t,x)=>t+x,0)/v.length,av=k==="IELTS"?Math.round(raw*2)/2:+raw.toFixed(2);
+    return `<div class="xp-r"><b>${p.name}</b><span>${fs(k,Math.max(...v))}</span><span>${fs(k,av)}</span></div>`}).join("");
+  return `<div class="x-parts"><div class="xp-h"><span>Section</span><span>Best</span><span>Average</span></div>${rows}</div>`;
+}
 function countdown(){
-  $("cd").innerHTML=Object.keys(EX).map(k=>{
+  const box=$("cd");
+  box.innerHTML=Object.keys(EX).map(k=>{
     const a=attemptsOf(k),l=a[a.length-1],p=a.length>1?a[a.length-2]:null,g=targets[k]>0?targets[k]:null;
     const d=l&&p?+(l.score-p.score).toFixed(2):0,best=a.length?Math.max(...a.map(x=>x.score)):null;
     const avgRaw=a.length?a.reduce((t,x)=>t+x.score,0)/a.length:null,avg=avgRaw==null?null:(k==="IELTS"?Math.round(avgRaw*2)/2:+avgRaw.toFixed(2));
     const delta=d!==0?`<span class="delta ${d>0?"up":"down"}">${arrow(d>0)}${fd(k,d)}</span>`:"";
-    return `<div class="xcard" style="--c:var(--${k.toLowerCase()})"><div class="x-head"><b>${EX[k].n}</b>${delta}</div><div class="x-score">${l?fs(k,l.score):"–"}</div><div class="x-sub">${l?`<span>Best ${fs(k,best)}</span><span>Average ${fs(k,avg)}</span>`:"<span>No results yet</span>"}${g?`<span>Goal ${fs(k,g)}</span>`:""}</div>${spark(a.slice(-8).map(x=>x.score),!p||l.score>=p.score)}</div>`}).join("");
+    const chev='<svg class="x-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+    return `<div class="xcard has-parts${xOpen[k]?" open":""}" data-k="${k}" role="button" tabindex="0" aria-expanded="${xOpen[k]?"true":"false"}" style="--c:var(--${k.toLowerCase()})"><div class="x-head"><b>${EX[k].n}</b>${delta}${chev}</div><div class="x-score">${l?fs(k,l.score):"\u2013"}</div><div class="x-sub">${l?`<span>Best ${fs(k,best)}</span><span>Average ${fs(k,avg)}</span>`:"<span>No results yet</span>"}${g?`<span>Goal ${fs(k,g)}</span>`:""}</div>${spark(a.slice(-8).map(x=>x.score),!p||l.score>=p.score)}${xParts(k)}</div>`}).join("");
+  box.querySelectorAll(".xcard").forEach(c=>{
+    const tg=()=>{const k=c.dataset.k;xOpen[k]=!xOpen[k];c.classList.toggle("open",xOpen[k]);c.setAttribute("aria-expanded",xOpen[k]?"true":"false")};
+    c.onclick=tg;c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tg()}};
+  });
 }
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"],Y0=new Date().getFullYear();
 function dateSel(val,onchange,y1,y2,min){
