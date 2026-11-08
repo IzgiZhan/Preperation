@@ -1210,7 +1210,7 @@ async function loadPublic(slug){
 $("entElective1").onchange=()=>{entSubs[0]=$("entElective1").value;fillEntElectives();saveEntElectives();renderExamParts()};$("entElective2").onchange=()=>{entSubs[1]=$("entElective2").value;fillEntElectives();saveEntElectives();renderExamParts()};$("subj").onchange=updScore;$("csub").onchange=()=>{chartSub=$("csub").value;render()};
 document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>openPanel(b.dataset.panel)));
 let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{chart();freq()},150)});
-const aY=+today().slice(0,4),aDate=dateSel(today(),()=>{const g=aDate.get();if(g&&g>today())aDate.set(today())},aY-2,aY,undefined,today());$("addDateBox").appendChild(aDate.el);
+const aY=+today().slice(0,4),aDate=dateSel(today(),()=>{const g=aDate.get();if(g&&g>today())aDate.set(today())},aY-1,aY,undefined,today());$("addDateBox").appendChild(aDate.el);
 const pDate=dateSel(today(),null,Y0-1,Y0+2,today());$("pDate").appendChild(pDate.el);const pSec=secCtl("IELTS","");$("pSecBox").appendChild(pSec.el);$("pExam").onchange=()=>{pSec.setEx($("pExam").value)};
 $("pAdd").onclick=async()=>{const m=$("pMsg");
   const row={title:"Practice",task_date:pDate.get()||today(),exam:$("pExam").value,section:pSec.get()};
