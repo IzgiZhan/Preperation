@@ -341,14 +341,7 @@ h2.bad{color:var(--bad)}
 .am-letter{display:grid;place-items:center;background:var(--ink);color:#fff;font-size:96px;font-weight:700}
 .am-name{font-size:24px;font-weight:700;overflow-wrap:anywhere}
 .am-quote{margin-top:10px;color:var(--mu);font-size:17px;font-style:italic;line-height:1.45;overflow-wrap:anywhere}
-/* compact score steppers */
-.part-score{flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px;max-width:none}
-.stp{width:132px;flex:none}
-.stp-in{padding:7px 30px;font-size:16px;border-radius:10px}
-.stp-in::placeholder{font-size:14px}
-.stp-b{right:3px;width:26px}
-.stp-b svg{width:13px;height:13px}
-@media(max-width:820px){.part-score{flex:1 1 100%}.stp{width:132px}}
+.stp-b{width:28px}.stp-b svg{width:11px;height:11px}
 /* mobile readability */
 @media(max-width:820px){
  body{font-size:16px;line-height:1.55}
@@ -1211,10 +1204,10 @@ async function uploadAvatar(file){
   if(!uid){m.textContent="Log in first.";return}
   m.textContent="Uploading photo...";
   try{
-    const im=await loadImg(file),S=256,c=document.createElement("canvas");c.width=c.height=S;
-    const w=im.naturalWidth||im.width,h=im.naturalHeight||im.height,r=Math.min(w,h)*0.9;
-    c.getContext("2d").drawImage(im,(w-r)/2,(h-r)/2,r,r,0,0,S,S);
-    const blob=await new Promise(res=>c.toBlob(res,"image/jpeg",.88));if(!blob)throw new Error("Could not process the image");
+    const im=await loadImg(file),w=im.naturalWidth||im.width,h=im.naturalHeight||im.height,r=Math.min(w,h)*0.9,S=Math.max(256,Math.min(1280,Math.round(r))),c=document.createElement("canvas");c.width=c.height=S;
+    const cx=c.getContext("2d");cx.imageSmoothingEnabled=true;cx.imageSmoothingQuality="high";
+    cx.drawImage(im,(w-r)/2,(h-r)/2,r,r,0,0,S,S);
+    const blob=await new Promise(res=>c.toBlob(res,"image/jpeg",.95));if(!blob)throw new Error("Could not process the image");
     const path=uid+"/avatar.jpg",up=await sb.storage.from("avatars").upload(path,blob,{upsert:true,contentType:"image/jpeg"});if(up.error)throw up.error;
     const url=sb.storage.from("avatars").getPublicUrl(path).data.publicUrl+"?v="+Date.now();
     const u2=await sb.from("profiles").update({avatar_url:url}).eq("user_id",uid);if(u2.error)throw u2.error;
