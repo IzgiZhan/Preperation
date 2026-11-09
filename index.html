@@ -343,6 +343,7 @@ h2.bad{color:var(--bad)}
 .am-quote{margin-top:10px;color:var(--mu);font-size:17px;font-style:italic;line-height:1.45;overflow-wrap:anywhere}
 .stp-b{width:28px}.stp-b svg{width:11px;height:11px}
 .stp[hidden]{display:none!important}
+.stp-sm{width:120px}.stp-sm .stp-in{padding:7px 28px;font-size:16px;border-radius:10px}.stp-sm .stp-in::placeholder{font-size:14px}.stp-sm .stp-b{width:24px;right:3px}
 /* mobile readability */
 @media(max-width:820px){
  body{font-size:16px;line-height:1.55}
@@ -550,7 +551,7 @@ document.addEventListener("keydown",e=>{if(e.target.matches&&e.target.matches(".
 const IELTS_RAW={listening:{"9.0":[39,40],"8.5":[37,38],"8.0":[35,36],"7.5":[32,34],"7.0":[30,31],"6.5":[26,29],"6.0":[23,25],"5.5":[18,22],"5.0":[16,17],"4.5":[13,15],"4.0":[10,12],"3.5":[8,9],"3.0":[6,7],"2.5":[4,5]},reading:{"9.0":[39,40],"8.5":[37,38],"8.0":[35,36],"7.5":[33,34],"7.0":[30,32],"6.5":[27,29],"6.0":[23,26],"5.5":[19,22],"5.0":[15,18],"4.5":[13,14],"4.0":[10,12],"3.5":[8,9],"3.0":[6,7],"2.5":[4,5]}};
 const ieltsRaw=(part,band)=>cur==="IELTS"&&band!==""&&!isNaN(band)?(IELTS_RAW[part]||{})[Number(band).toFixed(1)]||null:null;
 const STP_UP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>',STP_DOWN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
-const stepper=(cls,attrs,min,max,step,ph,extra)=>`<div class="stp"><button type="button" class="stp-b" data-dir="-1" aria-label="Decrease">${STP_DOWN}</button><input type="text" readonly inputmode="none" class="${cls} stp-in" ${attrs} data-min="${min}" data-max="${max}" data-step="${step}" placeholder="${ph}"><button type="button" class="stp-b" data-dir="1" aria-label="Increase">${STP_UP}</button>${extra||""}</div>`;
+const stepper=(cls,attrs,min,max,step,ph,extra)=>`<div class="stp${cls==="raw-c"?" stp-sm":""}"><button type="button" class="stp-b" data-dir="-1" aria-label="Decrease">${STP_DOWN}</button><input type="text" readonly inputmode="none" class="${cls} stp-in" ${attrs} data-min="${min}" data-max="${max}" data-step="${step}" placeholder="${ph}"><button type="button" class="stp-b" data-dir="1" aria-label="Increase">${STP_UP}</button>${extra||""}</div>`;
 function stepIt(inp,dir){
  const mn=+inp.dataset.min,mx=+inp.dataset.max,st=+inp.dataset.step||1;let v=inp.value===""?NaN:parseFloat(inp.value);
  v=isNaN(v)?(dir>0?mn:mx):Math.min(mx,Math.max(mn,+(v+dir*st).toFixed(2)));
