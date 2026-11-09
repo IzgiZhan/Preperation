@@ -332,6 +332,23 @@ h2.bad{color:var(--bad)}
 .stp-b:active{background:var(--bg);color:var(--tx)}.stp-b svg{width:15px;height:15px;pointer-events:none}
 .part-score{flex:1;min-width:0;max-width:420px;flex-direction:column;align-items:stretch}
 @media(max-width:820px){.part-row{flex-wrap:wrap;gap:10px}.part-check{flex:1 1 100%}.part-score{flex:1 1 100%;max-width:none}}
+#avOpen{cursor:pointer}
+.am{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);padding:20px}
+.am.show{display:flex}
+.am-box{position:relative;background:var(--card);color:var(--tx);border-radius:28px;box-shadow:0 20px 60px rgba(0,0,0,.35);width:min(360px,100%);max-height:90vh;overflow:auto;padding:28px 24px 26px;text-align:center}
+.am-x{position:absolute;top:12px;right:12px;border:0;background:var(--bg);color:var(--tx);width:38px;height:38px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer}
+.am-photo{display:block;width:min(240px,64vw);aspect-ratio:1;margin:8px auto 18px;border-radius:50%;object-fit:cover}
+.am-letter{display:grid;place-items:center;background:var(--ink);color:#fff;font-size:96px;font-weight:700}
+.am-name{font-size:24px;font-weight:700;overflow-wrap:anywhere}
+.am-quote{margin-top:10px;color:var(--mu);font-size:17px;font-style:italic;line-height:1.45;overflow-wrap:anywhere}
+/* compact score steppers */
+.part-score{flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px;max-width:none}
+.stp{width:132px;flex:none}
+.stp-in{padding:7px 30px;font-size:16px;border-radius:10px}
+.stp-in::placeholder{font-size:14px}
+.stp-b{right:3px;width:26px}
+.stp-b svg{width:13px;height:13px}
+@media(max-width:820px){.part-score{flex:1 1 100%}.stp{width:132px}}
 /* mobile readability */
 @media(max-width:820px){
  body{font-size:16px;line-height:1.55}
@@ -417,7 +434,7 @@ h2.bad{color:var(--bad)}
     <a href="#" id="out" class="logout-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H5v16h4"/><path d="m16 8 4 4-4 4M20 12H9"/></svg><span>Log out</span></a>
   </aside>
   <main class="main-area">
-    <header class="topbar own"><div><h1 id="pageTitle">Overview</h1></div><div class="top-right"><span class="av-wrap"><img class="top-av" id="topAv" alt="" hidden><span class="top-av letter" id="topAvLetter">S</span></span><div class="top-id"><span class="top-name" id="topName"></span><button class="quote-btn" id="quoteBtn" type="button">Add a quote</button><div class="quote-box" id="quoteBox" hidden></div></div><button class="icon-btn" id="themeToggle" type="button" aria-label="Switch between light and dark theme"><svg class="ico i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg><svg class="ico i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="themeLbl"></span></button></div></header>
+    <header class="topbar own"><div><h1 id="pageTitle">Overview</h1></div><div class="top-right"><span class="av-wrap" id="avOpen" role="button" tabindex="0" aria-label="Open profile photo"><img class="top-av" id="topAv" alt="" hidden><span class="top-av letter" id="topAvLetter">S</span></span><div class="top-id"><span class="top-name" id="topName"></span><button class="quote-btn" id="quoteBtn" type="button">Add a quote</button><div class="quote-box" id="quoteBox" hidden></div></div><button class="icon-btn" id="themeToggle" type="button" aria-label="Switch between light and dark theme"><svg class="ico i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg><svg class="ico i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="themeLbl"></span></button></div></header>
     <button class="next-exam own" id="nextExam" type="button" hidden></button>
     <section class="app-panel active" id="overview">
       
@@ -1250,6 +1267,23 @@ const aY=+today().slice(0,4),aDate=dateSel(today(),()=>{const g=aDate.get();if(g
  panel.addEventListener("keydown",e=>{if(e.target.matches(NUM)&&["-","+","e","E"].includes(e.key))e.preventDefault()});
  panel.addEventListener("input",e=>{if(e.target.matches(NUM))fix(e.target,false)});
  panel.addEventListener("change",e=>{if(e.target.matches(NUM))fix(e.target,true)});
+})();
+/* avatar window: big photo, name and quote */
+(function(){
+ let m;
+ const close=()=>{if(m&&m.classList.contains("show")){m.classList.remove("show");document.body.style.overflow=""}};
+ const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+ function open(){
+  if(!m){m=document.createElement("div");m.id="avModal";m.className="am";m.setAttribute("role","dialog");m.setAttribute("aria-modal","true");m.innerHTML='<div class="am-box"></div>';document.body.appendChild(m);
+   m.addEventListener("click",e=>{if(e.target===m||e.target.closest(".am-x"))close()});document.addEventListener("keydown",e=>{if(e.key==="Escape")close()})}
+  const img=$("topAv"),url=img&&!img.hidden&&img.getAttribute("src")?img.src:"",name=($("topName").textContent||"").trim()||"Student",letter=esc(name[0].toUpperCase());
+  m.firstChild.innerHTML='<button class="am-x" type="button" aria-label="Close">\u00d7</button>'+
+   (url?'<img class="am-photo" src="'+esc(url)+'" alt="">':'<div class="am-photo am-letter">'+letter+'</div>')+
+   '<div class="am-name">'+esc(name)+'</div>'+(quoteTxt?'<div class="am-quote">\u201c'+esc(quoteTxt)+'\u201d</div>':"");
+  m.classList.add("show");document.body.style.overflow="hidden";
+ }
+ document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#avOpen"))open()});
+ document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.id==="avOpen"){e.preventDefault();open()}});
 })();
 const pDate=dateSel(today(),null,Y0-1,Y0+2,today());$("pDate").appendChild(pDate.el);const pSec=secCtl("IELTS","");$("pSecBox").appendChild(pSec.el);$("pExam").onchange=()=>{pSec.setEx($("pExam").value)};
 $("pAdd").onclick=async()=>{const m=$("pMsg");
