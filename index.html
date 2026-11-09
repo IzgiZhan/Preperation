@@ -342,6 +342,7 @@ h2.bad{color:var(--bad)}
 .am-name{font-size:24px;font-weight:700;overflow-wrap:anywhere}
 .am-quote{margin-top:10px;color:var(--mu);font-size:17px;font-style:italic;line-height:1.45;overflow-wrap:anywhere}
 .stp-b{width:28px}.stp-b svg{width:11px;height:11px}
+.stp[hidden]{display:none!important}
 /* mobile readability */
 @media(max-width:820px){
  body{font-size:16px;line-height:1.55}
@@ -566,7 +567,7 @@ function rawRangeUI(raw,r){
  if(raw.classList.contains("stp-in")){const a=r?r[0]:1,b=r?r[1]:40;raw.dataset.min=a;raw.dataset.max=b;raw.placeholder=r?(a===b?a:a+"\u2013"+b):"1\u201340";if(raw.value!==""&&(+raw.value<a||+raw.value>b))raw.value="";return}
 raw.min=r?r[0]:1;raw.max=r?r[1]:40;raw.placeholder=r?(r[0]===r[1]?r[0]:r[0]+"–"+r[1]):"1–40"}
 document.addEventListener("input",e=>{const t=e.target;if(!t.matches)return;
- if(t.matches(".part-value")&&cur==="IELTS"){const raw=t.closest(".part-score")?.querySelector(".raw-c");if(raw){const r=ieltsRaw(t.dataset.part,t.value);rawRangeUI(raw,r);if(r&&raw.value&&(+raw.value<r[0]||+raw.value>r[1]))raw.value=""}}
+ if(t.matches(".part-value")&&cur==="IELTS"){const raw=t.closest(".part-score")?.querySelector(".raw-c");if(raw){const r=ieltsRaw(t.dataset.part,t.value);rawRangeUI(raw,r);{const q=raw.closest(".stp");if(q){q.hidden=t.value==="";if(q.hidden)raw.value=""}}if(r&&raw.value&&(+raw.value<r[0]||+raw.value>r[1]))raw.value=""}}
  else if(t.matches(".raw-c")&&t.value!=="")t.value=String(Math.min(40,Math.max(1,Math.floor(+t.value))))});
 document.addEventListener("change",e=>{const t=e.target;if(t.matches&&t.matches(".raw-c")&&t.value!==""){t.value=String(Math.min(+t.max||40,Math.max(+t.min||1,Math.floor(+t.value))))}});
 function examPartsFor(ex){
@@ -608,6 +609,7 @@ function renderExamParts(){
   const rn=cur==="IELTS"&&(p.id==="listening"||p.id==="reading")?40:0;
   return `<div class="part-row"><label class="part-check"><input type="checkbox" class="part-toggle" value="${p.id}"> ${p.name}</label><div class="part-score" hidden>${scoreControl}${rn?`${stepper("raw-c",`data-part="${p.id}" aria-label="Correct answers"`,1,40,1,"1\u201340")}<input type="hidden" class="raw-t" data-part="${p.id}" value="40">`:""}</div></div>`;
  }).join("");
+ $("partsList").querySelectorAll(".raw-c").forEach(r=>{const q=r.closest(".stp");if(q)q.hidden=true});
  $("partsList").querySelectorAll(".part-toggle").forEach(c=>c.addEventListener("change",()=>{c.closest(".part-row").querySelector(".part-score").hidden=!c.checked;updateCalculatedScore()}));
  $("partsList").querySelectorAll(".part-value").forEach(i=>i.addEventListener("change",updateCalculatedScore));
  $("partsList").querySelectorAll(".part-value").forEach(i=>i.addEventListener("input",updateCalculatedScore));
@@ -859,7 +861,7 @@ async function add(){
  }
  const {error}=await sb.from("entries").insert(records);if(error){alert(error.message);return}
  await markPlansDone(cur,date,records);
- $("score").value="";document.querySelectorAll(".part-toggle").forEach(c=>{c.checked=false;c.closest(".part-row").querySelector(".part-score").hidden=true});document.querySelectorAll(".part-value,.raw-c").forEach(i=>i.value="");document.querySelectorAll(".raw-c").forEach(r=>rawRangeUI(r,null));updateCalculatedScore();aDate.set(today());chartEx=cur;chartSub="full";openPanel("historyPanel");load();
+ $("score").value="";document.querySelectorAll(".part-toggle").forEach(c=>{c.checked=false;c.closest(".part-row").querySelector(".part-score").hidden=true});document.querySelectorAll(".part-value,.raw-c").forEach(i=>i.value="");document.querySelectorAll(".raw-c").forEach(r=>{rawRangeUI(r,null);const q=r.closest(".stp");if(q)q.hidden=true});updateCalculatedScore();aDate.set(today());chartEx=cur;chartSub="full";openPanel("historyPanel");load();
 }
 async function del(id){await sb.from("entries").delete().eq("id",id);load()}
 $("add").onclick=add;
