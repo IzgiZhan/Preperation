@@ -382,6 +382,9 @@ button.danger{background:linear-gradient(180deg,color-mix(in srgb,var(--bad) 84%
 .nav-btn,.side-btn,.logout-link{border-radius:14px}
 @media(hover:none){.xcard:hover{transform:none}button.main:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.goal-head{display:flex;align-items:center;gap:10px}.goal-head .left-pill{margin-right:auto}
+.left-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:14px;font-weight:650;color:var(--c,var(--ac));background:color-mix(in srgb,var(--c,var(--ac)) 14%,var(--card))}
+.left-pill.done{color:var(--ok);background:var(--okbg)}.left-pill .ico{width:16px;height:16px}
 </style>
 </head>
 <body>
@@ -1035,11 +1038,13 @@ function renderGoals(){
     const wrap=el("div",null,"goal-item"),head=el("div",null,"goal-head"),n=el("b",EX[k].n);n.style.color="var(--"+k.toLowerCase()+")";
     const goal=targets[k]>0?targets[k]:null,dl=deadlines[k]||null,days=dl?dayNum(dl)-t0:null,has=goal||dl;
     const btn=el("button",has?"Edit":"Add goal","hbtn"+(has?" amber":""));btn.onclick=()=>{goalEdit[k]=true;editGoal(k,wrap)};
-    head.append(n,btn);wrap.appendChild(head);
+    const a=attemptsOf(k),l=a[a.length-1];head.appendChild(n);
+    if(goal&&l){const left=Math.max(0,+(goal-l.score).toFixed(2)),pill=el("span",null,"left-pill"+(left>0?"":" done"));pill.innerHTML=IC("target")+"<span>"+(left>0?fs(k,left)+" left":"Goal reached")+"</span>";pill.style.setProperty("--c","var(--"+k.toLowerCase()+")");head.appendChild(pill)}
+    head.appendChild(btn);wrap.appendChild(head);
     if(has){
       const info=el("div",null,"info");info.append(infoRow("Goal score",goal?fs(k,goal)+" / "+fs(k,EX[k].max):"Not set"),infoRow("Date to reach it",dl?fmtLong(dl):"Not set"));wrap.appendChild(info);
-      const a=attemptsOf(k),l=a[a.length-1],when=days===null?"":days>0?days+" days left.":days===0?"The date is today.":"The date has passed.";
-      if(goal&&l){const pct=Math.min(100,Math.round(l.score/goal*100)),left=Math.max(0,+(goal-l.score).toFixed(2)),bar=el("div",null,"gbar");bar.innerHTML='<i style="width:'+pct+'%"></i>';wrap.append(bar,el("p",pct+"% done. "+(left>0?fs(k,left)+" left to reach the goal. ":"Goal reached. ")+when,"mu"))}
+      const when=days===null?"":days>0?days+" days left.":days===0?"The date is today.":"The date has passed.";
+      if(goal&&l){const pct=Math.min(100,Math.round(l.score/goal*100)),bar=el("div",null,"gbar");bar.innerHTML='<i style="width:'+pct+'%"></i>';wrap.appendChild(bar);if(when)wrap.appendChild(el("p",when,"mu"))}
       else if(when)wrap.appendChild(el("p",when,"mu"));
     }else wrap.appendChild(el("p","No goal yet.","mu"));
     g.appendChild(wrap)});
