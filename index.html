@@ -606,8 +606,8 @@ function renderExamParts(){
  const parts=examParts();$("examParts").hidden=!parts.length;$("singleScoreRow").hidden=!!parts.length;$("subjWrap").hidden=true;
  $("partsTitle").textContent=cur==="IELTS"?"IELTS sections":cur==="ENT"?"ҰБТ пәндері":"SAT sections";
  $("partsList").innerHTML=parts.map(p=>{
-  const lo=cur==="IELTS"?1:(p.min??0),st=p.step||1;
-  const scoreControl=stepper("part-value",`data-part="${p.id}" ${cur==="IELTS"?'data-fmt="1" ':""}aria-label="${p.name}"`,lo,p.max,st,cur==="IELTS"?"1.0\u20139.0":lo+"\u2013"+p.max);
+  const lo=cur==="IELTS"?2.5:(p.min??0),st=p.step||1;
+  const scoreControl=stepper("part-value",`data-part="${p.id}" ${cur==="IELTS"?'data-fmt="1" ':""}aria-label="${p.name}"`,lo,p.max,st,cur==="IELTS"?lo.toFixed(1)+"\u20139.0":lo+"\u2013"+p.max);
   const rn=cur==="IELTS"&&(p.id==="listening"||p.id==="reading")?40:0;
   return `<div class="part-row"><label class="part-check"><input type="checkbox" class="part-toggle" value="${p.id}"> ${p.name}</label><div class="part-score" hidden>${scoreControl}${rn?`${stepper("raw-c",`data-part="${p.id}" aria-label="Correct answers"`,1,40,1,"1\u201340")}<input type="hidden" class="raw-t" data-part="${p.id}" value="40">`:""}</div></div>`;
  }).join("");
