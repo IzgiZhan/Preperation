@@ -1035,14 +1035,18 @@ function showHeat(){
 }
 const goalEdit={};
 function forecastOf(k,goal,days){
-  const a=attemptsOf(k).slice(-6);if(a.length<2)return null;
-  const xs=a.map(r=>dayNum(r.date)),ys=a.map(r=>r.score),n=a.length,mx=xs.reduce((p,c)=>p+c,0)/n,my=ys.reduce((p,c)=>p+c,0)/n;
+  const a=attemptsOf(k).slice(-6);if(a.length<3)return null;
+  const xs=a.map(r=>dayNum(r.date)),ys=a.map(r=>r.score),n=a.length;
+  if(xs[n-1]-xs[0]<14)return null;
+  const mx=xs.reduce((p,c)=>p+c,0)/n,my=ys.reduce((p,c)=>p+c,0)/n;
   let num=0,den=0;for(let i=0;i<n;i++){num+=(xs[i]-mx)*(ys[i]-my);den+=(xs[i]-mx)**2}
-  if(!den)return null;const slope=num/den,last=a[n-1],t0=dayNum(today());
+  if(!den)return null;
+  const cap=EX[k].max*0.03/7;
+  const slope=Math.max(-cap,Math.min(cap,num/den)),last=a[n-1],t0=dayNum(today());
   const q=EX[k].step,rd=v=>Math.min(EX[k].max,Math.max(0,Math.round(v/q)*q));
   const out={slope,week:slope*7};
-  if(days!==null&&days>0)out.atDeadline=rd(last.score+slope*(dayNum(last.date)<t0?(t0-dayNum(last.date))+days:days));
-  if(last.score<goal&&slope>0){const need=Math.ceil((goal-last.score)/slope);out.reachIso=isoOf(dayNum(last.date)+need);out.reachDays=dayNum(last.date)+need-t0}
+  if(days!==null&&days>0)out.atDeadline=rd(last.score+slope*((t0-dayNum(last.date))+days));
+  if(last.score<goal&&slope>0){const need=Math.ceil((goal-last.score)/slope),d=dayNum(last.date)+need-t0;out.reachDays=Math.max(d,1);out.reachIso=isoOf(t0+out.reachDays);out.far=d>365}
   return out}
 function infoRow(a,b){const r=el("div",null,"info-row");r.append(el("span",a),el("b",b));return r}
 function renderGoals(){
@@ -1065,7 +1069,7 @@ function renderGoals(){
           const pace=(f.week>=0?"+":"")+(+f.week.toFixed(2))+" / week";
           box.appendChild(infoRow("Your pace",pace));
           if(f.atDeadline!==undefined){const ok=f.atDeadline>=goal;const r=infoRow("Forecast by date",fs(k,f.atDeadline)+(ok?" \u2713 on track":" \u2014 "+fs(k,+(goal-f.atDeadline).toFixed(2))+" short"));r.querySelector("b").style.color=ok?"var(--ok,#16a34a)":"var(--bad)";box.appendChild(r)}
-          if(f.reachIso)box.appendChild(infoRow("Goal at this pace",f.reachDays>0?"~"+fmtLong(f.reachIso):"soon"));
+          if(f.reachIso)box.appendChild(infoRow("Goal at this pace",f.far?"more than a year":"~"+fmtLong(f.reachIso)));
           else if(f.slope<=0)box.appendChild(infoRow("Goal at this pace","not growing yet"));
           wrap.appendChild(box)}}
       else if(when)wrap.appendChild(el("p",when,"mu"));
