@@ -440,6 +440,17 @@ button.danger{background:linear-gradient(180deg,color-mix(in srgb,var(--bad) 84%
 .tip-ic{font-size:18px;line-height:1.4}
 .wk-t{display:block;margin-bottom:4px}
 .st-card.block{background:var(--card);margin:0}.st-card .pbar{background:var(--bg)}
+.t-title{font-size:20px;margin-bottom:4px}
+.mini-h{font-size:13px;font-weight:600;color:var(--mu);margin:12px 0 6px}
+.ach-box{display:grid;gap:6px;margin-bottom:6px}
+.ach-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:var(--bg);font-weight:600}
+.ach-x{border:0;background:var(--badbg);color:var(--bad);width:30px;height:30px;border-radius:50%;font-size:18px;line-height:1;flex:none}
+.ach-add{padding:4px 16px 16px;border:2px dashed var(--bd);border-radius:16px;margin-top:8px}
+.pitem2{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:14px 0;border-top:1px solid var(--bd)}.pitem2:first-of-type{border-top:0}
+.ach-list{margin:6px 0 0;padding-left:18px;color:var(--mu);font-size:14px}
+.sec-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.sec-chip{padding:7px 14px;border-radius:99px;background:var(--bg);font-weight:600;font-size:14px}.sec-chip.good{background:var(--okbg);color:var(--ok)}.sec-chip.bad{background:var(--badbg);color:var(--bad)}
+.st-long{border-left:6px solid var(--c)}
 @media(max-width:1100px){.sa-grid,.st-grid{grid-template-columns:1fr}}
 @media(max-width:820px){.lv-grid{grid-template-columns:1fr 1fr}.pitem{grid-template-columns:1fr auto auto}.pitem .pbar{grid-column:1/-1;grid-row:2}.prow{grid-template-columns:1fr 1fr 48px}.sess{grid-template-columns:84px 1fr}.ring{width:110px;height:110px}.ring::before{width:86px;height:86px}.ring b{font-size:26px}}
 </style>
@@ -1540,50 +1551,91 @@ const FIELDS={
  edu:{n:"Languages & Education",m:"Translation, Philology, Teaching, Journalism"},
  arts:{n:"Arts & Design",m:"Design, Architecture, Music, Media production"},
  sport:{n:"Sport & Coaching",m:"Physical education, Sport management, Coaching"}};
-const PCAT={academic:{n:"Olympiads",c:"#4f46e5"},science:{n:"Research",c:"#0891b2"},it:{n:"IT & engineering",c:"#0284c7"},lang:{n:"Languages",c:"#7c3aed"},social:{n:"Leadership & volunteering",c:"#16a34a"},arts:{n:"Arts & culture",c:"#db2777"},sport:{n:"Sport",c:"#ea580c"},biz:{n:"Business",c:"#ca8a04"},extra:{n:"Courses & experience",c:"#64748b"}};
+const PCAT={academic:{n:"Olympiads",c:"#4f46e5"},science:{n:"Research",c:"#0891b2"},it:{n:"IT & robotics",c:"#0284c7"},lang:{n:"Languages",c:"#7c3aed"},social:{n:"Leadership & volunteering",c:"#16a34a"},arts:{n:"Arts",c:"#db2777"},sport:{n:"Sport",c:"#ea580c"},biz:{n:"Business",c:"#ca8a04"},extra:{n:"Courses & work",c:"#64748b"}};
+const CAT_ICON={academic:"🏆",science:"🔬",it:"🤖",lang:"🌍",social:"🤝",arts:"🎨",sport:"⚽",biz:"💼",extra:"📚"};
+/* stages: name, points 1-5 */
+const STG={school:["School",1],city:["City",2],region:["Region",3],national:["Republic",4],intl:["International",5],qual:["Qualifier",3],fnat:["National championship",4],open:["Open / Invitational",4],world:["World championship",5]};
+const S_ALL=["school","city","region","national","intl"],S_UP=["city","region","national","intl"],S_FIRST=["qual","fnat","open","world"],S_INT=["intl"];
+/* results: id, name, multiplier 0-1 */
+const RES={
+ oly:[["part","Participant",.3],["merit","Certificate",.5],["3","3rd place",.7],["2","2nd place",.85],["1","1st place",1]],
+ medal:[["part","Participant",.3],["hm","Honorable mention",.5],["bronze","Bronze medal",.7],["silver","Silver medal",.85],["gold","Gold medal",1]],
+ comp:[["part","Participant",.3],["final","Finalist",.55],["special","Special prize",.65],["3","3rd place",.7],["2","2nd place",.85],["1","1st place",1]],
+ laureate:[["part","Participant",.3],["diploma","Diploma",.5],["l3","Laureate 3rd",.7],["l2","Laureate 2nd",.8],["l1","Laureate 1st",.9],["gp","Grand Prix",1]],
+ ftc:[["part","Participant",.3],["finalist","Finalist Alliance",.6],["design","Design Award",.7],["motivate","Motivate Award",.7],["control","Control Award",.7],["reach","Reach Award",.7],["sustain","Sustain Award",.7],["innovate","Innovate Award",.75],["connect","Connect Award",.8],["think","Think Award",.8],["winner","Winning Alliance",.9],["inspire","Inspire Award",1]],
+ fll:[["part","Participant",.3],["motivate","Motivate",.6],["breakthrough","Breakthrough",.6],["allstar","Rising All-Star",.6],["perf","Robot Performance",.75],["design","Robot Design",.75],["project","Innovation Project",.75],["core","Core Values",.75],["engx","Engineering Excellence",.8],["champ","Champion's Award",1]],
+ frc:[["part","Participant",.3],["finalist","Finalist Alliance",.6],["tech","Technical award",.7],["rookie","Rookie All-Star",.75],["ei","Engineering Inspiration",.85],["winner","Winner",.9],["impact","FIRST Impact Award",1]],
+ vex:[["part","Participant",.3],["finalist","Finalist",.6],["judged","Think / Build / Create Award",.7],["design","Design Award",.8],["skills","Skills Champion",.85],["champ","Tournament Champion",.9],["excel","Excellence Award",1]],
+ project:[["made","Made it",.4],["used","Has real users",.7],["popular","100+ users or featured",1]],
+ cf:[["pupil","Below 1400",.3],["spec","Specialist 1400+",.5],["exp","Expert 1600+",.7],["cm","Candidate Master 1900+",.85],["master","Master 2100+",1]],
+ kaggle:[["part","Participant",.3],["bronze","Bronze medal",.6],["silver","Silver medal",.8],["gold","Gold medal",1]],
+ ielts:[["55","5.5",.3],["6","6.0–6.5",.5],["7","7.0–7.5",.75],["8","8.0+",1]],
+ toefl:[["79","Below 80",.3],["80","80–99",.5],["100","100–109",.75],["110","110+",1]],
+ camb:[["b1","B1 Preliminary",.3],["b2","B2 First",.5],["c1","C1 Advanced",.8],["c2","C2 Proficiency",1]],
+ cefr:[["a2","A2",.3],["b1","B1",.5],["b2","B2",.75],["c1","C1+",1]],
+ hsk:[["12","HSK 1–2",.3],["34","HSK 3–4",.6],["56","HSK 5–6",1]],
+ debate:[["part","Participant",.3],["qf","Quarter-finalist",.5],["sf","Semi-finalist",.65],["final","Finalist",.75],["speaker","Best speaker",.85],["win","Winner",1]],
+ mun:[["del","Delegate",.3],["hm","Honorable mention",.6],["out","Outstanding delegate",.8],["best","Best delegate",1]],
+ hours:[["20","20+ hours",.3],["50","50+ hours",.5],["100","100+ hours",.75],["200","200+ hours",1]],
+ role:[["member","Member",.4],["lead","Leader / coordinator",.75],["founder","Founder",1]],
+ parl:[["member","Member",.4],["head","Head of committee",.7],["pres","President",1]],
+ org:[["help","Helper",.4],["main","Main organizer",.8],["big","Main organizer, 200+ people",1]],
+ school:[["study","Studying",.4],["grad","Graduated",.8],["honors","Graduated with honors",1]],
+ exhib:[["part","Participant",.4],["prize","Prize",.75],["solo","Solo exhibition",1]],
+ publish:[["sch","School newspaper / blog",.4],["mag","Magazine or website",.7],["book","Book",1]],
+ rank:[["youth","Youth rank",.3],["adult","Adult rank",.5],["kms","Candidate Master (КМС)",.8],["ms","Master of Sport (МС)",1]],
+ team:[["club","Club team",.4],["city","City team",.6],["region","Region team",.8],["nat","National team",1]],
+ biz:[["idea","Idea / plan",.3],["sales","First sales",.6],["regular","Regular customers",.8],["profit","Profit 1+ year",1]],
+ course:[["done","Completed",.5],["cert","Certificate",.7],["spec","Specialization (3+ courses)",1]],
+ summer:[["part","Participant",.5],["selected","Selected by contest",.8],["grant","Full scholarship",1]],
+ work:[["shadow","Job shadowing",.3],["short","Internship < 1 month",.5],["long","Internship 1+ month",.8],["job","Part-time job",1]]};
+const OLY_EV=[["resp","Republic subject olympiad",S_ALL,"oly"],["zhaut","Zhautykov Olympiad",S_INT,"medal"],["intl","International olympiad",S_INT,"medal"],["online","Online olympiad / Kangaroo",S_ALL,"oly"],["other","Other olympiad",S_ALL,"oly"]];
+/* topic: id, group, name, short text, events [id, name, stages|null, results], career fields */
 const TOPICS=[
- ["oly_math","academic","Mathematics olympiad","Subject olympiads and competitions in mathematics.",["Olympiad diplomas (school, city, region, republic)","Competitions like Kangaroo or online olympiads"],["it","eng","econ","sci"]],
- ["oly_phys","academic","Physics olympiad","Olympiads and tournaments in physics.",["Olympiad diplomas","Physics tournament certificates"],["eng","sci","it"]],
- ["oly_chem","academic","Chemistry olympiad","Olympiads and competitions in chemistry.",["Olympiad diplomas","Lab competition certificates"],["med","sci"]],
- ["oly_bio","academic","Biology olympiad","Olympiads and competitions in biology.",["Olympiad diplomas","Ecology or biology contest certificates"],["med","sci"]],
- ["oly_inf","academic","Informatics olympiad","Programming olympiads (algorithms and data structures).",["Olympiad diplomas","Codeforces or eolymp rating"],["it","eng"]],
- ["oly_hum","academic","Humanities olympiad","Olympiads in history, geography, languages, law or economics.",["Olympiad diplomas","Contest certificates"],["law","edu","econ"]],
- ["res_project","science","Research project","Your own scientific project, for example for the «Дарын» science projects competition.",["Project paper and presentation","Certificates from project competitions"],["sci","med","eng"]],
- ["res_fair","science","Science conferences","Talks at school, city or international conferences and science fairs.",["Conference certificates","Published abstracts"],["sci","edu"]],
- ["it_prog","it","Programming","Writing programs, apps or websites.",["GitHub repositories","Finished apps or websites","Course certificates"],["it"]],
- ["it_robot","it","Robotics","Building and programming robots.",["Competition diplomas (WRO, FIRST)","Photos and videos of robots"],["eng","it"]],
- ["it_ai","it","Data & AI","Data analysis, machine learning and AI projects.",["Kaggle or GitHub projects","Online course certificates"],["it","sci"]],
- ["it_hack","it","Hackathons & tech projects","Hackathons, startups and team tech projects.",["Hackathon certificates","Project demo links"],["it","econ"]],
- ["lang_eng","lang","English","Your English level and certificates.",["IELTS, TOEFL or Cambridge certificates","Language competition diplomas"],["edu","law","econ"]],
- ["lang_other","lang","Other foreign languages","Chinese, German, Turkish, Korean and other languages.",["HSK, Goethe, TOPIK or other certificates"],["edu","law"]],
- ["lang_debate","lang","Debate & public speaking","Debate clubs, Model UN, public speaking.",["Debate tournament certificates","MUN certificates"],["law","edu"]],
- ["soc_vol","social","Volunteering","Volunteer work for people, animals, ecology or events.",["Volunteer certificates","Letters from organizations with hours"],["law","med","edu"]],
- ["soc_lead","social","Student leadership","School parliament, club president, team captain.",["Letter or order from school","Projects you led"],["law","econ","edu"]],
- ["soc_event","social","Organizing events","School events, charity fairs, festivals you organized.",["Photos and posters","Letters of thanks"],["econ","arts"]],
- ["art_music","arts","Music","Playing instruments, singing, music school.",["Music school diploma","Competition diplomas"],["arts","edu"]],
- ["art_visual","arts","Art & design","Drawing, graphic design, photography, video.",["Portfolio of works","Exhibition or contest diplomas"],["arts","it"]],
- ["art_stage","arts","Theatre & dance","Theatre, dance and performing arts.",["Performance videos","Festival diplomas"],["arts"]],
- ["art_write","arts","Writing & journalism","Essays, poems, school newspaper, blog.",["Published works","Essay contest diplomas"],["edu","law","arts"]],
- ["sport_comp","sport","Sport competitions","Training and competitions in any sport.",["Sport ranks and diplomas","Team membership"],["sport","med"]],
- ["biz_start","biz","Entrepreneurship","Your own small business, startup or business case competitions.",["Business plan or product","Startup competition certificates"],["econ","it"]],
- ["biz_fin","biz","Financial literacy","Finance, economics and investing courses or competitions.",["Course certificates","Olympiad or case diplomas"],["econ"]],
- ["ex_course","extra","Online courses","Coursera, Stepik, Khan Academy and other courses.",["Course certificates with hours"],["it","sci","econ"]],
- ["ex_summer","extra","Summer schools","Summer and winter schools, camps, exchange programs.",["Participation certificates"],["edu","sci"]],
- ["ex_work","extra","Internships & work","Internships, part-time jobs, job shadowing.",["Letter from employer","Contract or certificate"],["econ","eng"]]
+ ["oly_math","academic","Mathematics","Math olympiads.",OLY_EV,["it","eng","econ","sci"]],
+ ["oly_phys","academic","Physics","Physics olympiads.",OLY_EV,["eng","sci","it"]],
+ ["oly_chem","academic","Chemistry","Chemistry olympiads.",OLY_EV,["med","sci"]],
+ ["oly_bio","academic","Biology","Biology olympiads.",OLY_EV,["med","sci"]],
+ ["oly_inf","academic","Informatics","Programming olympiads.",[...OLY_EV,["cf","Codeforces rating",null,"cf"]],["it","eng"]],
+ ["oly_hum","academic","History, geography, languages","Humanities olympiads.",OLY_EV,["law","edu","econ"]],
+ ["res_project","science","Research project","Your own science project.",[["daryn","«Дарын» science projects",S_ALL,"oly"],["infomatrix","INFOMATRIX",S_UP,"medal"],["isef","ISEF / international fair",S_INT,"comp"],["other","Other project contest",S_ALL,"comp"]],["sci","med","eng"]],
+ ["res_fair","science","Science conferences","Talks at conferences.",[["conf","Conference",S_ALL,"comp"]],["sci","edu"]],
+ ["it_robot","it","Robotics","Robotics competitions.",[["fll","FIRST LEGO League (FLL)",S_FIRST,"fll"],["ftc","FIRST Tech Challenge (FTC)",S_FIRST,"ftc"],["frc","FIRST Robotics Competition (FRC)",S_FIRST,"frc"],["wro","World Robot Olympiad (WRO)",S_UP,"comp"],["vex","VEX Robotics",S_FIRST,"vex"],["other","Other robotics contest",S_ALL,"comp"]],["eng","it"]],
+ ["it_prog","it","Programming","Apps, websites, games.",[["project","Own app / website / game",null,"project"],["oss","Open-source project",null,"role"]],["it"]],
+ ["it_ai","it","Data & AI","AI and data projects.",[["kaggle","Kaggle competition",null,"kaggle"],["ioai","AI olympiad (IOAI)",S_ALL,"medal"],["project","Own AI project",null,"project"]],["it","sci"]],
+ ["it_hack","it","Hackathons","Hackathons and tech contests.",[["hack","Hackathon",S_UP,"comp"],["other","Other tech contest",S_ALL,"comp"]],["it","econ"]],
+ ["lang_eng","lang","English","Certificates and contests.",[["ielts","IELTS",null,"ielts"],["toefl","TOEFL iBT",null,"toefl"],["camb","Cambridge exam",null,"camb"],["oly","English olympiad",S_ALL,"oly"]],["edu","law","econ"]],
+ ["lang_other","lang","Other languages","Chinese, German, Turkish, Korean…",[["hsk","HSK (Chinese)",null,"hsk"],["goethe","Goethe / DELF / DELE",null,"cefr"],["topik","TOPIK (Korean)",null,"cefr"],["oly","Language olympiad",S_ALL,"oly"]],["edu","law"]],
+ ["lang_debate","lang","Debate & MUN","Debates and Model UN.",[["debate","Debate tournament",S_ALL,"debate"],["mun","Model UN",S_UP,"mun"]],["law","edu"]],
+ ["soc_vol","social","Volunteering","Helping people and nature.",[["hours","Volunteer hours",null,"hours"],["org","Volunteer group",null,"role"]],["law","med","edu"]],
+ ["soc_lead","social","Leadership","Leading people.",[["parl","School parliament",null,"parl"],["club","Club / community",null,"role"],["capt","Team captain",null,"role"]],["law","econ","edu"]],
+ ["soc_event","social","Events","Events you organized.",[["event","Event",S_ALL,"org"]],["econ","arts"]],
+ ["art_music","arts","Music","Instruments and singing.",[["school","Music school",null,"school"],["contest","Music contest",S_ALL,"laureate"]],["arts","edu"]],
+ ["art_visual","arts","Art & design","Drawing, design, photo, video.",[["contest","Art contest",S_ALL,"laureate"],["exhib","Exhibition",S_ALL,"exhib"]],["arts","it"]],
+ ["art_stage","arts","Theatre & dance","Stage performance.",[["fest","Festival / contest",S_ALL,"laureate"]],["arts"]],
+ ["art_write","arts","Writing","Essays, poems, journalism.",[["contest","Writing contest",S_ALL,"comp"],["pub","Published work",null,"publish"]],["edu","law","arts"]],
+ ["sport_comp","sport","Sport","Any sport.",[["comp","Competition",S_ALL,"comp"],["rank","Sport rank",null,"rank"],["team","Team",null,"team"]],["sport","med"]],
+ ["biz_start","biz","Entrepreneurship","Own business or startup.",[["own","Own business",null,"biz"],["contest","Startup contest",S_UP,"comp"]],["econ","it"]],
+ ["biz_fin","biz","Economics & finance","Finance olympiads and courses.",[["oly","Economics olympiad",S_ALL,"oly"],["course","Finance course",null,"course"]],["econ"]],
+ ["ex_course","extra","Online courses","Coursera, Stepik, Khan Academy…",[["course","Online course",null,"course"]],["it","sci","econ"]],
+ ["ex_summer","extra","Summer schools","Camps and exchange programs.",[["summer","Summer / winter school",S_UP,"summer"],["exchange","Exchange program",S_INT,"summer"]],["edu","sci"]],
+ ["ex_work","extra","Internships & work","Work experience.",[["work","Internship / job",null,"work"]],["econ","eng"]]
 ].map(([id,cat,n,d,ev,f])=>({id,cat,n,d,ev,f}));
-const LEVELS=[["Beginner","Just started"],["Basic","Club or course"],["Good","School or city prize"],["Strong","Region prize"],["Top","Country or world prize"]];
-const ACH=[["none","None",0],["school","School",4],["city","City",8],["region","Region",12],["national","Country",18],["intl","World",25]];
-const achOf=k=>ACH.find(x=>x[0]===k)||ACH[0];
+const LEVELS=[["Beginner","Just started"],["Basic","Club or course"],["Good","Can do it alone"],["Strong","Better than most"],["Top","One of the best"]];
 const topicOf=id=>TOPICS.find(t=>t.id===id);
-// topic % = level (15 each) + award bonus + experience bonus, max 100
-const topicPct=it=>Math.min(100,Math.round((+it.level||1)*15+achOf(it.achievement)[2]+Math.min(+it.years||0,4)*2.5));
+const evOf=(t,id)=>(t.ev||[]).find(e=>e[0]===id);
+const resOf=ev=>ev?RES[ev[3]]||[]:[];
+function achInfo(t,a){const ev=evOf(t,a.ev);if(!ev)return null;const st=a.st&&STG[a.st]?STG[a.st]:null,r=resOf(ev).find(x=>x[0]===a.r);
+  return {text:[ev[1],st?st[0]:null,r?r[1]:null,a.y].filter(Boolean).join(" · "),pts:Math.round((ev[2]?(st?st[1]:1)*20:80)*(r?r[2]:.3))}}
+// topic % = skill level (max 40) + best result (max 50) + number of results (max 10)
+function topicPct(it){const t=topicOf(it.topic);const pts=(Array.isArray(it.items)?it.items:[]).map(a=>t&&achInfo(t,a)).filter(Boolean).map(x=>x.pts);
+  return Math.min(100,Math.round((+it.level||1)*8+(pts.length?Math.max(...pts)*.5:0)+Math.min(10,Math.max(0,pts.length-1)*3)))}
 
 let portfolio=[],pCat="academic",pSel=null,portErr="",aiRep={},aiBusy={},aiErr={},schedMsg={},schedAll=false;
 let asstEx="IELTS",asstLang=lsGet("asst_lang","en"),perWeek=lsGet("asst_week",4);
-
 async function loadPortfolio(){
   const r=await sb.from("portfolio_items").select("*").eq("user_id",uid);
-  if(r.error){portfolio=[];portErr="The portfolio needs new database tables. Run smart_assistant.sql in the Supabase SQL editor."}else{portErr="";portfolio=r.data||[]}
+  if(r.error){portfolio=[];portErr="Run smart_assistant.sql in the Supabase SQL editor."}else{portErr="";portfolio=r.data||[]}
   const q=await sb.from("assistant_reports").select("*").eq("user_id",uid).order("created_at",{ascending:false}).limit(30);
   aiRep={};if(!q.error)(q.data||[]).forEach(x=>{if(!aiRep[x.exam])aiRep[x.exam]={key:x.attempt_key,data:x.data}});
 }
@@ -1593,10 +1645,9 @@ function portStats(){
   const s=items.map(x=>x.pc),depth=s.length?(s[0]*.5+(s[1]||0)*.3+(s[2]||0)*.2):0,breadth=Math.min(100,cats.length*20);
   return {items,cats,overall:Math.round(depth*.8+breadth*.2)};
 }
+const achText=p=>{const t=topicOf(p.topic);return (Array.isArray(p.items)?p.items:[]).map(a=>t&&achInfo(t,a)).filter(Boolean).map(x=>x.text)};
 
 /* ---------- Portfolio panel ---------- */
-const CAT_ICON={academic:"🏆",science:"🔬",it:"💻",lang:"🌍",social:"🤝",arts:"🎨",sport:"⚽",biz:"💼",extra:"📚"};
-// a row of pill buttons: pick one option
 function optRow(opts,val,onPick){
   const r=el("div",null,"chips opt");
   opts.forEach(([v,n])=>{const b=el("button",n,"chip"+(v===val?" on":""));b.type="button";b.onclick=()=>{onPick(v);[...r.children].forEach(x=>x.classList.toggle("on",x===b))};r.appendChild(b)});
@@ -1619,50 +1670,53 @@ function renderPortfolio(force){
   pick.appendChild(tg);
   if(pSel)pick.appendChild(topicEditor(pSel));
   box.appendChild(pick);
-  const lst=el("div",null,"block"),ov=portStats(),hd=el("div",null,"sa-head");
-  hd.appendChild(el("h2","My portfolio"));if(ov.items.length)hd.appendChild(el("span",ov.overall+"%","big-pill"));lst.appendChild(hd);
-  if(!ov.items.length)lst.appendChild(el("p","Empty. Pick a topic above.","mu"));
-  ov.items.forEach(({p,t,pc})=>{
-    const r=el("div",null,"pitem"),m=el("div");
-    m.append(el("b",CAT_ICON[t.cat]+" "+t.n),document.createElement("br"),el("small",LEVELS[p.level-1][0]+(p.achievement!=="none"?" · "+achOf(p.achievement)[1]:""),"mu"));
-    const bar=el("div",null,"pbar");bar.style.setProperty("--c",PCAT[t.cat].c);bar.innerHTML='<i style="width:'+pc+'%"></i>';
+  const lst=el("div",null,"block");lst.appendChild(el("h2","My portfolio"));
+  const items=portfolio.map(p=>({p,t:topicOf(p.topic)})).filter(x=>x.t);
+  if(!items.length)lst.appendChild(el("p","Empty. Pick a topic above.","mu"));
+  items.forEach(({p,t})=>{
+    const r=el("div",null,"pitem2"),m=el("div"),ach=achText(p);
+    m.append(el("b",CAT_ICON[t.cat]+" "+t.n+" · "+LEVELS[p.level-1][0]));
+    if(ach.length){const ul=el("ul",null,"ach-list");ach.forEach(x=>ul.appendChild(el("li",x)));m.appendChild(ul)}else m.appendChild(el("div","No results yet","mu"));
     const ed=el("button","Edit","hbtn amber");ed.type="button";ed.onclick=()=>{pCat=t.cat;pSel=t.id;renderPortfolio(true);window.scrollTo({top:0,behavior:"smooth"})};
-    r.append(m,bar,el("b",pc+"%"),ed);lst.appendChild(r)});
+    r.append(m,ed);lst.appendChild(r)});
   box.appendChild(lst);
 }
 function topicEditor(id){
   const t=topicOf(id),cur0=portfolio.find(p=>p.topic===id),c=PCAT[t.cat].c;
-  const d={level:cur0?.level||0,achievement:cur0?.achievement||"none",years:cur0?.years||0};
+  const d={topic:id,level:cur0?.level||0,items:Array.isArray(cur0?.items)?[...cur0.items]:[]};
   const w=el("div",null,"t-editor");w.style.setProperty("--c",c);
-  const info=el("div",null,"t-info");
-  info.innerHTML=`<b style="font-size:19px">${escH(t.n)}</b><p style="margin:4px 0 0">${escH(t.d)}</p><small class="mu">Proof: ${escH(t.ev.join(", "))}</small>`;
-  w.appendChild(info);
-  const sc=el("b","","t-score");
-  const upd=()=>{sc.textContent=d.level?"Score: "+topicPct(d)+"%":"Pick your level"};
+  w.appendChild(el("h3",CAT_ICON[t.cat]+" "+t.n,"t-title"));
   w.appendChild(stepH("3. How good are you?"));
   const lg=el("div",null,"lv-grid");
-  LEVELS.forEach(([n,s],i)=>{const b=el("button",null,"lv"+(d.level===i+1?" on":""));b.type="button";b.innerHTML="<b>"+n+"</b><small>"+s+"</small>";b.onclick=()=>{d.level=i+1;[...lg.children].forEach(x=>x.classList.toggle("on",x===b));upd()};lg.appendChild(b)});
+  LEVELS.forEach(([n,s],i)=>{const b=el("button",null,"lv"+(d.level===i+1?" on":""));b.type="button";b.innerHTML="<b>"+n+"</b><small>"+s+"</small>";b.onclick=()=>{d.level=i+1;[...lg.children].forEach(x=>x.classList.toggle("on",x===b))};lg.appendChild(b)});
   w.appendChild(lg);
-  w.appendChild(stepH("4. Best award"));
-  w.appendChild(optRow(ACH.map(a=>[a[0],a[1]]),d.achievement,v=>{d.achievement=v;upd()}));
-  w.appendChild(stepH("5. How long?"));
-  w.appendChild(optRow([[0,"< 1 year"],[1,"1 year"],[2,"2 years"],[3,"3 years"],[4,"4 years"],[5,"5+ years"]],d.years,v=>{d.years=v;upd()}));
-  const note=document.createElement("input");note.maxLength=160;note.placeholder="Your best result (optional)";note.value=cur0?.note||"";
-  const link=document.createElement("input");link.type="url";link.maxLength=300;link.placeholder="Link to proof (optional)";link.value=cur0?.proof_url||"";
-  const more=el("div",null,"row");more.style.marginTop="14px";more.append(note,link);more.hidden=!(cur0?.note||cur0?.proof_url);
-  const mb=el("button","Add note or link","hbtn gray");mb.type="button";mb.hidden=!more.hidden;mb.style.marginTop="14px";mb.onclick=()=>{more.hidden=false;mb.hidden=true;note.focus()};
-  w.append(mb,more);
-  const bar=el("div",null,"save-bar"),save=el("button",cur0?"Save":"Add","main"),msg=el("p","","mu");save.type="button";
-  upd();
+  w.appendChild(stepH("4. Your results"));
+  const list=el("div",null,"ach-box"),adder=el("div",null,"ach-add");
+  const drawList=()=>{list.replaceChildren();
+    if(!d.items.length)list.appendChild(el("p","No results yet. Add one below.","mu"));
+    d.items.forEach((a,i)=>{const info=achInfo(t,a);if(!info)return;const r=el("div",null,"ach-row"),x=el("button","×","ach-x");x.type="button";x.title="Remove";x.onclick=()=>{d.items.splice(i,1);drawList()};r.append(el("span","🏅 "+info.text),x);list.appendChild(r)})};
+  let nw={};
+  const drawAdd=()=>{adder.replaceChildren();
+    adder.appendChild(el("div","Competition / activity","mini-h"));
+    adder.appendChild(optRow(t.ev.map(e=>[e[0],e[1]]),nw.ev,v=>{nw={ev:v,y:Y0};drawAdd()}));
+    const ev=evOf(t,nw.ev);if(!ev)return;
+    if(ev[2]){adder.appendChild(el("div","Stage","mini-h"));adder.appendChild(optRow(ev[2].map(s=>[s,STG[s][0]]),nw.st,v=>{nw.st=v;drawAdd()}))}
+    if(ev[2]&&!nw.st)return;
+    adder.appendChild(el("div","Result","mini-h"));adder.appendChild(optRow(resOf(ev).map(r=>[r[0],r[1]]),nw.r,v=>{nw.r=v;drawAdd()}));
+    if(!nw.r)return;
+    adder.appendChild(el("div","Year","mini-h"));adder.appendChild(optRow([Y0-3,Y0-2,Y0-1,Y0].map(y=>[y,String(y)]),nw.y,v=>{nw.y=v}));
+    const ok=el("button","Add this result","main");ok.type="button";ok.style.marginTop="12px";
+    ok.onclick=()=>{d.items.push({ev:nw.ev,st:nw.st||null,r:nw.r,y:nw.y});nw={};drawList();drawAdd()};adder.appendChild(ok)};
+  drawList();drawAdd();w.append(list,adder);
+  const bar=el("div",null,"save-bar"),save=el("button",cur0?"Save":"Add to portfolio","main"),msg=el("p","","mu");save.type="button";
   save.onclick=async()=>{
-    if(!d.level){msg.textContent="Pick your level first.";return}
-    const url=link.value.trim();if(url&&!/^https?:\/\//i.test(url)){msg.textContent="The link must start with https://";return}
+    if(!d.level){msg.textContent="Pick how good you are (step 3).";return}
     save.disabled=true;
-    const {error}=await sb.from("portfolio_items").upsert({user_id:uid,topic:id,level:d.level,achievement:d.achievement,years:d.years,note:note.value.trim()||null,proof_url:url||null,updated_at:new Date().toISOString()},{onConflict:"user_id,topic"});
-    save.disabled=false;if(error){msg.textContent=error.message;return}
+    const {error}=await sb.from("portfolio_items").upsert({user_id:uid,topic:id,level:d.level,items:d.items,updated_at:new Date().toISOString()},{onConflict:"user_id,topic"});
+    save.disabled=false;if(error){msg.textContent=/items/i.test(error.message)?"Run smart_assistant_update.sql in the Supabase SQL editor.":error.message;return}
     pSel=null;document.activeElement?.blur();load()};
   const cl=el("button","Cancel","hbtn gray");cl.type="button";cl.onclick=()=>{pSel=null;renderPortfolio(true)};
-  bar.append(sc,save,cl);
+  bar.append(save,cl);
   if(cur0){const rm=el("button",null,"x");rm.type="button";rm.innerHTML=ICON_X;rm.onclick=async()=>{if(!confirm("Delete "+t.n+"?"))return;await sb.from("portfolio_items").delete().eq("id",cur0.id);pSel=null;load()};bar.appendChild(rm)}
   w.append(bar,msg);return w;
 }
@@ -1797,10 +1851,11 @@ function practiceBlock(k){
   const b=el("div",null,"block"),a=analyze(k);
   if(!a){emptyMsg(b,"Add a test result. The assistant will check it here.","Add result",()=>{setEx(k);openPanel("addPanel")});return b}
   const cards=el("div",null,"trend-grid sa-cards"),chCls=a.ch==null||a.ch===0?"trend-flat":a.ch>0?"trend-up":"trend-down";
-  cards.innerHTML=`<div class="trend-card"><span>Score</span><strong>${fs(k,a.tot)}</strong><small>${fmtD(a.date)}</small></div><div class="trend-card"><span>Change</span><strong class="${chCls}">${a.ch==null?"—":fd(k,a.ch)}</strong></div><div class="trend-card"><span>Chance</span><strong>${a.now?a.now.p+"%":"—"}</strong></div>`;
+  cards.innerHTML=`<div class="trend-card"><span>Score</span><strong>${fs(k,a.tot)}</strong><small>${fmtD(a.date)}</small></div><div class="trend-card"><span>Change</span><strong class="${chCls}">${a.ch==null?"—":fd(k,a.ch)}</strong><small>${a.ch==null?"first test":"vs last test"}</small></div>`;cards.style.gridTemplateColumns="1fr 1fr";
   b.appendChild(cards);
-  a.secs.forEach(s=>{const ok=s.tg==null?null:s.score>=s.tg-1e-9,col=ok==null?"var(--ac)":ok?"var(--ok)":s.score>=s.tg*.85?"#f59e0b":"var(--bad)";
-    b.appendChild(pRow(s.name,s.pct,fs(k,s.score)+(s.tg!=null?(ok?" ✓":" · need "+fs(k,roundTo(k,s.tg))):""),col))});
+  const sc=el("div",null,"sec-chips");
+  a.secs.forEach(s=>{const ok=s.tg==null?null:s.score>=s.tg-1e-9,x=el("span",s.name+" "+fs(k,s.score)+(ok===true?" ✓":""),"sec-chip"+(ok===false?" bad":ok?" good":""));sc.appendChild(x)});
+  b.appendChild(sc);
   b.appendChild(stepH("Fix this"));
   const tip=(ic,title,text)=>{const r=el("div",null,"tip"),n=el("span",ic,"tip-ic"),m=el("div");m.appendChild(el("b",title));if(text)m.appendChild(el("div",text,"mu"));r.append(n,m);return r};
   let any=false;
@@ -1835,7 +1890,7 @@ async function runAI(k,force){
     chance_percent:c?c.p:null,forecast_on_exam_date:c?c.projR:null,history:attemptsOf(k).slice(-10).map(x=>({date:x.date,score:x.score})),
     last_practice:{date:a.date,total:a.tot,change:a.ch,sections:a.secs.map(s=>({name:s.name,score:s.score,max:s.mx,needed_for_goal:s.tg!=null?roundTo(k,s.tg):null,change:s.ch}))},
     not_practiced_recently:a.stale.map(s=>s.name),
-    portfolio:portfolio.map(p=>{const t=topicOf(p.topic);return t?{topic:t.n,level:LEVELS[p.level-1][0],award:achOf(p.achievement)[1]}:null}).filter(Boolean),
+    portfolio:portfolio.map(p=>{const t=topicOf(p.topic);return t?{topic:t.n,level:LEVELS[p.level-1][0],results:achText(p)}:null}).filter(Boolean),
     career_fields:careerScores().filter(x=>x.score>0).slice(0,3).map(x=>({field:x.n,match_percent:x.score})),
     style:"Use very simple words. Keep every item short (max 12 words)."};
   let data,error;try{({data,error}=await sb.functions.invoke("smart-assistant",{body}))}catch(e){error=e}
@@ -1886,23 +1941,19 @@ function pRow(name,pct,sub,color){
 }
 function renderStats(){
   const box=$("statsBody");if(!box||viewUid||!uid)return;box.replaceChildren();
-  const grid=el("div",null,"st-grid");grid.style.marginBottom="20px";
   Object.keys(EX).forEach(k=>{
-    const a=attemptsOf(k),l=a[a.length-1],g=goalOf(k),c=chanceOf(k),col="var(--"+k.toLowerCase()+")",card=el("div",null,"st-card block");card.style.setProperty("--c",col);
-    const ready=g&&l?Math.min(100,Math.round(l.score/g*100)):null,top=el("div",null,"chance");
-    top.innerHTML=`<div class="ring sm" style="--p:${ready||0};--rc:${col}"><b>${ready==null?"—":ready+"%"}</b></div><div><b style="font-size:20px;color:${col}">${EX[k].n}</b><div class="mu">${l?"Last: "+fs(k,l.score)+(g?" / goal "+fs(k,g):""):"No results"}</div></div>`;
+    const a=attemptsOf(k),l=a[a.length-1],g=goalOf(k),col="var(--"+k.toLowerCase()+")",card=el("div",null,"block st-long");card.style.setProperty("--c",col);
+    const ready=g&&l?Math.min(100,Math.round(l.score/g*100)):l?Math.round(l.score/EX[k].max*100):null;
+    const top=el("div",null,"chance");
+    top.innerHTML=`<div class="ring sm" style="--p:${ready||0};--rc:${col}"><b>${ready==null?"—":ready+"%"}</b></div><div><b style="font-size:22px;color:${col}">${EX[k].n}</b><div class="mu">${l?(g?"Last "+fs(k,l.score)+" of goal "+fs(k,g):"Last "+fs(k,l.score)+" of "+EX[k].max):"No results yet"}</div></div>`;
     card.appendChild(top);
-    card.appendChild(pRow("Chance",c?c.p:null));
-    sectionStats(k).forEach(s=>card.appendChild(pRow(s.name,s.n?s.pct:null)));
-    grid.appendChild(card)});
-  box.appendChild(grid);
-  const pb=el("div",null,"block"),ps=portStats(),hd=el("div",null,"sa-head");hd.appendChild(el("h2","Portfolio"));if(ps.items.length)hd.appendChild(el("span",ps.overall+"%","big-pill"));pb.appendChild(hd);
-  if(!ps.items.length)emptyMsg(pb,"No topics yet.","Open Portfolio",()=>openPanel("subjectsPanel"));
-  else ps.items.forEach(x=>pb.appendChild(pRow(CAT_ICON[x.t.cat]+" "+x.t.n,x.pc,null,PCAT[x.t.cat].c)));
+    sectionStats(k).forEach(s=>card.appendChild(pRow(s.name,s.n?s.pct:null,s.n?fs(k,s.last)+" / "+s.mx:null)));
+    box.appendChild(card)});
+  const pb=el("div",null,"block st-long"),ps=portStats();pb.style.setProperty("--c","var(--ac)");
+  const top=el("div",null,"chance");top.innerHTML=`<div class="ring sm" style="--p:${ps.overall}"><b>${ps.items.length?ps.overall+"%":"—"}</b></div><div><b style="font-size:22px;color:var(--ac)">Portfolio</b><div class="mu">${ps.items.length?ps.items.length+" topics":"No topics yet"}</div></div>`;
+  pb.appendChild(top);
+  ps.items.forEach(x=>pb.appendChild(pRow(CAT_ICON[x.t.cat]+" "+x.t.n,x.pc,null,PCAT[x.t.cat].c)));
   box.appendChild(pb);
-  const cb=el("div",null,"block");cb.appendChild(el("h2","Careers"));const cs=careerScores().filter(c=>c.score>0).slice(0,5);
-  if(!cs.length)cb.appendChild(el("p","Add Portfolio topics to see this.","mu"));else cs.forEach(c=>cb.appendChild(pRow(c.n,c.score)));
-  box.appendChild(cb);
 }
 
 setTheme(lsGet("theme","light"));setEx("IELTS");(()=>{let q=0;const ob=new MutationObserver(()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;ob.disconnect();iconize();ob.observe(document.body,{childList:true,subtree:true})})});ob.observe(document.body,{childList:true,subtree:true});iconize()})();
