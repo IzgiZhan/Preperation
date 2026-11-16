@@ -1926,7 +1926,7 @@ function chatBlock(k){
     const typing=el("div","…","bub ai typing");log.appendChild(typing);scroll();
     chatBusy[k]=true;send.disabled=true;
     let data,error;
-    try{({data,error}=await sb.functions.invoke("smart-assistant",{body:{mode:"chat",messages:msgs.slice(-12),context:chatContext(k),style:"Talk like a friendly coach. Use simple words. Keep answers short."}}))}catch(e){error=e}
+    try{({data,error}=await sb.functions.invoke("coach-chat",{body:{messages:msgs.slice(-12),context:chatContext(k),style:"Talk like a friendly coach. Use simple words. Keep answers short."}}))}catch(e){error=e}
     chatBusy[k]=false;send.disabled=false;typing.remove();
     let reply=data&&(data.reply||data.message||data.answer||data.text);
     if(error||!reply||data.error){reply="Sorry, I cannot answer right now. "+(error||data&&data.error?await errDetail(error,data):"The chat is not ready on the server yet.")}
