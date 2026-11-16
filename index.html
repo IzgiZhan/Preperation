@@ -430,6 +430,16 @@ button.danger{background:linear-gradient(180deg,color-mix(in srgb,var(--bad) 84%
 .st-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.st-top b{font-size:18px}
 .st-card .sub-h{margin:14px 0 2px;font-size:13px;color:var(--mu)}
 .st-card .prow{grid-template-columns:minmax(0,1fr) 48px;gap:4px 10px;padding:8px 0}.st-card .prow>div:first-child{grid-column:1/-1}.st-card .prow>div:first-child br{display:none}.st-card .prow>div:first-child small{margin-left:8px}
+.step{font-size:15px;font-weight:700;margin:18px 0 10px}.card>.step:first-child{margin-top:0}
+.opt{margin:0}.opt .chip{min-height:38px;padding:6px 16px;font-size:14px}
+.tabs{margin:4px 0 16px;flex-wrap:wrap}.tabs .seg-btn{padding:10px 18px}
+.seg.mini{margin:0}.seg.mini .seg-btn{padding:5px 11px;font-size:13px}
+.save-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+.t-score{font-size:17px;margin-right:6px}
+.big-pill{font-size:22px;font-weight:800;color:var(--ac)}
+.tip-ic{font-size:18px;line-height:1.4}
+.wk-t{display:block;margin-bottom:4px}
+.st-card.block{background:var(--card);margin:0}.st-card .pbar{background:var(--bg)}
 @media(max-width:1100px){.sa-grid,.st-grid{grid-template-columns:1fr}}
 @media(max-width:820px){.lv-grid{grid-template-columns:1fr 1fr}.pitem{grid-template-columns:1fr auto auto}.pitem .pbar{grid-column:1/-1;grid-row:2}.prow{grid-template-columns:1fr 1fr 48px}.sess{grid-template-columns:84px 1fr}.ring{width:110px;height:110px}.ring::before{width:86px;height:86px}.ring b{font-size:26px}}
 </style>
@@ -539,9 +549,9 @@ button.danger{background:linear-gradient(180deg,color-mix(in srgb,var(--bad) 84%
 <label class="switch"><input type="checkbox" id="nImprove"> Improvement alerts</label>
 <label class="switch"><input type="checkbox" id="nPlan"> Plan task alerts</label>
 <button class="main" id="nBrowser" type="button">Turn on browser notifications</button><p class="mu" id="nMsg"></p></div></section>
-<section class="app-panel" id="subjectsPanel"><div class="page-intro"><h2>Digital portfolio</h2><p class="mu">Choose a portfolio topic, read what counts, rate your level and add proof. The Smart Assistant uses it for career guidance.</p></div><div id="portBody"></div></section>
-<section class="app-panel" id="assistantPanel"><div class="page-intro"><h2>Smart Assistant</h2><p class="mu">Оқушылардың сандық портфолиосын талдау және кәсіби бағдар беруге арналған интеллектуалды «Smart Ассистент» ақпараттық жүйесі</p></div><div id="asstBody"></div></section>
-<section class="app-panel" id="statsPanel"><div class="page-intro"><h2>Percentages</h2><p class="mu">Exam readiness, chances, sections and portfolio topics in percent.</p></div><div id="statsBody"></div></section>
+<section class="app-panel" id="subjectsPanel"><div id="portBody"></div></section>
+<section class="app-panel" id="assistantPanel"><div id="asstBody"></div></section>
+<section class="app-panel" id="statsPanel"><div id="statsBody"></div></section>
 
     <section class="app-panel" id="profilePanel"><div class="page-intro"><h2>My Profile</h2></div>
 <div class="card own"><div class="prof-head"><div class="avatar" id="avatar"><img id="avatarImg" alt="" hidden><span id="avatarLetter">S</span></div><div><b id="acEmail"></b><div class="mu">Member since <span id="acJoined"></span></div><button class="hbtn" id="avatarBtn" type="button" style="margin-top:8px">Change photo</button><input type="file" id="avatarFile" accept="image/*" class="vh"></div></div>
@@ -936,7 +946,7 @@ async function add(){
  }
  const {error}=await sb.from("entries").insert(records);if(error){alert(error.message);return}
  await markPlansDone(cur,date,records);
- $("score").value="";document.querySelectorAll(".part-toggle").forEach(c=>{c.checked=false;c.closest(".part-row").querySelector(".part-score").hidden=true});document.querySelectorAll(".part-value,.raw-c").forEach(i=>i.value="");document.querySelectorAll(".raw-c").forEach(r=>{rawRangeUI(r,null);const q=r.closest(".stp");if(q)q.hidden=true});updateCalculatedScore();aDate.set(today());chartEx=cur;chartSub="full";asstEx=cur;const ex0=cur;openPanel("assistantPanel");load().then(()=>runAI(ex0));
+ $("score").value="";document.querySelectorAll(".part-toggle").forEach(c=>{c.checked=false;c.closest(".part-row").querySelector(".part-score").hidden=true});document.querySelectorAll(".part-value,.raw-c").forEach(i=>i.value="");document.querySelectorAll(".raw-c").forEach(r=>{rawRangeUI(r,null);const q=r.closest(".stp");if(q)q.hidden=true});updateCalculatedScore();aDate.set(today());chartEx=cur;chartSub="full";asstEx=cur;asstTab="test";const ex0=cur;openPanel("assistantPanel");load().then(()=>runAI(ex0));
 }
 async function del(id){await sb.from("entries").delete().eq("id",id);load()}
 $("add").onclick=add;
@@ -1561,8 +1571,8 @@ const TOPICS=[
  ["ex_summer","extra","Summer schools","Summer and winter schools, camps, exchange programs.",["Participation certificates"],["edu","sci"]],
  ["ex_work","extra","Internships & work","Internships, part-time jobs, job shadowing.",["Letter from employer","Contract or certificate"],["econ","eng"]]
 ].map(([id,cat,n,d,ev,f])=>({id,cat,n,d,ev,f}));
-const LEVELS=[["Beginner","Just started, self-study"],["Basic","Club or course, school-level participation"],["Intermediate","School or city prizes, finished projects"],["Advanced","Regional prizes, strong projects or certificates"],["Expert","National or international results"]];
-const ACH=[["none","No awards yet",0],["school","School",4],["city","City / district",8],["region","Region",12],["national","National",18],["intl","International",25]];
+const LEVELS=[["Beginner","Just started"],["Basic","Club or course"],["Good","School or city prize"],["Strong","Region prize"],["Top","Country or world prize"]];
+const ACH=[["none","None",0],["school","School",4],["city","City",8],["region","Region",12],["national","Country",18],["intl","World",25]];
 const achOf=k=>ACH.find(x=>x[0]===k)||ACH[0];
 const topicOf=id=>TOPICS.find(t=>t.id===id);
 // topic % = level (15 each) + award bonus + experience bonus, max 100
@@ -1585,37 +1595,39 @@ function portStats(){
 }
 
 /* ---------- Portfolio panel ---------- */
+const CAT_ICON={academic:"🏆",science:"🔬",it:"💻",lang:"🌍",social:"🤝",arts:"🎨",sport:"⚽",biz:"💼",extra:"📚"};
+// a row of pill buttons: pick one option
+function optRow(opts,val,onPick){
+  const r=el("div",null,"chips opt");
+  opts.forEach(([v,n])=>{const b=el("button",n,"chip"+(v===val?" on":""));b.type="button";b.onclick=()=>{onPick(v);[...r.children].forEach(x=>x.classList.toggle("on",x===b))};r.appendChild(b)});
+  return r;
+}
+const stepH=t=>el("div",t,"step");
 function renderPortfolio(force){
   const box=$("portBody");if(!box||viewUid||!uid)return;
   if(!force&&box.querySelector(".t-editor")?.contains(document.activeElement))return;
   box.replaceChildren();
   if(portErr)box.appendChild(el("p",portErr,"mu"));
-  const pick=el("div",null,"card own");pick.appendChild(el("h3","Choose a topic","sub-h"));
+  const pick=el("div",null,"card own");
+  pick.appendChild(stepH("1. Pick a group"));
   const cats=el("div",null,"chips");
-  Object.entries(PCAT).forEach(([k,c])=>{const n=portfolio.filter(p=>(topicOf(p.topic)||{}).cat===k).length,b=el("button",null,"chip"+(k===pCat?" on":""));b.type="button";b.innerHTML="<span>"+escH(c.n)+(n?" · "+n:"")+"</span>";b.onclick=()=>{pCat=k;pSel=null;renderPortfolio(true)};cats.appendChild(b)});
+  Object.entries(PCAT).forEach(([k,c])=>{const n=portfolio.filter(p=>(topicOf(p.topic)||{}).cat===k).length,b=el("button",null,"chip"+(k===pCat?" on":""));b.type="button";b.innerHTML="<span>"+CAT_ICON[k]+" "+escH(c.n)+(n?" ("+n+")":"")+"</span>";b.onclick=()=>{pCat=k;pSel=null;renderPortfolio(true)};cats.appendChild(b)});
   pick.appendChild(cats);
+  pick.appendChild(stepH("2. Pick a topic"));
   const tg=el("div",null,"topic-grid");
   TOPICS.filter(t=>t.cat===pCat).forEach(t=>{const has=portfolio.some(p=>p.topic===t.id),b=el("button",null,"tchip"+(pSel===t.id?" on":""));b.type="button";b.style.setProperty("--c",PCAT[t.cat].c);b.innerHTML=(has?'<span class="ok">✓</span>':"")+"<span>"+escH(t.n)+"</span>";b.onclick=()=>{pSel=pSel===t.id?null:t.id;renderPortfolio(true)};tg.appendChild(b)});
   pick.appendChild(tg);
   if(pSel)pick.appendChild(topicEditor(pSel));
   box.appendChild(pick);
-  const lst=el("div",null,"block");lst.appendChild(el("h2","My portfolio"));
-  if(!portfolio.length)lst.appendChild(el("p","No topics yet. Choose a topic above and rate yourself.","mu"));
-  else{
-    const ov=portStats(),top=el("div",null,"chance");
-    top.innerHTML=`<div class="ring sm" style="--p:${ov.overall}"><b>${ov.overall}%</b></div><div><b>Portfolio strength</b><div class="mu">${ov.items.length} topic${ov.items.length===1?"":"s"} in ${ov.cats.length} categor${ov.cats.length===1?"y":"ies"}</div></div>`;
-    lst.appendChild(top);
-    Object.keys(PCAT).forEach(ck=>{
-      const items=ov.items.filter(x=>x.t.cat===ck);if(!items.length)return;
-      const h=el("h3",PCAT[ck].n,"sub-h");h.style.margin="18px 0 4px";h.style.color=PCAT[ck].c;lst.appendChild(h);
-      items.forEach(({p,t,pc})=>{
-        const r=el("div",null,"pitem"),m=el("div");
-        m.append(el("b",t.n),document.createElement("br"),el("small",LEVELS[p.level-1][0]+" · "+achOf(p.achievement)[1]+(p.years?" · "+(p.years>=5?"5+":p.years)+" yr":"")+(p.note?" · "+p.note:""),"mu"));
-        if(p.proof_url&&/^https?:\/\//i.test(p.proof_url)){const a=el("a"," Proof");a.href=p.proof_url;a.target="_blank";a.rel="noopener";a.style.color="var(--ac)";a.style.fontSize="14px";m.appendChild(a)}
-        const bar=el("div",null,"pbar");bar.style.setProperty("--c",PCAT[ck].c);bar.innerHTML='<i style="width:'+pc+'%"></i>';
-        const ed=el("button","Edit","hbtn amber");ed.type="button";ed.onclick=()=>{pCat=ck;pSel=t.id;renderPortfolio(true);window.scrollTo({top:0,behavior:"smooth"})};
-        r.append(m,bar,el("b",pc+"%"),ed);lst.appendChild(r)})});
-  }
+  const lst=el("div",null,"block"),ov=portStats(),hd=el("div",null,"sa-head");
+  hd.appendChild(el("h2","My portfolio"));if(ov.items.length)hd.appendChild(el("span",ov.overall+"%","big-pill"));lst.appendChild(hd);
+  if(!ov.items.length)lst.appendChild(el("p","Empty. Pick a topic above.","mu"));
+  ov.items.forEach(({p,t,pc})=>{
+    const r=el("div",null,"pitem"),m=el("div");
+    m.append(el("b",CAT_ICON[t.cat]+" "+t.n),document.createElement("br"),el("small",LEVELS[p.level-1][0]+(p.achievement!=="none"?" · "+achOf(p.achievement)[1]:""),"mu"));
+    const bar=el("div",null,"pbar");bar.style.setProperty("--c",PCAT[t.cat].c);bar.innerHTML='<i style="width:'+pc+'%"></i>';
+    const ed=el("button","Edit","hbtn amber");ed.type="button";ed.onclick=()=>{pCat=t.cat;pSel=t.id;renderPortfolio(true);window.scrollTo({top:0,behavior:"smooth"})};
+    r.append(m,bar,el("b",pc+"%"),ed);lst.appendChild(r)});
   box.appendChild(lst);
 }
 function topicEditor(id){
@@ -1623,32 +1635,35 @@ function topicEditor(id){
   const d={level:cur0?.level||0,achievement:cur0?.achievement||"none",years:cur0?.years||0};
   const w=el("div",null,"t-editor");w.style.setProperty("--c",c);
   const info=el("div",null,"t-info");
-  info.innerHTML=`<h3 style="font-size:20px;margin-bottom:6px">${escH(t.n)} <span class="tag" style="background:${c}">${escH(PCAT[t.cat].n)}</span></h3><p style="margin:0 0 10px">${escH(t.d)}</p><b style="font-size:14px">What counts as proof</b><ul>${t.ev.map(x=>"<li>"+escH(x)+"</li>").join("")}</ul><b style="font-size:14px">Fits these career fields</b><div class="ftags">${t.f.map(f=>'<span class="ftag">'+escH(FIELDS[f].n)+"</span>").join("")}</div>`;
+  info.innerHTML=`<b style="font-size:19px">${escH(t.n)}</b><p style="margin:4px 0 0">${escH(t.d)}</p><small class="mu">Proof: ${escH(t.ev.join(", "))}</small>`;
   w.appendChild(info);
-  w.appendChild(el("label","How good are you at it?"));
-  const lg=el("div",null,"lv-grid"),sc=el("div",null,"calculated-score");
-  const upd=()=>{const pc=d.level?topicPct(d):null;sc.innerHTML="<span>Topic score</span><strong>"+(pc==null?"—":pc+"%")+"</strong><small>"+(d.level?"Level "+d.level+" · "+escH(achOf(d.achievement)[1]):"Choose your level")+"</small>"};
-  const drawLv=()=>{lg.replaceChildren();LEVELS.forEach(([n,s],i)=>{const b=el("button",null,"lv"+(d.level===i+1?" on":""));b.type="button";b.innerHTML="<b>"+(i+1)+" · "+n+"</b><small>"+s+"</small>";b.onclick=()=>{d.level=i+1;drawLv();upd()};lg.appendChild(b)})};
-  drawLv();w.appendChild(lg);
-  const ach=document.createElement("select");ACH.forEach(([k,n])=>{const o=document.createElement("option");o.value=k;o.textContent=n;ach.appendChild(o)});ach.value=d.achievement;ach.onchange=()=>{d.achievement=ach.value;upd()};
-  const yr=document.createElement("select");[0,1,2,3,4,5].forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v===0?"Less than 1 year":v===5?"5+ years":v+(v===1?" year":" years");yr.appendChild(o)});yr.value=d.years;yr.onchange=()=>{d.years=+yr.value;upd()};
-  const row1=el("div",null,"row");row1.append(lab("Highest award",ach),lab("Experience",yr));w.appendChild(row1);
-  const note=document.createElement("input");note.maxLength=160;note.placeholder="e.g. 2nd place in the city olympiad 2026";note.value=cur0?.note||"";
-  const link=document.createElement("input");link.type="url";link.maxLength=300;link.placeholder="https://... certificate, GitHub, video";link.value=cur0?.proof_url||"";
-  const row2=el("div",null,"row");row2.append(lab("Main achievement",note),lab("Proof link (optional)",link));w.appendChild(row2);
-  upd();w.appendChild(sc);
-  const bar=el("div",null,"chips");bar.style.marginTop="16px";
-  const save=el("button",cur0?"Save changes":"Add to portfolio","main"),msg=el("p","","mu");save.type="button";
+  const sc=el("b","","t-score");
+  const upd=()=>{sc.textContent=d.level?"Score: "+topicPct(d)+"%":"Pick your level"};
+  w.appendChild(stepH("3. How good are you?"));
+  const lg=el("div",null,"lv-grid");
+  LEVELS.forEach(([n,s],i)=>{const b=el("button",null,"lv"+(d.level===i+1?" on":""));b.type="button";b.innerHTML="<b>"+n+"</b><small>"+s+"</small>";b.onclick=()=>{d.level=i+1;[...lg.children].forEach(x=>x.classList.toggle("on",x===b));upd()};lg.appendChild(b)});
+  w.appendChild(lg);
+  w.appendChild(stepH("4. Best award"));
+  w.appendChild(optRow(ACH.map(a=>[a[0],a[1]]),d.achievement,v=>{d.achievement=v;upd()}));
+  w.appendChild(stepH("5. How long?"));
+  w.appendChild(optRow([[0,"< 1 year"],[1,"1 year"],[2,"2 years"],[3,"3 years"],[4,"4 years"],[5,"5+ years"]],d.years,v=>{d.years=v;upd()}));
+  const note=document.createElement("input");note.maxLength=160;note.placeholder="Your best result (optional)";note.value=cur0?.note||"";
+  const link=document.createElement("input");link.type="url";link.maxLength=300;link.placeholder="Link to proof (optional)";link.value=cur0?.proof_url||"";
+  const more=el("div",null,"row");more.style.marginTop="14px";more.append(note,link);more.hidden=!(cur0?.note||cur0?.proof_url);
+  const mb=el("button","Add note or link","hbtn gray");mb.type="button";mb.hidden=!more.hidden;mb.style.marginTop="14px";mb.onclick=()=>{more.hidden=false;mb.hidden=true;note.focus()};
+  w.append(mb,more);
+  const bar=el("div",null,"save-bar"),save=el("button",cur0?"Save":"Add","main"),msg=el("p","","mu");save.type="button";
+  upd();
   save.onclick=async()=>{
-    if(!d.level){msg.textContent="Choose your level first.";return}
-    const url=link.value.trim();if(url&&!/^https?:\/\//i.test(url)){msg.textContent="The link must start with http:// or https://";return}
+    if(!d.level){msg.textContent="Pick your level first.";return}
+    const url=link.value.trim();if(url&&!/^https?:\/\//i.test(url)){msg.textContent="The link must start with https://";return}
     save.disabled=true;
     const {error}=await sb.from("portfolio_items").upsert({user_id:uid,topic:id,level:d.level,achievement:d.achievement,years:d.years,note:note.value.trim()||null,proof_url:url||null,updated_at:new Date().toISOString()},{onConflict:"user_id,topic"});
     save.disabled=false;if(error){msg.textContent=error.message;return}
     pSel=null;document.activeElement?.blur();load()};
-  bar.appendChild(save);
-  const cl=el("button","Cancel","hbtn gray");cl.type="button";cl.onclick=()=>{pSel=null;renderPortfolio(true)};bar.appendChild(cl);
-  if(cur0){const rm=el("button",null,"x");rm.type="button";rm.innerHTML=ICON_X;rm.onclick=async()=>{if(!confirm("Remove "+t.n+" from your portfolio?"))return;await sb.from("portfolio_items").delete().eq("id",cur0.id);pSel=null;load()};bar.appendChild(rm)}
+  const cl=el("button","Cancel","hbtn gray");cl.type="button";cl.onclick=()=>{pSel=null;renderPortfolio(true)};
+  bar.append(sc,save,cl);
+  if(cur0){const rm=el("button",null,"x");rm.type="button";rm.innerHTML=ICON_X;rm.onclick=async()=>{if(!confirm("Delete "+t.n+"?"))return;await sb.from("portfolio_items").delete().eq("id",cur0.id);pSel=null;load()};bar.appendChild(rm)}
   w.append(bar,msg);return w;
 }
 
@@ -1742,71 +1757,74 @@ function careerScores(){
 }
 
 /* ---------- Smart Assistant panel ---------- */
+let asstTab="chance";
+const goBtn=(text,fn)=>{const b=el("button",text,"main");b.type="button";b.onclick=fn;return b};
+const emptyMsg=(box,text,btn,fn)=>{box.appendChild(el("p",text,"mu"));if(btn)box.appendChild(goBtn(btn,fn))};
 function renderAssistant(){
   const box=$("asstBody");if(!box||viewUid||!uid)return;
-  if(box.contains(document.activeElement)&&document.activeElement.tagName==="SELECT")return;
+  if(box.contains(document.activeElement)&&document.activeElement.tagName==="INPUT")return;
   box.replaceChildren();
-  const ctl=el("div",null,"sa-head"),exc=el("div",null,"chips");chips(exc,asstEx,k=>{asstEx=k;renderAssistant()});
-  const lang=el("div",null,"rng");lang.innerHTML='<div class="rng-label">'+IC("lang")+"<span>AI language</span></div>";
-  const sg=el("div",null,"seg");[["en","English"],["ru","Русский"],["kk","Қазақша"]].forEach(([k,n])=>{const b=el("button",n,"seg-btn"+(k===asstLang?" on":""));b.type="button";b.onclick=()=>{asstLang=k;lsSet("asst_lang",k);renderAssistant()};sg.appendChild(b)});
-  lang.appendChild(sg);ctl.append(exc,lang);box.appendChild(ctl);
-  const k=asstEx,grid=el("div",null,"sa-grid");grid.append(chanceBlock(k),careerBlock());box.append(grid,practiceBlock(k),scheduleBlock(k));
+  const exc=el("div",null,"chips");chips(exc,asstEx,k=>{asstEx=k;renderAssistant()});box.appendChild(exc);
+  const tabs=el("div",null,"seg tabs");
+  [["chance","🎯 Chance"],["test","📝 Last test"],["plan","📅 Plan"],["career","🧭 Careers"]].forEach(([k,n])=>{const b=el("button",n,"seg-btn"+(k===asstTab?" on":""));b.type="button";b.onclick=()=>{asstTab=k;renderAssistant()};tabs.appendChild(b)});
+  box.appendChild(tabs);
+  const k=asstEx;
+  box.appendChild(asstTab==="test"?practiceBlock(k):asstTab==="plan"?scheduleBlock(k):asstTab==="career"?careerBlock():chanceBlock(k));
 }
 function chanceBlock(k){
-  const b=el("div",null,"block"),g=goalOf(k),dl=deadlines[k];b.appendChild(el("h2","Chance to reach your goal"));
-  if(!g){b.appendChild(el("p","Set a goal score and an exam date in Goals, and the assistant will calculate your chance.","mu"));const go=el("button","Set a goal","main");go.onclick=()=>openPanel("goalsPanel");b.appendChild(go);return b}
+  const b=el("div",null,"block"),g=goalOf(k),dl=deadlines[k];
+  if(!g){emptyMsg(b,"First set your goal and exam date.","Set goal",()=>openPanel("goalsPanel"));return b}
   const c=chanceOf(k);
-  if(!c){b.appendChild(el("p","Add your first "+EX[k].n+" result to get a chance estimate.","mu"));return b}
+  if(!c){emptyMsg(b,"First add a test result.","Add result",()=>{setEx(k);openPanel("addPanel")});return b}
   const col=c.p>=70?"var(--ok)":c.p>=40?"#f59e0b":"var(--bad)",top=el("div",null,"chance");
   top.innerHTML=`<div class="ring" style="--p:${c.p};--rc:${col}"><b>${c.p}%</b></div>`;
-  const info=el("div",null,"info");info.style.cssText="flex:1;min-width:210px;margin:0";
-  info.append(infoRow("Goal",fs(k,g)),infoRow(dl?"Forecast on "+fmtD(dl):"Your level now",fs(k,c.projR)),infoRow("Pace",(c.week>=0?"+":"")+(+c.week.toFixed(k==="IELTS"?2:1))+" / week"),infoRow("Exam date",dl?daysText(daysTo(dl)):"Not set"));
+  const info=el("div",null,"info");info.style.cssText="flex:1;min-width:200px;margin:0";
+  info.append(infoRow("Your goal",fs(k,g)),infoRow(dl?"Expected on exam day":"Your level now",fs(k,c.projR)),infoRow("Exam",dl?daysText(daysTo(dl)):"no date"));
   top.appendChild(info);b.appendChild(top);
-  let t=c.p>=70?"You are on track. Keep the same rhythm.":c.p>=40?"The goal is possible, but you need to work on your weak sections.":"Right now the goal is hard to reach. Follow the schedule below and practice more often.";
-  if(!dl)t+=" Set an exam date for a more exact forecast.";if(c.n<3)t+=" The estimate gets more exact after 3 or more practices.";
-  b.appendChild(el("p",t,"mu"));return b;
+  const msg=el("p",c.p>=70?"👍 You are on track. Keep going.":c.p>=40?"💪 You can do it. Work on your weak parts.":"⚠️ Hard for now. Follow the plan every day.");msg.style.fontWeight="600";b.appendChild(msg);
+  const bar=el("div",null,"chips");bar.append(goBtn("What to fix",()=>{asstTab="test";renderAssistant()}));
+  const p2=el("button","My plan","hbtn");p2.type="button";p2.onclick=()=>{asstTab="plan";renderAssistant()};bar.appendChild(p2);
+  b.appendChild(bar);return b;
 }
 function careerBlock(){
-  const b=el("div",null,"block");b.appendChild(el("h2","Career guidance"));
+  const b=el("div",null,"block");b.appendChild(el("h2","Careers that fit you"));
   const cs=careerScores().filter(c=>c.score>0).slice(0,3);
-  if(!cs.length){b.appendChild(el("p","Add topics to your portfolio (and ҰБТ subjects in Add Exam), and the assistant will suggest career fields for you.","mu"));const go=el("button","Open portfolio","main");go.onclick=()=>openPanel("subjectsPanel");b.appendChild(go);return b}
-  cs.forEach(c=>{const r=el("div",null,"career"),h=el("div",null,"career-h"),bar=el("div",null,"pbar");h.append(el("b",c.n),el("b",c.score+"%"));bar.innerHTML='<i style="width:'+c.score+'%"></i>';r.append(h,bar,el("small","Majors: "+c.m),el("small","Based on: "+c.why.join(", ")));b.appendChild(r)});
+  if(!cs.length){emptyMsg(b,"Add topics to your Portfolio first.","Open Portfolio",()=>openPanel("subjectsPanel"));return b}
+  cs.forEach((c,i)=>{const r=el("div",null,"career"),h=el("div",null,"career-h"),bar=el("div",null,"pbar");h.append(el("b",["🥇","🥈","🥉"][i]+" "+c.n),el("b",c.score+"%"));bar.innerHTML='<i style="width:'+c.score+'%"></i>';r.append(h,bar,el("small",c.m));b.appendChild(r)});
   return b;
 }
 function practiceBlock(k){
-  const b=el("div",null,"block"),a=analyze(k);b.appendChild(el("h2","Last practice analysis"));
-  if(!a){b.appendChild(el("p","Add a "+EX[k].n+" practice result. After every practice the assistant analyzes it here.","mu"));const go=el("button","Add result","main");go.onclick=()=>{setEx(k);openPanel("addPanel")};b.appendChild(go);return b}
+  const b=el("div",null,"block"),a=analyze(k);
+  if(!a){emptyMsg(b,"Add a test result. The assistant will check it here.","Add result",()=>{setEx(k);openPanel("addPanel")});return b}
   const cards=el("div",null,"trend-grid sa-cards"),chCls=a.ch==null||a.ch===0?"trend-flat":a.ch>0?"trend-up":"trend-down";
-  const chanceTxt=a.now?a.now.p+"%":"—",chanceSub=a.now&&a.before?(a.now.p>=a.before.p?"up from ":"down from ")+a.before.p+"%":a.now?"first estimate":"set a goal";
-  cards.innerHTML=`<div class="trend-card"><span>Score</span><strong>${fs(k,a.tot)} / ${fs(k,a.mx)}</strong><small>${fmtLong(a.date)}</small></div><div class="trend-card"><span>Change</span><strong class="${chCls}">${a.ch==null?"—":fd(k,a.ch)}</strong><small>${a.ch==null?"first practice":"vs previous practice"}</small></div><div class="trend-card"><span>Chance</span><strong>${chanceTxt}</strong><small>${chanceSub}</small></div>`;
+  cards.innerHTML=`<div class="trend-card"><span>Score</span><strong>${fs(k,a.tot)}</strong><small>${fmtD(a.date)}</small></div><div class="trend-card"><span>Change</span><strong class="${chCls}">${a.ch==null?"—":fd(k,a.ch)}</strong></div><div class="trend-card"><span>Chance</span><strong>${a.now?a.now.p+"%":"—"}</strong></div>`;
   b.appendChild(cards);
   a.secs.forEach(s=>{const ok=s.tg==null?null:s.score>=s.tg-1e-9,col=ok==null?"var(--ac)":ok?"var(--ok)":s.score>=s.tg*.85?"#f59e0b":"var(--bad)";
-    b.appendChild(pRow(s.name,s.pct,fs(k,s.score)+" / "+fs(k,s.mx)+(s.ch!=null&&s.ch!==0?" · "+fd(k,s.ch):"")+(s.tg!=null?" · needed "+fs(k,roundTo(k,s.tg)):""),col))});
-  const imp=el("h3","What to improve","sub-h");imp.style.marginTop="18px";b.appendChild(imp);
-  const tip=(kind,ic,title,text,list)=>{const r=el("div",null,"tip"),n=el("div",null,"nic "+kind),m=el("div");n.innerHTML=IC(ic);m.append(el("b",title),el("div",text,"mu"));if(list){const ul=el("ul");list.forEach(x=>ul.appendChild(el("li",x)));m.appendChild(ul)}r.append(n,m);return r};
+    b.appendChild(pRow(s.name,s.pct,fs(k,s.score)+(s.tg!=null?(ok?" ✓":" · need "+fs(k,roundTo(k,s.tg))):""),col))});
+  b.appendChild(stepH("Fix this"));
+  const tip=(ic,title,text)=>{const r=el("div",null,"tip"),n=el("span",ic,"tip-ic"),m=el("div");m.appendChild(el("b",title));if(text)m.appendChild(el("div",text,"mu"));r.append(n,m);return r};
   let any=false;
-  a.weak.forEach(s=>{any=true;b.appendChild(tip("bad","target","Focus on "+s.name,s.tg!=null?"You scored "+fs(k,s.score)+", you need about "+fs(k,roundTo(k,s.tg))+" for your goal.":"This is your weakest section right now.",tipsFor(s.id,s.name).slice(0,2)))});
-  a.dropped.forEach(s=>{any=true;b.appendChild(tip("warn","down",s.name+" went down",fd(k,s.ch)+" compared with last time. Check which question types you lost."))});
-  a.stale.forEach(s=>{any=true;b.appendChild(tip("info","week","Practice "+s.name,s.n?"You have not practiced it for "+(-daysTo(s.date))+" days.":"You have no results in this section yet."))});
-  if(!any)b.appendChild(tip("ok","save","Great work","All practiced sections reach your goal level. Keep doing full mock tests."));
+  a.weak.forEach(s=>{any=true;b.appendChild(tip("🔴",s.name+(s.tg!=null?": "+fs(k,s.score)+" → "+fs(k,roundTo(k,s.tg)):""),tipsFor(s.id,s.name)[0]))});
+  a.dropped.forEach(s=>{any=true;b.appendChild(tip("🟠",s.name+" went down ("+fd(k,s.ch)+")",""))});
+  a.stale.forEach(s=>{any=true;b.appendChild(tip("🔵","Practice "+s.name,s.n?"Not done for "+(-daysTo(s.date))+" days":"No results yet"))});
+  if(!any)b.appendChild(tip("✅","All good!","Keep doing full tests."));
   b.appendChild(aiBox(k,a));return b;
 }
 function aiBox(k,a){
-  const box=el("div",null,"ai-box"),rep=aiRep[k]&&aiRep[k].key===a.key?aiRep[k].data:null;
-  const h=el("h3");h.innerHTML=IC("spark")+"<span>AI analysis</span>";box.appendChild(h);
-  if(aiBusy[k]){box.appendChild(el("p","Analyzing your practice...","mu"));return box}
+  const box=el("div",null,"ai-box"),rep=aiRep[k]&&aiRep[k].key===a.key?aiRep[k].data:null,h=el("div",null,"sa-head");
+  const t=el("h3");t.innerHTML=IC("spark")+"<span>AI advice</span>";
+  const sg=el("div",null,"seg mini");[["en","EN"],["ru","RU"],["kk","KZ"]].forEach(([v,n])=>{const x=el("button",n,"seg-btn"+(v===asstLang?" on":""));x.type="button";x.onclick=()=>{asstLang=v;lsSet("asst_lang",v);renderAssistant()};sg.appendChild(x)});
+  h.append(t,sg);box.appendChild(h);
+  if(aiBusy[k]){box.appendChild(el("p","Thinking...","mu"));return box}
   if(rep){
     if(rep.summary)box.appendChild(el("p",rep.summary));
-    if(rep.chance_comment)box.appendChild(el("p",rep.chance_comment,"mu"));
     const list=(title,arr,fmt)=>{if(!Array.isArray(arr)||!arr.length)return;box.appendChild(el("b",title));const ul=el("ul");arr.forEach(x=>ul.appendChild(el("li",fmt(x))));box.appendChild(ul)};
-    list("What to do",rep.improve,x=>typeof x==="string"?x:(x.area?x.area+": ":"")+(x.action||""));
-    list("Next 7 days",rep.next_steps,x=>String(x));
-    if(rep.career_tip)box.appendChild(el("p",rep.career_tip,"mu"));
+    list("To do",rep.improve,x=>typeof x==="string"?x:(x.area?x.area+": ":"")+(x.action||""));
+    list("This week",rep.next_steps,x=>String(x));
     if(rep.motivation){const m=el("p",rep.motivation);m.style.fontStyle="italic";box.appendChild(m)}
-    const r=el("button","Refresh AI analysis","hbtn");r.type="button";r.onclick=()=>runAI(k,true);box.appendChild(r);return box}
-  if(aiErr[k])box.appendChild(el("p","The AI is not available right now. "+aiErr[k],"mu"));
-  else box.appendChild(el("p","Get a personal analysis of this practice from AI.","mu"));
-  const go=el("button",aiErr[k]?"Try again":"Get AI analysis","main");go.type="button";go.onclick=()=>runAI(k,true);box.appendChild(go);return box;
+    const r=el("button","Ask again","hbtn");r.type="button";r.onclick=()=>runAI(k,true);box.appendChild(r);return box}
+  if(aiErr[k])box.appendChild(el("p","AI is not working now. "+aiErr[k],"mu"));
+  const go=el("button",aiErr[k]?"Try again":"Ask AI","main");go.type="button";go.onclick=()=>runAI(k,true);box.appendChild(go);return box;
 }
 async function runAI(k,force){
   const a=analyze(k);if(!a||!uid||aiBusy[k])return;
@@ -1818,7 +1836,8 @@ async function runAI(k,force){
     last_practice:{date:a.date,total:a.tot,change:a.ch,sections:a.secs.map(s=>({name:s.name,score:s.score,max:s.mx,needed_for_goal:s.tg!=null?roundTo(k,s.tg):null,change:s.ch}))},
     not_practiced_recently:a.stale.map(s=>s.name),
     portfolio:portfolio.map(p=>{const t=topicOf(p.topic);return t?{topic:t.n,level:LEVELS[p.level-1][0],award:achOf(p.achievement)[1]}:null}).filter(Boolean),
-    career_fields:careerScores().filter(x=>x.score>0).slice(0,3).map(x=>({field:x.n,match_percent:x.score}))};
+    career_fields:careerScores().filter(x=>x.score>0).slice(0,3).map(x=>({field:x.n,match_percent:x.score})),
+    style:"Use very simple words. Keep every item short (max 12 words)."};
   let data,error;try{({data,error}=await sb.functions.invoke("smart-assistant",{body}))}catch(e){error=e}
   aiBusy[k]=false;
   if(error||!data||data.error){aiErr[k]=await errDetail(error,data);renderAssistant();return}
@@ -1827,66 +1846,62 @@ async function runAI(k,force){
   renderAssistant();
 }
 function scheduleBlock(k){
-  const b=el("div",null,"block"),h=el("div",null,"sa-head");h.appendChild(el("h2","Study schedule until the exam"));
-  const sel=document.createElement("select");sel.style.width="auto";[3,4,5,6].forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n+" study days a week";sel.appendChild(o)});sel.value=perWeek;
-  sel.onchange=()=>{perWeek=+sel.value;lsSet("asst_week",perWeek);sel.blur();renderAssistant()};h.appendChild(sel);b.appendChild(h);
-  const dl=deadlines[k];
-  if(!dl||daysTo(dl)<1){b.appendChild(el("p",dl?"Your exam date has passed. Set a new date in Goals.":"Set your exam date in Goals and the assistant will build a day-by-day schedule.","mu"));const go=el("button","Open Goals","main");go.onclick=()=>openPanel("goalsPanel");b.appendChild(go);return b}
+  const b=el("div",null,"block"),dl=deadlines[k];
+  if(!dl||daysTo(dl)<1){emptyMsg(b,dl?"Your exam date has passed. Set a new one.":"First set your exam date.","Set date",()=>openPanel("goalsPanel"));return b}
+  b.appendChild(stepH("Days a week"));
+  b.appendChild(optRow([[3,"3"],[4,"4"],[5,"5"],[6,"6"]],perWeek,v=>{perWeek=v;lsSet("asst_week",v);renderAssistant()}));
   const S=buildSchedule(k,perWeek),t0=dayNum(today()),ws0=t0-((new Date().getDay()+6)%7),weeks={};
   S.list.forEach(s=>{(weeks[Math.floor((s.d-ws0)/7)]??=[]).push(s)});
-  const keys=Object.keys(weeks).map(Number).sort((x,y)=>x-y),nSess=S.list.filter(s=>s.type==="part"||s.type==="mock").length;
-  b.appendChild(el("p",nSess+" sessions in "+keys.length+" week"+(keys.length===1?"":"s")+" · full mock test every "+S.mockEvery+" days"+(S.focus.length?" · more time for "+S.focus.join(" and "):""),"mu"));
-  (schedAll?keys:keys.slice(0,3)).forEach((wk,i)=>{
-    const ss=weeks[wk],w=el("div",null,"wk"),hh=el("div",null,"wk-h"),from=ws0+wk*7;
-    hh.append(el("b","Week "+(i+1)+" · "+shortD(isoOf(from))+" – "+shortD(isoOf(from+6))),el("span",ss[0].ph,"phase"));w.appendChild(hh);
-    ss.forEach(s=>{const r=el("div",null,"sess "+s.type),wd=DAYN[(new Date(s.d*864e5).getUTCDay()+6)%7],m=el("div");m.append(el("b",s.title),document.createElement("br"),el("small",s.text));r.append(el("span",wd+", "+shortD(isoOf(s.d)),"mu"),m);w.appendChild(r)});
+  const keys=Object.keys(weeks).map(Number).sort((x,y)=>x-y);
+  const save=goBtn("Save to Plans",()=>schedToPlans(k,save,msg)),msg=el("p",schedMsg[k]||"","mu"),top=el("div",null,"save-bar");
+  top.append(save,el("span",keys.length+" weeks until the exam","mu"));b.append(top,msg);
+  (schedAll?keys:keys.slice(0,2)).forEach((wk,i)=>{
+    const ss=weeks[wk],w=el("div",null,"wk"),from=ws0+wk*7;
+    w.appendChild(el("b",(i===0?"This week":i===1?"Next week":"Week "+(i+1))+" · "+shortD(isoOf(from))+" – "+shortD(isoOf(from+6)),"wk-t"));
+    ss.forEach(s=>{const r=el("div",null,"sess "+s.type),wd=DAYN[(new Date(s.d*864e5).getUTCDay()+6)%7],m=el("div");
+      m.appendChild(el("b",s.type==="mock"?"📝 Full test":s.type==="exam"?"🎓 Exam":s.type==="rest"?"😴 Rest":s.title));
+      if(s.type==="part")m.appendChild(el("small"," · "+s.text));
+      r.append(el("span",wd+" "+(+isoOf(s.d).slice(8)),"mu"),m);w.appendChild(r)});
     b.appendChild(w)});
-  const bar=el("div",null,"chips");bar.style.marginTop="12px";
-  if(keys.length>3){const t=el("button",schedAll?"Show less":"Show all "+keys.length+" weeks","hbtn gray");t.type="button";t.onclick=()=>{schedAll=!schedAll;renderAssistant()};bar.appendChild(t)}
-  const add=el("button","Add schedule to Plans","main"),msg=el("p",schedMsg[k]||"","mu");add.type="button";add.onclick=()=>schedToPlans(k,add,msg);
-  bar.prepend(add);b.append(bar,msg);return b;
+  if(keys.length>2){const t=el("button",schedAll?"Show less":"Show all weeks","hbtn gray");t.type="button";t.style.marginTop="10px";t.onclick=()=>{schedAll=!schedAll;renderAssistant()};b.appendChild(t)}
+  return b;
 }
 async function schedToPlans(k,btn,msg){
-  const rows=buildSchedule(k,perWeek).list.filter(s=>s.type==="part"||s.type==="mock").slice(0,150).map(s=>({title:"Smart: "+(s.type==="mock"?"Full mock test":s.title),task_date:isoOf(s.d),exam:k,section:s.type==="part"?s.part:null}));
-  if(!rows.length){msg.textContent="Nothing to add yet.";return}
+  const rows=buildSchedule(k,perWeek).list.filter(s=>s.type==="part"||s.type==="mock").slice(0,150).map(s=>({title:"Smart: "+(s.type==="mock"?"Full test":s.title),task_date:isoOf(s.d),exam:k,section:s.type==="part"?s.part:null}));
+  if(!rows.length){msg.textContent="Nothing to save.";return}
   btn.disabled=true;msg.textContent="Saving...";
   await sb.from("planner_tasks").delete().eq("exam",k).eq("done",false).gt("task_date",today()).like("title","Smart:%");
   let r=await sb.from("planner_tasks").insert(rows);
   if(r.error&&/section/i.test(r.error.message))r=await sb.from("planner_tasks").insert(rows.map(({section,...x})=>x));
   btn.disabled=false;
-  schedMsg[k]=r.error?r.error.message:rows.length+" sessions added to Plans. Old Smart sessions for "+EX[k].n+" were replaced.";
+  schedMsg[k]=r.error?r.error.message:"✓ Saved "+rows.length+" tasks to Plans";
   msg.textContent=schedMsg[k];if(!r.error)await load();
 }
 
 /* ---------- Percentages panel ---------- */
 function pRow(name,pct,sub,color){
-  const r=el("div",null,"prow"),n=el("div");n.appendChild(el("span",name));if(sub){n.appendChild(document.createElement("br"));n.appendChild(el("small",sub,"mu"))}
+  const r=el("div",null,"prow"),n=el("div");n.appendChild(el("span",name));if(sub)n.appendChild(el("small"," "+sub,"mu"));
   const bar=el("div",null,"pbar");if(color)bar.style.setProperty("--c",color);bar.innerHTML='<i style="width:'+clampN(pct||0,0,100)+'%"></i>';
   r.append(n,bar,el("b",pct==null?"—":pct+"%"));return r;
 }
 function renderStats(){
   const box=$("statsBody");if(!box||viewUid||!uid)return;box.replaceChildren();
-  const ex=el("div",null,"block");ex.appendChild(el("h2","Exams"));const grid=el("div",null,"st-grid");
+  const grid=el("div",null,"st-grid");grid.style.marginBottom="20px";
   Object.keys(EX).forEach(k=>{
-    const a=attemptsOf(k),l=a[a.length-1],g=goalOf(k),c=chanceOf(k),col="var(--"+k.toLowerCase()+")",card=el("div",null,"st-card");card.style.setProperty("--c",col);
-    const top=el("div",null,"st-top"),nm=el("b",EX[k].n);nm.style.color=col;top.append(nm,el("span",l?"Latest "+fs(k,l.score):"No results","mu"));card.appendChild(top);
-    card.appendChild(pRow("Goal readiness",g&&l?Math.min(100,Math.round(l.score/g*100)):null,g?"latest vs goal "+fs(k,g):"no goal set"));
-    card.appendChild(pRow("Chance",c?c.p:null,c&&c.dl?"by "+fmtD(c.dl):"to reach the goal"));
-    card.appendChild(pRow("Of maximum",l?Math.round(l.score/EX[k].max*100):null,"max "+EX[k].max));
-    card.appendChild(el("h3","Sections","sub-h"));
-    sectionStats(k).forEach(s=>card.appendChild(pRow(s.name,s.n?s.pct:null,s.n?fs(k,s.last)+" / "+s.mx:"no results")));
+    const a=attemptsOf(k),l=a[a.length-1],g=goalOf(k),c=chanceOf(k),col="var(--"+k.toLowerCase()+")",card=el("div",null,"st-card block");card.style.setProperty("--c",col);
+    const ready=g&&l?Math.min(100,Math.round(l.score/g*100)):null,top=el("div",null,"chance");
+    top.innerHTML=`<div class="ring sm" style="--p:${ready||0};--rc:${col}"><b>${ready==null?"—":ready+"%"}</b></div><div><b style="font-size:20px;color:${col}">${EX[k].n}</b><div class="mu">${l?"Last: "+fs(k,l.score)+(g?" / goal "+fs(k,g):""):"No results"}</div></div>`;
+    card.appendChild(top);
+    card.appendChild(pRow("Chance",c?c.p:null));
+    sectionStats(k).forEach(s=>card.appendChild(pRow(s.name,s.n?s.pct:null)));
     grid.appendChild(card)});
-  ex.appendChild(grid);box.appendChild(ex);
-  const pb=el("div",null,"block");pb.appendChild(el("h2","Portfolio topics"));const ps=portStats();
-  if(!ps.items.length){pb.appendChild(el("p","No portfolio topics yet.","mu"));const go=el("button","Open portfolio","main");go.onclick=()=>openPanel("subjectsPanel");pb.appendChild(go)}
-  else{
-    const top=el("div",null,"chance");top.innerHTML=`<div class="ring" style="--p:${ps.overall}"><b>${ps.overall}%</b></div><div><b>Portfolio strength</b><div class="mu">Depth (your best topics) and breadth (number of categories).</div></div>`;pb.appendChild(top);
-    const h1=el("h3","By category","sub-h");h1.style.marginTop="14px";pb.appendChild(h1);ps.cats.forEach(c=>pb.appendChild(pRow(c.n,c.pct,c.count+" topic"+(c.count===1?"":"s"),c.c)));
-    const h2=el("h3","By topic","sub-h");h2.style.marginTop="14px";pb.appendChild(h2);ps.items.forEach(x=>pb.appendChild(pRow(x.t.n,x.pc,LEVELS[x.p.level-1][0]+" · "+achOf(x.p.achievement)[1],PCAT[x.t.cat].c)));
-  }
+  box.appendChild(grid);
+  const pb=el("div",null,"block"),ps=portStats(),hd=el("div",null,"sa-head");hd.appendChild(el("h2","Portfolio"));if(ps.items.length)hd.appendChild(el("span",ps.overall+"%","big-pill"));pb.appendChild(hd);
+  if(!ps.items.length)emptyMsg(pb,"No topics yet.","Open Portfolio",()=>openPanel("subjectsPanel"));
+  else ps.items.forEach(x=>pb.appendChild(pRow(CAT_ICON[x.t.cat]+" "+x.t.n,x.pc,null,PCAT[x.t.cat].c)));
   box.appendChild(pb);
-  const cb=el("div",null,"block");cb.appendChild(el("h2","Career field match"));const cs=careerScores().filter(c=>c.score>0);
-  if(!cs.length)cb.appendChild(el("p","Add portfolio topics or ҰБТ subjects to see career matches.","mu"));else cs.forEach(c=>cb.appendChild(pRow(c.n,c.score,c.m)));
+  const cb=el("div",null,"block");cb.appendChild(el("h2","Careers"));const cs=careerScores().filter(c=>c.score>0).slice(0,5);
+  if(!cs.length)cb.appendChild(el("p","Add Portfolio topics to see this.","mu"));else cs.forEach(c=>cb.appendChild(pRow(c.n,c.score)));
   box.appendChild(cb);
 }
 
