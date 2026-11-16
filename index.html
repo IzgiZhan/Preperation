@@ -1640,7 +1640,7 @@ const RES={
  course:[["done","Completed",.5],["cert","Certificate",.7],["spec","Specialization (3+ courses)",1]],
  summer:[["part","Participant",.5],["selected","Selected by contest",.8],["grant","Full scholarship",1]],
  work:[["shadow","Job shadowing",.3],["short","Internship < 1 month",.5],["long","Internship 1+ month",.8],["job","Part-time job",1]]};
-const OLY_EV=[["resp","Republic subject olympiad",S_ALL,"oly"],["zhaut","Zhautykov Olympiad",S_INT,"medal"],["intl","International olympiad",S_INT,"medal"],["online","Online olympiad / Kangaroo",S_ALL,"oly"],["other","Other olympiad",S_ALL,"oly"]];
+const OLY_EV=[["resp","Republic olympiad",null,"oly"],["zhaut","Zhautykov Olympiad",S_INT,"medal"],["intl","International olympiad",S_INT,"medal"],["online","Online olympiad / Kangaroo",S_ALL,"oly"],["other","Other olympiad",S_ALL,"oly"]];
 /* topic: id, group, name, short text, events [id, name, stages|null, results], career fields */
 const TOPICS=[
  ["oly_math","academic","Mathematics","Math olympiads.",OLY_EV,["it","eng","econ","sci"]],
@@ -1678,9 +1678,9 @@ const evOf=(t,id)=>(t.ev||[]).find(e=>e[0]===id);
 const resOf=ev=>ev?RES[ev[3]]||[]:[];
 function achInfo(t,a){const ev=evOf(t,a.ev);if(!ev)return null;const st=a.st&&STG[a.st]?STG[a.st]:null,r=resOf(ev).find(x=>x[0]===a.r);
   return {text:[ev[1],st?st[0]:null,r?r[1]:null,a.y].filter(Boolean).join(" · "),pts:Math.round((ev[2]?(st?st[1]:1)*20:80)*(r?r[2]:.3))}}
-// topic % = skill level (max 40) + best result (max 50) + number of results (max 10)
+// topic % = best result (max 90) + number of results (max 10)
 function topicPct(it){const t=topicOf(it.topic);const pts=(Array.isArray(it.items)?it.items:[]).map(a=>t&&achInfo(t,a)).filter(Boolean).map(x=>x.pts);
-  return Math.min(100,Math.round((+it.level||1)*8+(pts.length?Math.max(...pts)*.5:0)+Math.min(10,Math.max(0,pts.length-1)*3)))}
+  return Math.min(100,Math.round((pts.length?Math.max(...pts)*.9:0)+Math.min(10,Math.max(0,pts.length-1)*3)))}
 
 let portfolio=[],pCat="academic",pSel=null,portErr="",aiRep={},aiBusy={},aiErr={},schedMsg={},schedAll=false;
 let asstEx="IELTS",asstLang=lsGet("asst_lang","en"),perWeek=lsGet("asst_week",4);
@@ -1726,7 +1726,7 @@ function renderPortfolio(force){
   if(!items.length)lst.appendChild(el("p","Empty. Pick a topic above.","mu"));
   items.forEach(({p,t})=>{
     const r=el("div",null,"pitem2"),m=el("div"),ach=achText(p);
-    m.append(el("b",CAT_ICON[t.cat]+" "+t.n+" · "+LEVELS[p.level-1][0]));
+    m.append(el("b",CAT_ICON[t.cat]+" "+t.n));
     if(ach.length){const ul=el("ul",null,"ach-list");ach.forEach(x=>ul.appendChild(el("li",x)));m.appendChild(ul)}else m.appendChild(el("div","No results yet","mu"));
     const ed=el("button","Edit","hbtn amber");ed.type="button";ed.onclick=()=>{pCat=t.cat;pSel=t.id;renderPortfolio(true);window.scrollTo({top:0,behavior:"smooth"})};
     r.append(m,ed);lst.appendChild(r)});
@@ -1734,14 +1734,10 @@ function renderPortfolio(force){
 }
 function topicEditor(id){
   const t=topicOf(id),cur0=portfolio.find(p=>p.topic===id),c=PCAT[t.cat].c;
-  const d={topic:id,level:cur0?.level||0,items:Array.isArray(cur0?.items)?[...cur0.items]:[]};
+  const d={topic:id,level:cur0?.level||3,items:Array.isArray(cur0?.items)?[...cur0.items]:[]};
   const w=el("div",null,"t-editor");w.style.setProperty("--c",c);
   w.appendChild(el("h3",CAT_ICON[t.cat]+" "+t.n,"t-title"));
-  w.appendChild(stepH("3. How good are you?"));
-  const lg=el("div",null,"lv-grid");
-  LEVELS.forEach(([n,s],i)=>{const b=el("button",null,"lv"+(d.level===i+1?" on":""));b.type="button";b.innerHTML="<b>"+n+"</b><small>"+s+"</small>";b.onclick=()=>{d.level=i+1;[...lg.children].forEach(x=>x.classList.toggle("on",x===b))};lg.appendChild(b)});
-  w.appendChild(lg);
-  w.appendChild(stepH("4. Your results"));
+  w.appendChild(stepH("3. Your results"));
   const list=el("div",null,"ach-box"),adder=el("div",null,"ach-add");
   const drawList=()=>{list.replaceChildren();
     if(!d.items.length)list.appendChild(el("p","No results yet. Add one below.","mu"));
@@ -1761,7 +1757,7 @@ function topicEditor(id){
   drawList();drawAdd();w.append(list,adder);
   const bar=el("div",null,"save-bar"),save=el("button",cur0?"Save":"Add to portfolio","main"),msg=el("p","","mu");save.type="button";
   save.onclick=async()=>{
-    if(!d.level){msg.textContent="Pick how good you are (step 3).";return}
+    if(!d.items.length){msg.textContent="Add at least one result (step 3).";return}
     save.disabled=true;
     const {error}=await sb.from("portfolio_items").upsert({user_id:uid,topic:id,level:d.level,items:d.items,updated_at:new Date().toISOString()},{onConflict:"user_id,topic"});
     save.disabled=false;if(error){msg.textContent=/items/i.test(error.message)?"Run smart_assistant_update.sql in the Supabase SQL editor.":error.message;return}
@@ -1941,7 +1937,7 @@ async function runAI(k,force){
     chance_percent:c?c.p:null,forecast_on_exam_date:c?c.projR:null,history:attemptsOf(k).slice(-10).map(x=>({date:x.date,score:x.score})),
     last_practice:{date:a.date,total:a.tot,change:a.ch,sections:a.secs.map(s=>({name:s.name,score:s.score,max:s.mx,needed_for_goal:s.tg!=null?roundTo(k,s.tg):null,change:s.ch}))},
     not_practiced_recently:a.stale.map(s=>s.name),
-    portfolio:portfolio.map(p=>{const t=topicOf(p.topic);return t?{topic:t.n,level:LEVELS[p.level-1][0],results:achText(p)}:null}).filter(Boolean),
+    portfolio:portfolio.map(p=>{const t=topicOf(p.topic);return t?{topic:t.n,results:achText(p)}:null}).filter(Boolean),
     career_fields:careerScores().filter(x=>x.score>0).slice(0,3).map(x=>({field:x.n,match_percent:x.score})),
     style:"Use very simple words. Keep every item short (max 12 words)."};
   let data,error;try{({data,error}=await sb.functions.invoke("smart-assistant",{body}))}catch(e){error=e}
@@ -2279,8 +2275,7 @@ vs last test|к прошлому тесту|өткен тестпен
 first test|первый тест|бірінші тест
 1. Pick a group|1. Выбери группу|1. Топты таңда
 2. Pick a topic|2. Выбери тему|2. Тақырыпты таңда
-3. How good are you?|3. Насколько ты хорош?|3. Қаншалықты жақсысың?
-4. Your results|4. Твои результаты|4. Нәтижелерің
+3. Your results|3. Твои результаты|3. Нәтижелерің
 My portfolio|Моё портфолио|Менің портфолиом
 Empty. Pick a topic above.|Пусто. Выбери тему выше.|Бос. Жоғарыдан тақырып таңда.
 No results yet. Add one below.|Результатов нет. Добавь ниже.|Нәтиже жоқ. Төменнен қос.
@@ -2323,7 +2318,7 @@ Certificate|Сертификат|Сертификат
 3rd place|3 место|3 орын
 Finalist|Финалист|Финалист
 Special prize|Спецприз|Арнайы жүлде
-Republic subject olympiad|Республиканская предметная олимпиада|Республикалық пән олимпиадасы
+Republic olympiad|Республиканская олимпиада|Республикалық олимпиада
 Other olympiad|Другая олимпиада|Басқа олимпиада
 Portfolio|Портфолио|Портфолио
 🕒 When are you free? · Today|🕒 Когда ты свободен? · Сегодня|🕒 Қашан бос боласың? · Бүгін
