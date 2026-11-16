@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Exam Prep</title>
+<title>Smart Assistant</title>
 <script>try{document.documentElement.dataset.theme=JSON.parse(localStorage.getItem("theme"))||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
 <meta name="theme-color" content="#ffffff">
 <meta name="description" content="Track IELTS, SAT and ENT results, goals and study progress.">
@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Exam Prep">
+<meta name="apple-mobile-web-app-title" content="Smart Assistant">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -495,11 +495,11 @@ html.big-text body{zoom:1.12}
 </head>
 <body>
 <div class="w">
-<h1 id="ttl">Exam Prep</h1>
+<h1 id="ttl">Smart Assistant</h1>
 
 <section class="auth-shell" id="login" hidden aria-label="Account access">
   <div class="auth-brand">
-    <div class="auth-brand-top"><span>Exam Prep</span></div>
+    <div class="auth-brand-top"><span>Smart Assistant</span></div>
     <div class="auth-brand-copy">
       
       <h2>Make progress.<br>Reach your goals.</h2>
@@ -509,7 +509,7 @@ html.big-text body{zoom:1.12}
     <div class="auth-brand-foot">One place for every achievement.</div>
   </div>
   <div class="auth-form">
-    <div class="auth-mobile-logo"><span>Exam Prep</span></div>
+    <div class="auth-mobile-logo"><span>Smart Assistant</span></div>
     <div id="authMain">
       <h2 id="authTitle">Log in</h2>
       <p class="auth-subtitle" id="authSubtitle">Welcome back. Enter your email and password.</p>
@@ -520,7 +520,7 @@ html.big-text body{zoom:1.12}
         <div class="auth-row" id="forgotRow"><a href="#" id="forgot">Forgot password?</a></div>
         <button class="main auth-submit" id="authSubmit" type="submit">Log in</button>
       </form>
-      <p class="auth-switch"><span id="switchText">New to Exam Prep?</span> <a href="#" id="switchLink">Create an account</a></p>
+      <p class="auth-switch"><span id="switchText">New to Smart Assistant?</span> <a href="#" id="switchLink">Create an account</a></p>
     </div>
     <div id="authSent" hidden>
       <h2>Check your email</h2>
@@ -542,11 +542,11 @@ html.big-text body{zoom:1.12}
 </section>
 <div id="app" hidden class="dashboard">
   <aside class="sidebar own">
-    <div class="brand-lockup"><div class="brand-mark"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg></div><strong>Exam Prep</strong></div>
+    <div class="brand-lockup"><div class="brand-mark"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg></div><strong>Smart Assistant</strong></div>
     <nav class="app-nav" id="appNav" aria-label="Main navigation">
       <button class="nav-btn active" data-panel="overview"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/></svg>Overview</button>
       <button class="nav-btn" data-panel="addPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>Add Exam</button>
-      <button class="nav-btn" data-panel="assistantPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>Smart Assistant</button>
+      <button class="nav-btn" data-panel="assistantPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>AI Coach</button>
       <button class="nav-btn" data-panel="progressPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>Progress</button>
       <button class="nav-btn" data-panel="statsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>Percentages</button>
       <button class="nav-btn" data-panel="goalsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M13 3.055a9 9 0 1 0 7.941 7.945"/><path d="M15 6v3h3l3-3h-3v-3z"/><path d="M15 9l-3 3"/></svg>Goals</button>
@@ -1334,7 +1334,7 @@ function loadNotifUI(){
   const on=S.browser&&("Notification" in window)&&Notification.permission==="granted";$("nBrowser").textContent=on?"Turn off browser notifications":"Turn on browser notifications";
 }
 function saveNotifUI(){lsSet("notif",Object.assign(nSet(),{daily:$("nDaily").checked,streak:$("nStreak").checked,goals:$("nGoals").checked,improve:$("nImprove").checked,plan:$("nPlan").checked,freeOnly:$("nFree").checked,time:$("nTime").value}));renderNotif()}
-function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"Settings",subjectsPanel:"Portfolio",assistantPanel:"Smart Assistant",statsPanel:"Percentages",plannerPanel:"Plans",notifPanel:"Notifications",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel()}window.openPanel=openPanel;
+function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"Settings",subjectsPanel:"Portfolio",assistantPanel:"AI Coach",statsPanel:"Percentages",plannerPanel:"Plans",notifPanel:"Notifications",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel()}window.openPanel=openPanel;
 function updateShare(){const sl=$("pslug").value.trim().toLowerCase();if(sl)$("plink").value=location.origin+location.pathname+"?u="+sl}
 async function loadProfile(){
   const {data:p}=await sb.from("profiles").select("*").eq("user_id",uid).maybeSingle();
@@ -1406,7 +1406,7 @@ function setTheme(t){
 }
 async function copyLink(){
   const url=$("plink").value;if(!url)return;
-  try{if(navigator.share)await navigator.share({title:"My Exam Prep",url});else{await navigator.clipboard.writeText(url);$("profileStatus").textContent="Link copied!"}}
+  try{if(navigator.share)await navigator.share({title:"My Smart Assistant",url});else{await navigator.clipboard.writeText(url);$("profileStatus").textContent="Link copied!"}}
   catch(e){if(e.name!=="AbortError"){$("profileStatus").textContent="Could not share. Copy this link: "+url}}
 }
 async function loadPublic(slug){
@@ -1469,7 +1469,7 @@ $("nBrowser").onclick=async()=>{const S=nSet(),m=$("nMsg");
   if(!("Notification" in window)){m.textContent="This browser does not support notifications.";return}
   if(S.browser){lsSet("notif",Object.assign(S,{browser:false}));m.textContent="Browser notifications are off.";loadNotifUI();return}
   const p=Notification.permission==="granted"?"granted":await Notification.requestPermission();
-  if(p==="granted"){lsSet("notif",Object.assign(S,{browser:true}));m.textContent="Browser notifications are on. They appear while Exam Prep is open in your browser or installed as an app.";try{new Notification("Exam Prep",{body:"Notifications are on.",icon:"icon-192.png"})}catch(e){}}
+  if(p==="granted"){lsSet("notif",Object.assign(S,{browser:true}));m.textContent="Browser notifications are on. They appear while Smart Assistant is open in your browser or installed as an app.";try{new Notification("Smart Assistant",{body:"Notifications are on.",icon:"icon-192.png"})}catch(e){}}
   else m.textContent="Notifications are blocked. Allow them in your browser settings for this site.";
   loadNotifUI()};
 setInterval(renderNotif,60000);
@@ -1511,7 +1511,7 @@ function setAuthMode(mode){
   $("authSubtitle").textContent=up?"It takes less than a minute.":"Welcome back. Enter your email and password.";
   $("pw2Wrap").hidden=!up;$("forgotRow").hidden=up;$("pw").autocomplete=up?"new-password":"current-password";
   $("authSubmit").innerHTML=AIC[up?"userplus":"login"]+"<span>"+(up?"Create account":"Log in")+"</span>";
-  $("switchText").textContent=up?"Already have an account?":"New to Exam Prep?";
+  $("switchText").textContent=up?"Already have an account?":"New to Smart Assistant?";
   $("switchLink").textContent=up?"Log in":"Create an account";
   amsg("");
 }
@@ -2061,7 +2061,7 @@ function renderSiteSet(){
   grp("Site language",[["en","🇬🇧 English"],["ru","🇷🇺 Русский"],["kk","🇰🇿 Қазақша"]],siteLang,v=>{setLang(v)});
   grp("Theme",[["light","☀️ Light"],["dark","🌙 Dark"]],document.documentElement.dataset.theme,v=>setTheme(v));
   grp("Text size",[["normal","A Normal"],["big","A+ Large"]],lsGet("text_size","normal"),v=>{lsSet("text_size",v);applySize()});
-  grp("Open the site on",[["overview","🏠 Overview"],["assistantPanel","✨ Smart Assistant"],["addPanel","✏️ Add Exam"],["plannerPanel","📅 Plans"]],lsGet("start_page","overview"),v=>lsSet("start_page",v));
+  grp("Open the site on",[["overview","🏠 Overview"],["assistantPanel","✨ AI Coach"],["addPanel","✏️ Add Exam"],["plannerPanel","📅 Plans"]],lsGet("start_page","overview"),v=>lsSet("start_page",v));
   {const sh=el("div","Share my profile","step");box.appendChild(sh);
   const r=el("div",null,"save-bar");const cp=el("button","Copy profile link","main go");cp.type="button";cp.onclick=async()=>{try{await navigator.clipboard.writeText($("plink").value);cp.lastChild.textContent=tr("Copied!")}catch(e){}};
   r.appendChild(cp);box.appendChild(r);}
@@ -2082,7 +2082,7 @@ function styleBtns(){
 let siteLang=lsGet("site_lang","en");
 const TRL=`Overview|Обзор|Шолу
 Add Exam|Добавить экзамен|Емтихан қосу
-Smart Assistant|Smart Ассистент|Smart Ассистент
+AI Coach|AI Coach|AI Coach
 Progress|Прогресс|Прогресс
 Percentages|Проценты|Пайыздар
 Goals|Цели|Мақсаттар
@@ -2229,7 +2229,7 @@ A Normal|A Обычный|A Қалыпты
 A+ Large|A+ Крупный|A+ Үлкен
 Open the site on|Открывать сайт на|Сайтты ашқанда
 🏠 Overview|🏠 Обзор|🏠 Шолу
-✨ Smart Assistant|✨ Smart Ассистент|✨ Smart Ассистент
+✨ AI Coach|✨ AI Coach|✨ AI Coach
 ✏️ Add Exam|✏️ Добавить экзамен|✏️ Емтихан қосу
 📅 Plans|📅 Планы|📅 Жоспарлар
 Share my profile|Поделиться профилем|Профильмен бөлісу
@@ -2340,7 +2340,7 @@ Email|Почта|Пошта
 Password|Пароль|Құпиясөз
 Show|Показать|Көрсету
 Forgot password?|Забыли пароль?|Құпиясөзді ұмыттың ба?
-New to Exam Prep?|Впервые здесь?|Мұнда алғаш рет пе?
+New to Smart Assistant?|Впервые здесь?|Мұнда алғаш рет пе?
 Create an account|Создать аккаунт|Аккаунт ашу
 Create your account|Создай аккаунт|Аккаунт ашу
 It takes less than a minute.|Это займёт меньше минуты.|Бір минуттан аз уақыт алады.
