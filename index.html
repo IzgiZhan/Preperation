@@ -481,7 +481,6 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
 .time-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.time-row .tsel{width:auto;min-width:110px}
 .wday{position:relative}.wfree{position:absolute;top:4px;right:6px;font-size:11px}
 .free-box h2{font-size:19px}
-html.big-text body{zoom:1.12}
 #profilePanel>.tabs{margin-top:0}
 /* compact sidebar: every section fits on a laptop screen */
 @media(min-width:821px){.sidebar .brand-lockup{padding-bottom:2px!important;margin-bottom:0}}
@@ -1730,6 +1729,15 @@ const TOPICS=[
  ["ex_summer","extra","Summer schools","Camps and exchange programs.",[["summer","Summer / winter school",S_UP,"summer"],["exchange","Exchange program",S_INT,"summer"]],["edu","sci"]],
  ["ex_work","extra","Internships & work","Work experience.",[["work","Internship / job",null,"work"]],["econ","eng"]]
 ].map(([id,cat,n,d,ev,f])=>({id,cat,n,d,ev,f}));
+const levName=l=>LEVELS[Math.min(5,Math.max(1,+l||1))-1][0];
+function autoLevel(t,items){
+  const pts=(items||[]).map(a=>achInfo(t,a)).filter(Boolean).map(x=>x.pts);
+  if(!pts.length)return 1;
+  const best=Math.max(...pts),n=pts.length;
+  let l=best>=80?5:best>=60?4:best>=40?3:best>=20?2:1;
+  if(n>=3&&l<5)l++;
+  return l;
+}
 const LEVELS=[["Beginner","Just started"],["Basic","Club or course"],["Good","Can do it alone"],["Strong","Better than most"],["Top","One of the best"]];
 const topicOf=id=>TOPICS.find(t=>t.id===id);
 const evOf=(t,id)=>(t.ev||[]).find(e=>e[0]===id);
@@ -1786,7 +1794,7 @@ function renderPortfolio(force){
   if(!items.length)lst.appendChild(el("p","Empty. Pick a topic above.","mu"));
   items.forEach(({p,t})=>{
     const r=el("div",null,"pitem2"),m=el("div"),ach=achText(p);
-    m.append(el("b",CAT_ICON[t.cat]+" "+t.n+" · "+LEVELS[p.level-1][0]));
+    m.append(el("b",CAT_ICON[t.cat]+" "+t.n+" · "+levName(p.level)));
     if(ach.length){const ul=el("ul",null,"ach-list");ach.forEach(x=>ul.appendChild(el("li",x)));m.appendChild(ul)}else m.appendChild(el("div","No results yet","mu"));
     const ed=el("button","Edit","hbtn amber");ed.type="button";ed.onclick=()=>{pCat=t.cat;pSel=t.id;renderPortfolio(true);window.scrollTo({top:0,behavior:"smooth"})};
     r.append(m,ed);lst.appendChild(r)});
@@ -1797,11 +1805,7 @@ function topicEditor(id){
   const d={topic:id,level:cur0?.level||0,items:Array.isArray(cur0?.items)?[...cur0.items]:[]};
   const w=el("div",null,"t-editor");w.style.setProperty("--c",c);
   w.appendChild(el("h3",CAT_ICON[t.cat]+" "+t.n,"t-title"));
-  w.appendChild(stepH("3. How good are you?"));
-  const lg=el("div",null,"lv-grid");
-  LEVELS.forEach(([n,s],i)=>{const b=el("button",null,"lv"+(d.level===i+1?" on":""));b.type="button";b.innerHTML="<b>"+n+"</b><small>"+s+"</small>";b.onclick=()=>{d.level=i+1;[...lg.children].forEach(x=>x.classList.toggle("on",x===b))};lg.appendChild(b)});
-  w.appendChild(lg);
-  w.appendChild(stepH("4. Your results"));
+  w.appendChild(stepH("3. Your results"));
   const list=el("div",null,"ach-box"),adder=el("div",null,"ach-add");
   const drawList=()=>{list.replaceChildren();
     if(!d.items.length)list.appendChild(el("p","No results yet. Add one below.","mu"));
@@ -1824,9 +1828,9 @@ function topicEditor(id){
   drawList();drawAdd();w.append(list,adder);
   const bar=el("div",null,"save-bar"),save=el("button",cur0?"Save":"Add to portfolio","main"),msg=el("p","","mu");save.type="button";
   save.onclick=async()=>{
-    if(!d.level){msg.textContent="Pick how good you are (step 3).";return}
+    if(!d.items.length){msg.textContent="Add at least one result first.";return}
     save.disabled=true;
-    const {error}=await sb.from("portfolio_items").upsert({user_id:uid,topic:id,level:d.level,items:d.items,updated_at:new Date().toISOString()},{onConflict:"user_id,topic"});
+    const {error}=await sb.from("portfolio_items").upsert({user_id:uid,topic:id,level:autoLevel(t,d.items),items:d.items,updated_at:new Date().toISOString()},{onConflict:"user_id,topic"});
     save.disabled=false;if(error){msg.textContent=/items/i.test(error.message)?"Run smart_assistant_update.sql in the Supabase SQL editor.":error.message;return}
     pSel=null;document.activeElement?.blur();load()};
   const cl=el("button","Cancel","hbtn gray");cl.type="button";cl.onclick=()=>{pSel=null;renderPortfolio(true)};
@@ -2015,7 +2019,7 @@ async function runAI(k,force){
     chance_percent:c?c.p:null,forecast_on_exam_date:c?c.projR:null,history:attemptsOf(k).slice(-10).map(x=>({date:x.date,score:x.score})),
     last_practice:{date:a.date,total:a.tot,change:a.ch,sections:a.secs.map(s=>({name:s.name,score:s.score,max:s.mx,needed_for_goal:s.tg!=null?roundTo(k,s.tg):null,change:s.ch}))},
     not_practiced_recently:a.stale.map(s=>s.name),
-    portfolio:portfolio.map(p=>{const t=topicOf(p.topic);return t?{topic:t.n,level:LEVELS[p.level-1][0],results:achText(p)}:null}).filter(Boolean),
+    portfolio:portfolio.map(p=>{const t=topicOf(p.topic);return t?{topic:t.n,level:levName(p.level),results:achText(p)}:null}).filter(Boolean),
     career_fields:careerScores().filter(x=>x.score>0).slice(0,3).map(x=>({field:x.n,match_percent:x.score})),
     style:"Use very simple words. Keep every item short (max 12 words)."};
   let data,error;try{({data,error}=await sb.functions.invoke("smart-assistant",{body}))}catch(e){error=e}
@@ -2134,13 +2138,11 @@ function renderSiteSet(){
     opts.forEach(([v,n])=>{const b=el("button",n,"big-opt"+(v===val?" on":""));b.type="button";b.onclick=()=>{fn(v);renderSiteSet()};r.appendChild(b)});box.appendChild(r)};
   grp("Site language",[["en","English"],["ru","Русский"],["kk","Қазақша"]],siteLang,v=>{setLang(v)});
   grp("Theme",[["light","☀️ Light"],["dark","🌙 Dark"]],document.documentElement.dataset.theme,v=>setTheme(v));
-  grp("Text size",[["normal","A Normal"],["big","A+ Large"]],lsGet("text_size","normal"),v=>{lsSet("text_size",v);applySize()});
   grp("Open the site on",[["overview","🏠 Overview"],["assistantPanel","✨ Smart Assistant"],["addPanel","✏️ Add Exam"],["plannerPanel","📅 Plans"]],lsGet("start_page","overview"),v=>lsSet("start_page",v));
   {const sh=el("div","Share my profile","step");box.appendChild(sh);
   const r=el("div",null,"save-bar");const cp=el("button","Copy profile link","main go");cp.type="button";cp.onclick=async()=>{try{await navigator.clipboard.writeText($("plink").value);cp.lastChild.textContent=tr("Copied!")}catch(e){}};
   r.appendChild(cp);box.appendChild(r);}
 }
-function applySize(){document.documentElement.classList.toggle("big-text",lsGet("text_size","normal")==="big")}
 
 /* ===================== BUTTON STYLES ===================== */
 // different looks for different actions: save = green, AI = purple, go to = outline, add = blue
@@ -2309,9 +2311,6 @@ Site language|Язык сайта|Сайт тілі
 Theme|Тема|Тақырып
 ☀️ Light|☀️ Светлая|☀️ Ашық
 🌙 Dark|🌙 Тёмная|🌙 Қараңғы
-Text size|Размер текста|Мәтін өлшемі
-A Normal|A Обычный|A Қалыпты
-A+ Large|A+ Крупный|A+ Үлкен
 Open the site on|Открывать сайт на|Сайтты ашқанда
 🏠 Overview|🏠 Обзор|🏠 Шолу
 ✨ Smart Assistant|✨ Smart Ассистент|✨ Smart Ассистент
@@ -2364,8 +2363,8 @@ vs last test|к прошлому тесту|өткен тестпен
 first test|первый тест|бірінші тест
 1. Pick a group|1. Выбери группу|1. Топты таңда
 2. Pick a topic|2. Выбери тему|2. Тақырыпты таңда
-3. How good are you?|3. Насколько ты хорош?|3. Қаншалықты жақсысың?
-4. Your results|4. Твои результаты|4. Нәтижелерің
+3. Your results|3. Твои результаты|3. Нәтижелерің
+Add at least one result first.|Сначала добавь хотя бы один результат.|Алдымен кемінде бір нәтиже қос.
 My portfolio|Моё портфолио|Менің портфолиом
 Empty. Pick a topic above.|Пусто. Выбери тему выше.|Бос. Жоғарыдан тақырып таңда.
 No results yet. Add one below.|Результатов нет. Добавь ниже.|Нәтиже жоқ. Төменнен қос.
@@ -2562,7 +2561,7 @@ function translateTree(root){
   root.querySelectorAll("[placeholder]").forEach(e=>{if(e.dataset.enPh===undefined)e.dataset.enPh=e.placeholder;e.placeholder=tr(e.dataset.enPh)});
 }
 function setLang(v){siteLang=v;lsSet("site_lang",v);document.documentElement.lang=v==="kk"?"kk":v;if(v!=="en"){asstLang=v;lsSet("asst_lang",v)}setQuote(quoteTxt);translateTree(document.body);}
-document.documentElement.lang=siteLang;applySize();
+document.documentElement.lang=siteLang;
 
 setTheme(lsGet("theme","light"));setEx("IELTS");(()=>{let q=0;const ob=new MutationObserver(()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;ob.disconnect();iconize();styleBtns();translateTree(document.body);ob.observe(document.body,{childList:true,subtree:true})})});ob.observe(document.body,{childList:true,subtree:true});iconize();styleBtns();translateTree(document.body);setTab("profile")})();
 const PUB=new URLSearchParams(location.search).get("u");
