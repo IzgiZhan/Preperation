@@ -59,11 +59,15 @@ button.danger{background:var(--bad)}
 .dashboard{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh;width:100%}
 .sidebar{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:24px 14px;background:var(--card);border-right:1px solid var(--bd)}
 .brand-lockup{display:flex;align-items:center;gap:12px;padding:4px 10px 22px}
-.brand-mark{width:38px;height:38px;border-radius:10px;background:var(--ink);color:#fff;display:grid;place-items:center}.brand-mark .ico{width:22px;height:22px}
-.brand-lockup strong{font-size:17px;letter-spacing:-.03em}
-.brand-lockup .b-txt{display:flex;flex-direction:column;min-width:0;line-height:1.15}
-.brand-lockup .b-txt small{font-size:11.5px;font-weight:600;color:var(--mu);letter-spacing:0}
+.brand-mark{min-width:58px;height:48px;border-radius:12px;background:var(--ink);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px 9px;flex:none}
+.brand-mark .ico{width:22px;height:22px}
+.brand-mark span{font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1;white-space:nowrap}
+.brand-lockup strong{font-size:17px;letter-spacing:-.03em;line-height:1.15}
 .app-nav{display:flex;flex-direction:column;gap:2px}
+.sb-bar{position:absolute;right:1px;top:0;width:7px;pointer-events:none;z-index:6}
+.sb-bar i{display:block;width:100%;border-radius:99px;background:var(--bd);pointer-events:auto;cursor:grab;transition:background .15s}
+.sb-bar i:hover{background:var(--mu)}.sb-bar i:active{cursor:grabbing;background:var(--mu)}
+@media(max-width:820px){.sb-bar{display:none!important}}
 .nav-btn,.side-btn,.logout-link{display:flex;align-items:center;gap:12px;padding:11px 12px;border:0;border-radius:12px;background:none;color:var(--mu);font-size:15px;font-weight:600;text-align:left;text-decoration:none;width:100%}
 .nav-btn:hover,.side-btn:hover,.logout-link:hover{background:var(--bg);color:var(--tx)}
 .nav-btn.active{background:var(--ac2);color:var(--ac)}
@@ -488,24 +492,25 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
 /* compact sidebar: every section fits on a laptop screen */
 @media(min-width:821px){.sidebar .brand-lockup{padding-bottom:2px!important;margin-bottom:0}}
 @media(min-width:821px){
- .sidebar{padding:18px 12px 14px;overflow-y:auto;scrollbar-width:thin}
- .brand-lockup{padding:2px 10px 14px}
- .app-nav{gap:1px}
- .nav-btn,.logout-link{padding:10px 12px;font-size:15px;gap:12px;border-radius:12px}
- .nav-btn .ico,.logout-link .ico{width:20px;height:20px}
- .logout-link{margin-top:auto;border-top:1px solid var(--bd);border-radius:0 0 11px 11px;padding-top:12px}
- .nav-btn[data-panel=profilePanel]{margin-top:6px}
+ .sidebar{padding:18px 12px 14px;overflow-y:auto;scrollbar-width:none}
+ .sidebar::-webkit-scrollbar{width:0;height:0}
+ .brand-lockup{padding:2px 8px 14px}
+ .app-nav{gap:2px}
+ .nav-btn,.logout-link{padding:12px 14px;font-size:16px;gap:13px;border-radius:13px}
+ .nav-btn .ico,.logout-link .ico{width:22px;height:22px}
+ .logout-link{margin-top:0;border-top:1px solid var(--bd);border-radius:0 0 11px 11px;padding-top:12px}
+ .nav-btn[data-panel=profilePanel]{margin-top:0}
 }
 @media(min-width:821px) and (max-height:700px){
  .sidebar{padding:12px 10px 10px}
  .brand-lockup{padding:0 10px 8px}
- .nav-btn,.logout-link{padding:8px 12px;font-size:14.5px}
+ .nav-btn,.logout-link{padding:9px 12px;font-size:15px}
 }
 @media(min-width:821px){
- .sidebar .app-nav{flex:1 1 auto;min-height:0}
- .sidebar .nav-btn{flex:1 1 0;min-height:34px;max-height:58px;padding-top:0;padding-bottom:0}
+ .sidebar .app-nav{flex:1 0 auto;min-height:0}
+ .sidebar .nav-btn{flex:1 1 auto;min-height:46px;max-height:66px;padding-top:0;padding-bottom:0}
  .sidebar .nav-btn[data-panel=profilePanel]{margin-top:auto}
- .sidebar .logout-link{margin-top:0}
+ .sidebar .logout-link{margin-top:0;flex:none}
 }
 </style>
 </head>
@@ -558,7 +563,7 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
 </section>
 <div id="app" hidden class="dashboard">
   <aside class="sidebar own">
-    <div class="brand-lockup"><div class="brand-mark"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg></div><span class="b-txt"><strong>Smart Assistant</strong><small translate="no">Exam Prep</small></span></div>
+    <div class="brand-lockup"><div class="brand-mark"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg><span translate="no">Exam Prep</span></div><strong>Smart Assistant</strong></div>
     <nav class="app-nav" id="appNav" aria-label="Main navigation">
       <button class="nav-btn active" data-panel="overview"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/></svg>Overview</button>
       <button class="nav-btn" data-panel="addPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>Add Exam</button>
@@ -2567,6 +2572,27 @@ function translateTree(root){
 function setLang(v){siteLang=v;lsSet("site_lang",v);document.documentElement.lang=v==="kk"?"kk":v;if(v!=="en"){asstLang=v;lsSet("asst_lang",v)}setQuote(quoteTxt);translateTree(document.body);}
 document.documentElement.lang=siteLang;
 
+/* a draggable scroll handle next to the section buttons */
+(function(){
+ const sb=document.querySelector(".sidebar");if(!sb)return;
+ const track=document.createElement("div");track.className="sb-bar";track.innerHTML="<i></i>";
+ sb.appendChild(track);const thumb=track.firstChild;let drag=null;
+ const MIN=30;
+ function upd(){
+  const ch=sb.clientHeight,sh=sb.scrollHeight,st=sb.scrollTop,on=innerWidth>820&&sh-ch>4;
+  track.hidden=!on;if(!on)return;
+  const h=Math.max(MIN,ch*ch/sh);
+  track.style.top=st+"px";track.style.height=ch+"px";
+  thumb.style.height=h+"px";thumb.style.transform="translateY("+(sh>ch?st/(sh-ch)*(ch-h):0)+"px)";
+ }
+ sb.addEventListener("scroll",upd,{passive:true});addEventListener("resize",upd);
+ try{const ro=new ResizeObserver(upd);ro.observe(sb);const nav=sb.querySelector(".app-nav");if(nav)ro.observe(nav)}catch(e){}
+ thumb.addEventListener("pointerdown",e=>{e.preventDefault();drag={y:e.clientY,st:sb.scrollTop};thumb.setPointerCapture(e.pointerId)});
+ thumb.addEventListener("pointermove",e=>{if(!drag)return;const ch=sb.clientHeight,sh=sb.scrollHeight,h=Math.max(MIN,ch*ch/sh);
+  if(ch-h>0)sb.scrollTop=drag.st+(e.clientY-drag.y)*(sh-ch)/(ch-h)});
+ ["pointerup","pointercancel"].forEach(n=>thumb.addEventListener(n,()=>{drag=null}));
+ upd();setTimeout(upd,400);addEventListener("load",upd);
+})();
 setTheme(lsGet("theme","light"));setEx("IELTS");(()=>{let q=0;const ob=new MutationObserver(()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;ob.disconnect();iconize();styleBtns();translateTree(document.body);ob.observe(document.body,{childList:true,subtree:true})})});ob.observe(document.body,{childList:true,subtree:true});iconize();styleBtns();translateTree(document.body);setTab("profile")})();
 const PUB=new URLSearchParams(location.search).get("u");
 if(PUB){document.body.classList.add("pub");loadPublic(PUB)}
