@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Exam Prep</title>
+<title>Smart Assistant — Exam Prep</title>
 <script>try{document.documentElement.dataset.theme=JSON.parse(localStorage.getItem("theme"))||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
 <meta name="theme-color" content="#ffffff">
 <meta name="description" content="Track IELTS, SAT and ENT results, goals and study progress.">
@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Exam Prep">
+<meta name="apple-mobile-web-app-title" content="Smart Assistant">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -60,7 +60,9 @@ button.danger{background:var(--bad)}
 .sidebar{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:24px 14px;background:var(--card);border-right:1px solid var(--bd)}
 .brand-lockup{display:flex;align-items:center;gap:12px;padding:4px 10px 22px}
 .brand-mark{width:38px;height:38px;border-radius:10px;background:var(--ink);color:#fff;display:grid;place-items:center}.brand-mark .ico{width:22px;height:22px}
-.brand-lockup strong{font-size:18px;letter-spacing:-.03em}
+.brand-lockup strong{font-size:17px;letter-spacing:-.03em}
+.brand-lockup .b-txt{display:flex;flex-direction:column;min-width:0;line-height:1.15}
+.brand-lockup .b-txt small{font-size:11.5px;font-weight:600;color:var(--mu);letter-spacing:0}
 .app-nav{display:flex;flex-direction:column;gap:2px}
 .nav-btn,.side-btn,.logout-link{display:flex;align-items:center;gap:12px;padding:11px 12px;border:0;border-radius:12px;background:none;color:var(--mu);font-size:15px;font-weight:600;text-align:left;text-decoration:none;width:100%}
 .nav-btn:hover,.side-btn:hover,.logout-link:hover{background:var(--bg);color:var(--tx)}
@@ -119,6 +121,7 @@ button.danger{background:var(--bad)}
 .auth-shell{display:grid;grid-template-columns:1.05fr 1fr;min-height:100vh}
 .auth-brand{display:flex;flex-direction:column;justify-content:space-between;padding:44px 52px;background:var(--ink);color:#fff}
 .auth-brand-top{font-weight:800;font-size:20px;letter-spacing:-.03em}
+.auth-brand-top small,.auth-mobile-logo small{display:block;font-size:12px;font-weight:600;opacity:.72;letter-spacing:0;margin-top:2px}
 .auth-brand-copy h2{font-size:clamp(40px,5.4vw,72px);line-height:1.03;font-weight:800;letter-spacing:-.045em;margin:0 0 16px}
 .auth-brand-copy p,.auth-brand-foot{color:#aab7dd;max-width:42ch;margin:0;font-size:14px}
 .auth-exams{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
@@ -508,11 +511,11 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
 </head>
 <body>
 <div class="w">
-<h1 id="ttl">Exam Prep</h1>
+<h1 id="ttl">Smart Assistant</h1>
 
 <section class="auth-shell" id="login" hidden aria-label="Account access">
   <div class="auth-brand">
-    <div class="auth-brand-top"><span>Exam Prep</span></div>
+    <div class="auth-brand-top"><span>Smart Assistant</span><small translate="no">Exam Prep</small></div>
     <div class="auth-brand-copy">
       
       <h2>Make progress.<br>Reach your goals.</h2>
@@ -522,7 +525,7 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
     <div class="auth-brand-foot">One place for every achievement.</div>
   </div>
   <div class="auth-form">
-    <div class="auth-mobile-logo"><span>Exam Prep</span></div>
+    <div class="auth-mobile-logo"><span>Smart Assistant</span><small translate="no">Exam Prep</small></div>
     <div id="authMain">
       <h2 id="authTitle">Log in</h2>
       <p class="auth-subtitle" id="authSubtitle">Welcome back. Enter your email and password.</p>
@@ -555,11 +558,11 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
 </section>
 <div id="app" hidden class="dashboard">
   <aside class="sidebar own">
-    <div class="brand-lockup"><div class="brand-mark"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg></div><strong>Exam Prep</strong></div>
+    <div class="brand-lockup"><div class="brand-mark"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg></div><span class="b-txt"><strong>Smart Assistant</strong><small translate="no">Exam Prep</small></span></div>
     <nav class="app-nav" id="appNav" aria-label="Main navigation">
       <button class="nav-btn active" data-panel="overview"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/></svg>Overview</button>
       <button class="nav-btn" data-panel="addPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>Add Exam</button>
-      <button class="nav-btn" data-panel="assistantPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4.5V8"/><circle cx="12" cy="3.5" r="1.2"/><path d="M2 13v3M22 13v3"/><path d="M9.5 13v1.5M14.5 13v1.5"/></svg>Smart Assistant</button>
+      <button class="nav-btn" data-panel="assistantPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4.5V8"/><circle cx="12" cy="3.5" r="1.2"/><path d="M2 13v3M22 13v3"/><path d="M9.5 13v1.5M14.5 13v1.5"/></svg>AI Coach</button>
       <button class="nav-btn" data-panel="progressPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>Progress</button>
       <button class="nav-btn" data-panel="statsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.2 15.9A10 10 0 1 1 8.1 2.8"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>Percentages</button>
       <button class="nav-btn" data-panel="goalsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M13 3.055a9 9 0 1 0 7.941 7.945"/><path d="M15 6v3h3l3-3h-3v-3z"/><path d="M15 9l-3 3"/></svg>Goals</button>
@@ -1391,7 +1394,7 @@ function loadNotifUI(){
   const on=S.browser&&("Notification" in window)&&Notification.permission==="granted";$("nBrowser").textContent=on?"Turn off browser notifications":"Turn on browser notifications";
 }
 function saveNotifUI(){lsSet("notif",Object.assign(nSet(),{daily:$("nDaily").checked,streak:$("nStreak").checked,goals:$("nGoals").checked,improve:$("nImprove").checked,plan:$("nPlan").checked,freeOnly:$("nFree").checked,time:$("nTime").value}));renderNotif()}
-function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"Settings",subjectsPanel:"Portfolio",assistantPanel:"Smart Assistant",statsPanel:"Percentages",plannerPanel:"Plans",notifPanel:"Notifications",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel()}window.openPanel=openPanel;
+function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"Settings",subjectsPanel:"Portfolio",assistantPanel:"AI Coach",statsPanel:"Percentages",plannerPanel:"Plans",notifPanel:"Notifications",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel()}window.openPanel=openPanel;
 function updateShare(){const sl=$("pslug").value.trim().toLowerCase();if(sl)$("plink").value=location.origin+location.pathname+"?u="+sl}
 async function loadProfile(){
   const {data:p}=await sb.from("profiles").select("*").eq("user_id",uid).maybeSingle();
@@ -1939,7 +1942,7 @@ function careerScores(){
     return {f,n:FIELDS[f].n,m:FIELDS[f].m,score:Math.round(Math.min(100,score)),why:[...new Set(v.why)].slice(0,4)}}).sort((a,b)=>b.score-a.score);
 }
 
-/* ---------- Smart Assistant panel ---------- */
+/* ---------- AI Coach panel ---------- */
 let asstTab="chance";
 const goBtn=(text,fn,cls)=>{const b=el("button",text,"main "+(cls||"go"));b.type="button";b.onclick=fn;return b};
 const emptyMsg=(box,text,btn,fn)=>{box.appendChild(el("p",text,"mu"));if(btn)box.appendChild(goBtn(btn,fn))};
@@ -2138,7 +2141,7 @@ function renderSiteSet(){
     opts.forEach(([v,n])=>{const b=el("button",n,"big-opt"+(v===val?" on":""));b.type="button";b.onclick=()=>{fn(v);renderSiteSet()};r.appendChild(b)});box.appendChild(r)};
   grp("Site language",[["en","English"],["ru","Русский"],["kk","Қазақша"]],siteLang,v=>{setLang(v)});
   grp("Theme",[["light","☀️ Light"],["dark","🌙 Dark"]],document.documentElement.dataset.theme,v=>setTheme(v));
-  grp("Open the site on",[["overview","🏠 Overview"],["assistantPanel","✨ Smart Assistant"],["addPanel","✏️ Add Exam"],["plannerPanel","📅 Plans"]],lsGet("start_page","overview"),v=>lsSet("start_page",v));
+  grp("Open the site on",[["overview","🏠 Overview"],["assistantPanel","✨ AI Coach"],["addPanel","✏️ Add Exam"],["plannerPanel","📅 Plans"]],lsGet("start_page","overview"),v=>lsSet("start_page",v));
   {const sh=el("div","Share my profile","step");box.appendChild(sh);
   const r=el("div",null,"save-bar");const cp=el("button","Copy profile link","main go");cp.type="button";cp.onclick=async()=>{try{await navigator.clipboard.writeText($("plink").value);cp.lastChild.textContent=tr("Copied!")}catch(e){}};
   r.appendChild(cp);box.appendChild(r);}
@@ -2159,6 +2162,7 @@ let siteLang=lsGet("site_lang","en");
 const TRL=`Overview|Обзор|Шолу
 Add Exam|Добавить экзамен|Емтихан қосу
 Smart Assistant|Smart Ассистент|Smart Ассистент
+AI Coach|AI-коуч|AI-коуч
 Progress|Прогресс|Прогресс
 Percentages|Проценты|Пайыздар
 Goals|Цели|Мақсаттар
@@ -2313,7 +2317,7 @@ Theme|Тема|Тақырып
 🌙 Dark|🌙 Тёмная|🌙 Қараңғы
 Open the site on|Открывать сайт на|Сайтты ашқанда
 🏠 Overview|🏠 Обзор|🏠 Шолу
-✨ Smart Assistant|✨ Smart Ассистент|✨ Smart Ассистент
+✨ AI Coach|✨ AI-коуч|✨ AI-коуч
 ✏️ Add Exam|✏️ Добавить экзамен|✏️ Емтихан қосу
 📅 Plans|📅 Планы|📅 Жоспарлар
 Share my profile|Поделиться профилем|Профильмен бөлісу
