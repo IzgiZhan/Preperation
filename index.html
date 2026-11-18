@@ -2117,12 +2117,12 @@ async function runAI(k,force){
   aiBusy[k]=true;aiErr[k]="";renderAssistant();
   const c=a.now,dl=deadlines[k]||null;
   const body={language:{en:"English",ru:"Russian",kk:"Kazakh"}[asstLang]||"English",exam:EX[k].n,max_score:a.mx,goal:goalOf(k),exam_date:dl,days_left:dl?daysTo(dl):null,today:today(),
-    chance_percent:c?c.p:null,forecast_on_exam_date:c?c.projR:null,history:attemptsOf(k).slice(-10).map(x=>({date:x.date,score:x.score})),
+    chance_percent:c?c.p:null,forecast_on_exam_date:c?c.projR:null,history:attemptsOf(k).slice(-6).map(x=>({date:x.date,score:x.score})),
     last_practice:{date:a.date,total:a.tot,change:a.ch,sections:a.secs.map(s=>({name:s.name,score:s.score,max:s.mx,needed_for_goal:s.tg!=null?roundTo(k,s.tg):null,change:s.ch}))},
     not_practiced_recently:a.stale.map(s=>s.name),
-    portfolio:portfolio.map(p=>{const t=topicOf(p.topic);return t?{topic:t.n,level:levName(p.level),results:achText(p)}:null}).filter(Boolean),
+    portfolio:portfolio.map(p=>{const t=topicOf(p.topic);return t?{topic:t.n,level:levName(p.level)}:null}).filter(Boolean).slice(0,8),
     career_fields:careerScores().filter(x=>x.score>0).slice(0,3).map(x=>({field:x.n,match_percent:x.score})),
-    style:"Use very simple words. Keep every item short (max 12 words)."};
+    style:"Use very simple words. Keep every item short (max 12 words). Answer quickly."};
   let data,error;try{({data,error}=await sb.functions.invoke("smart-assistant",{body}))}catch(e){error=e}
   aiBusy[k]=false;
   if(error||!data||data.error){aiErr[k]=await errDetail(error,data);renderAssistant();return}
