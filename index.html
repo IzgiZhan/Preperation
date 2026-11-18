@@ -2032,7 +2032,7 @@ function chanceBlock(k){
       const r=infoRow(x.name,x.n?x.p+"%":"no results yet");
       const bb=r.querySelector("b");bb.style.color=x.n?(x.p>=70?"var(--ok,#16a34a)":x.p>=40?"#f59e0b":"var(--bad)"):"var(--mu)";
       if(x.n){const sm=document.createElement("small");
-        sm.textContent="goal "+fs(k,x.tg)+" \u00b7 reached "+x.hit+" of "+x.of;
+        sm.textContent="goal "+fs(k,x.tg);
         sm.style.cssText="display:block;font-weight:600;color:var(--mu)";bb.appendChild(sm)}
       pb.appendChild(r)});
     b.appendChild(pb);
