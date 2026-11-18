@@ -1278,9 +1278,13 @@ function showCoach(data,T,mine){
   $("coach").replaceChildren(...out);
 }
 async function errDetail(error,data){
-  try{if(error&&error.context&&error.context.text){const t=await error.context.text();return "Details: "+(error.context.status||"")+" "+t.slice(0,300)}}catch(e){}
-  if(data&&data.error)return "Details: "+data.error+(data.detail?" - "+data.detail:"");
-  return "Details: "+((error&&error.message)||"unknown error");
+  const say=o=>o&&(o.detail||o.error)?String(o.detail||o.error):"";
+  try{if(error&&error.context&&error.context.text){
+    const t=await error.context.text();
+    let j=null;try{j=JSON.parse(t)}catch(e){}
+    return say(j)||t.slice(0,300)||"HTTP "+(error.context.status||"?");
+  }}catch(e){}
+  return say(data)||(error&&error.message)||"unknown error";
 }
 async function coach(force){
   const ex=coachEx,isE=ex==="ENT",lk=isE?entLang:"en",T=TT[lk],box=$("coach"),btn=$("ask");
@@ -2099,6 +2103,7 @@ async function pingAI(box,btn){
   if(data.openai_key)lines.push("\u2713 OPENAI_API_KEY is set");
   lines.push("GEMINI_MODEL = "+data.gemini_model_secret);
   if(data.key_works!==undefined)lines.push((data.key_works?"\u2713":"\u2717")+" the key "+(data.key_works?"works":"does not work"));
+  if(data.test_model)lines.push((data.test_ok?"\u2713":"\u2717")+" test on "+data.test_model+(data.test_ok?" answered":" failed: "+(data.test_error||"")));
   if(data.models_you_can_use&&data.models_you_can_use.length)lines.push("Models you can use: "+data.models_you_can_use.join(", "));
   w.append(el("b",data.problem?"Found the problem":"Setup looks fine"));
   if(data.problem)w.appendChild(el("p",data.problem));
