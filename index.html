@@ -400,6 +400,12 @@ button.danger{background:linear-gradient(180deg,color-mix(in srgb,var(--bad) 84%
 .nav-btn,.side-btn,.logout-link{border-radius:14px}
 @media(hover:none){.xcard:hover{transform:none}button.main:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.ai-err{border:1px solid #f3c2c2;background:#fff5f5;border-radius:12px;padding:12px 14px;margin:8px 0}
+.ai-err b{display:block;color:#b42318;margin-bottom:4px}
+.ai-err p,.ai-err li{font-size:13.5px;line-height:1.45;word-break:break-word;margin:3px 0}
+.ai-err ul{margin:6px 0 0;padding-left:18px}
+:root[data-theme=dark] .ai-err{border-color:#5a2a2a;background:#2a1a1a}
+:root[data-theme=dark] .ai-err b{color:#ff9a90}
 .goal-head{display:flex;align-items:center;gap:10px}.goal-head .left-pill{margin-right:auto}
 .pg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px 14px;margin:2px 0 10px}
 .pg-grid>div{display:flex;flex-direction:column}
@@ -2070,8 +2076,34 @@ function aiBox(k,a){
     list("This week",rep.next_steps,x=>String(x));
     if(rep.motivation){const m=el("p",rep.motivation);m.style.fontStyle="italic";box.appendChild(m)}
     const r=el("button","Ask again","hbtn");r.type="button";r.onclick=()=>runAI(k,true);box.appendChild(r);return box}
-  if(aiErr[k])box.appendChild(el("p","AI is not working now. "+aiErr[k],"mu"));
-  const go=el("button",aiErr[k]?"Try again":"Ask AI","main ai");go.type="button";go.onclick=()=>runAI(k,true);box.appendChild(go);return box;
+  if(aiErr[k]){
+    const w=el("div",null,"ai-err");
+    w.append(el("b","AI did not answer"),el("p",aiErr[k]));
+    box.appendChild(w);
+  }
+  const bar=el("div",null,"chips");
+  const go=el("button",aiErr[k]?"Try again":"Ask AI","main ai");go.type="button";go.onclick=()=>runAI(k,true);bar.appendChild(go);
+  if(aiErr[k]){const chk=el("button","Check the AI setup","hbtn");chk.type="button";chk.onclick=()=>pingAI(box,chk);bar.appendChild(chk)}
+  box.appendChild(bar);return box;
+}
+// asks the Edge Function what it can see: which key, which models, what is wrong
+async function pingAI(box,btn){
+  btn.disabled=true;btn.textContent="Checking\u2026";
+  let data,error;try{({data,error}=await sb.functions.invoke("smart-assistant",{body:{ping:true}}))}catch(e){error=e}
+  btn.disabled=false;btn.textContent="Check the AI setup";
+  const w=el("div",null,"ai-err");
+  if(error||!data){w.append(el("b","Could not reach the function"),el("p",await errDetail(error,data)),
+    el("p","The smart-assistant function is probably not deployed, or it is paused in Supabase."));box.appendChild(w);return}
+  const lines=[];
+  lines.push((data.gemini_key?"\u2713":"\u2717")+" GEMINI_API_KEY "+(data.gemini_key?"is set":"is missing"));
+  if(data.openai_key)lines.push("\u2713 OPENAI_API_KEY is set");
+  lines.push("GEMINI_MODEL = "+data.gemini_model_secret);
+  if(data.key_works!==undefined)lines.push((data.key_works?"\u2713":"\u2717")+" the key "+(data.key_works?"works":"does not work"));
+  if(data.models_you_can_use&&data.models_you_can_use.length)lines.push("Models you can use: "+data.models_you_can_use.join(", "));
+  w.append(el("b",data.problem?"Found the problem":"Setup looks fine"));
+  if(data.problem)w.appendChild(el("p",data.problem));
+  const ul=el("ul");lines.forEach(t=>ul.appendChild(el("li",t)));w.appendChild(ul);
+  box.appendChild(w);
 }
 async function runAI(k,force){
   const a=analyze(k);if(!a||!uid||aiBusy[k])return;
