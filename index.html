@@ -400,6 +400,19 @@ button.danger{background:linear-gradient(180deg,color-mix(in srgb,var(--bad) 84%
 .nav-btn,.side-btn,.logout-link{border-radius:14px}
 @media(hover:none){.xcard:hover{transform:none}button.main:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.chat-log{max-height:46vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:2px 2px 6px}
+.chat-log .chips{margin-top:6px}
+.msg{display:flex}.msg.me{justify-content:flex-end}
+.bub{max-width:82%;padding:10px 13px;border-radius:14px;font-size:14.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.msg.me .bub{background:var(--ac);color:#fff;border-bottom-right-radius:5px}
+.msg.ai .bub{background:var(--bg2,#f2f3f7);border-bottom-left-radius:5px}
+:root[data-theme=dark] .msg.ai .bub{background:#2a2a2e}
+.chat-row{display:flex;gap:8px;align-items:flex-end;margin-top:10px}
+.chat-in{flex:1;resize:none;min-height:44px;max-height:140px;padding:11px 14px;border:1px solid var(--bd);border-radius:14px;
+ background:var(--card);color:inherit;font:inherit;font-size:14.5px;line-height:1.4}
+.chat-in:focus{outline:none;border-color:var(--ac)}
+.chat-send{width:44px;height:44px;flex:none;border:0;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;cursor:pointer}
+.chat-send:disabled{opacity:.5;cursor:default}.chat-send svg{width:19px;height:19px}
 .ai-err{border:1px solid #f3c2c2;background:#fff5f5;border-radius:12px;padding:12px 14px;margin:8px 0}
 .ai-err b{display:block;color:#b42318;margin-bottom:4px}
 .ai-err p,.ai-err li{font-size:13.5px;line-height:1.45;word-break:break-word;margin:3px 0}
@@ -1024,7 +1037,7 @@ async function add(){
 }
 async function del(id){await sb.from("entries").delete().eq("id",id);load()}
 $("add").onclick=add;
-const ICP={up:'<path d="M7 17 17 7M8 7h9v9"/>',down:'<path d="M7 7l10 10M17 8v9H8"/>',flat:'<path d="M5 12h14M15 8l4 4-4 4"/>',
+const ICP={send:'<path d="M4.5 12 20 4.5 15.5 20 12 13z"/><path d="M12 13 4.5 12"/>',up:'<path d="M7 17 17 7M8 7h9v9"/>',down:'<path d="M7 7l10 10M17 8v9H8"/>',flat:'<path d="M5 12h14M15 8l4 4-4 4"/>',
 edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',save:'<path d="m5 12.5 4.5 4.5L19 7"/>',cancel:'<path d="M6 6l12 12M18 6 6 18"/>',
 details:'<path d="m6 9 6 6 6-6"/>',hide:'<path d="m6 15 6-6 6 6"/>',plus:'<path d="M12 5v14M5 12h14"/>',
 camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',key:'<circle cx="8" cy="15" r="4"/><path d="m11 12 8-8M16 7l3 3"/>',
@@ -2000,6 +2013,60 @@ function careerScores(){
 
 /* ---------- AI Coach panel ---------- */
 let asstTab="chance";
+let chatLog=[],chatBusy=false,chatErr="";
+const CHAT_KEY="ai_chat";
+function chatLoad(){try{chatLog=lsGet(CHAT_KEY,[])||[]}catch(e){chatLog=[]}if(!Array.isArray(chatLog))chatLog=[]}
+function chatSave(){lsSet(CHAT_KEY,chatLog.slice(-30))}
+// a short picture of the student so answers are about them, not about exams in general
+function chatContext(k){
+  const c=chanceOf(k),l=attemptsOf(k).slice(-1)[0],pg=partGoals[k]||{};
+  return {exam:EX[k].n,max:EX[k].max,goal:goalOf(k),exam_date:deadlines[k]||null,
+    days_left:deadlines[k]?daysTo(deadlines[k]):null,
+    last_score:l?l.score:null,chance_percent:c?c.p:null,
+    part_goals:partDefs(k).filter(p=>pg[p.id]>0).map(p=>({part:p.name,goal:pg[p.id]})),
+    weak_parts:c&&c.parts.length?c.parts.slice().sort((a,b)=>a.p-b.p).slice(0,2).map(x=>x.name):[]};
+}
+function chatBlock(k){
+  const b=el("div",null,"block");
+  chatLoad();
+  const log=el("div",null,"chat-log");
+  if(!chatLog.length){
+    log.appendChild(el("p","Ask me anything about your exams, study plan, subjects or university choice.","mu"));
+    const q=el("div",null,"chips");
+    ["How do I fix my weakest part?","Make me a plan for this week","What universities fit my portfolio?","Explain my chance in simple words"]
+      .forEach(t=>{const c=el("button",t,"hbtn");c.type="button";c.onclick=()=>chatSend(k,(siteLang!=="en"&&tr1(t))||t);q.appendChild(c)});
+    log.appendChild(q);
+  }
+  chatLog.forEach(m=>{const r=el("div",null,"msg "+(m.role==="ai"?"ai":"me"));r.appendChild(el("div",m.text,"bub"));log.appendChild(r)});
+  if(chatBusy){const r=el("div",null,"msg ai");r.appendChild(el("div","\u2026","bub"));log.appendChild(r)}
+  b.appendChild(log);
+  if(chatErr){const w=el("div",null,"ai-err");w.append(el("b","Chat did not answer"),el("p",chatErr));b.appendChild(w)}
+  const row=el("div",null,"chat-row"),ta=document.createElement("textarea");
+  ta.rows=1;ta.placeholder="Write your question\u2026";ta.className="chat-in";ta.disabled=chatBusy;
+  const send=el("button",null,"chat-send");send.type="button";send.innerHTML=IC("send");send.title="Send";send.disabled=chatBusy;
+  const fire=()=>{const t=ta.value.trim();if(t)chatSend(k,t)};
+  send.onclick=fire;
+  ta.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();fire()}};
+  ta.oninput=()=>{ta.style.height="auto";ta.style.height=Math.min(140,ta.scrollHeight)+"px"};
+  row.append(ta,send);b.appendChild(row);
+  if(chatLog.length){const cl=el("button","Clear chat","hbtn gray");cl.type="button";
+    cl.onclick=()=>{chatLog=[];chatSave();renderAssistant()};b.appendChild(cl)}
+  setTimeout(()=>{log.scrollTop=log.scrollHeight;if(!chatBusy)ta.focus()},30);
+  return b;
+}
+async function chatSend(k,text){
+  if(chatBusy)return;
+  chatLoad();
+  chatLog.push({role:"me",text});chatSave();
+  chatBusy=true;chatErr="";renderAssistant();
+  const body={chat:true,language:{en:"English",ru:"Russian",kk:"Kazakh"}[asstLang]||"English",
+    context:chatContext(k),messages:chatLog.slice(-10).map(m=>({role:m.role,text:m.text}))};
+  let data,error;try{({data,error}=await sb.functions.invoke("smart-assistant",{body}))}catch(e){error=e}
+  chatBusy=false;
+  if(error||!data||data.error||!data.reply){chatErr=await errDetail(error,data);renderAssistant();return}
+  chatLog.push({role:"ai",text:data.reply});chatSave();
+  renderAssistant();
+}
 const goBtn=(text,fn,cls)=>{const b=el("button",text,"main "+(cls||"go"));b.type="button";b.onclick=fn;return b};
 const emptyMsg=(box,text,btn,fn)=>{box.appendChild(el("p",text,"mu"));if(btn)box.appendChild(goBtn(btn,fn))};
 function renderAssistant(){
@@ -2008,10 +2075,10 @@ function renderAssistant(){
   box.replaceChildren();
   const exc=el("div",null,"chips");chips(exc,asstEx,k=>{asstEx=k;renderAssistant()});box.appendChild(exc);
   const tabs=el("div",null,"seg tabs");
-  [["chance","🎯 Chance"],["test","📝 Last test"],["plan","📅 Plan"],["career","🧭 Careers"]].forEach(([k,n])=>{const b=el("button",n,"seg-btn"+(k===asstTab?" on":""));b.type="button";b.onclick=()=>{asstTab=k;renderAssistant()};tabs.appendChild(b)});
+  [["chance","🎯 Chance"],["test","📝 Last test"],["plan","📅 Plan"],["career","🧭 Careers"],["chat","💬 Chat"]].forEach(([k,n])=>{const b=el("button",n,"seg-btn"+(k===asstTab?" on":""));b.type="button";b.onclick=()=>{asstTab=k;renderAssistant()};tabs.appendChild(b)});
   box.appendChild(tabs);
   const k=asstEx;
-  box.appendChild(asstTab==="test"?practiceBlock(k):asstTab==="plan"?scheduleBlock(k):asstTab==="career"?careerBlock():chanceBlock(k));
+  box.appendChild(asstTab==="test"?practiceBlock(k):asstTab==="plan"?scheduleBlock(k):asstTab==="career"?careerBlock():asstTab==="chat"?chatBlock(k):chanceBlock(k));
 }
 function chanceBlock(k){
   const b=el("div",null,"block"),g=goalOf(k),dl=deadlines[k];
@@ -2327,6 +2394,16 @@ Goal score|Целевой балл|Мақсатты балл
 Date to reach it|Дата экзамена|Емтихан күні
 Not set|Не задано|Белгіленбеген
 No goal yet.|Цели пока нет.|Әзірге мақсат жоқ.
+💬 Chat|💬 Чат|💬 Чат
+Ask me anything about your exams, study plan, subjects or university choice.|Спроси что угодно про экзамены, план учёбы, предметы или выбор вуза.|Емтихан, оқу жоспары, пәндер немесе университет туралы кез келген нәрсені сұра.
+How do I fix my weakest part?|Как подтянуть самую слабую часть?|Ең әлсіз бөлімді қалай көтеремін?
+Make me a plan for this week|Составь план на эту неделю|Осы аптаға жоспар құрып бер
+What universities fit my portfolio?|Какие вузы подходят моему портфолио?|Портфолиома қандай университеттер сай келеді?
+Explain my chance in simple words|Объясни мой шанс простыми словами|Шансымды қарапайым сөзбен түсіндір
+Write your question…|Напиши свой вопрос…|Сұрағыңды жаз…
+Clear chat|Очистить чат|Чатты тазалау
+Chat did not answer|Чат не ответил|Чат жауап бермеді
+Send|Отправить|Жіберу
 Goal for each part|Цель по каждой части|Әр бөлім бойынша мақсат
 Goal for each subject|Цель по каждому предмету|Әр пән бойынша мақсат
 Overall goal (counted for you)|Общая цель (считается сама)|Жалпы мақсат (өзі саналады)
