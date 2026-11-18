@@ -445,19 +445,69 @@ button.x:hover{transform:scale(1.08)}button.x:active{transform:scale(.92)}
 .nav-btn:active,.logout-link:active{transform:scale(.985)}
 @media(hover:none){.xcard:hover{transform:none}button.main:hover,.hbtn:hover,.chip:hover,.chat-send:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-.chat-log{max-height:46vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:2px 2px 6px}
-.chat-log .chips{margin-top:6px}
-.msg{display:flex}.msg.me{justify-content:flex-end}
-.bub{max-width:82%;padding:10px 13px;border-radius:14px;font-size:14.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
-.msg.me .bub{background:var(--ac);color:#fff;border-bottom-right-radius:5px}
-.msg.ai .bub{background:var(--bg2,#f2f3f7);border-bottom-left-radius:5px}
-:root[data-theme=dark] .msg.ai .bub{background:#2a2a2e}
-.chat-row{display:flex;gap:8px;align-items:flex-end;margin-top:10px}
-.chat-in{flex:1;resize:none;min-height:44px;max-height:140px;padding:11px 14px;border:1px solid var(--bd);border-radius:14px;
- background:var(--card);color:inherit;font:inherit;font-size:14.5px;line-height:1.4}
-.chat-in:focus{outline:none;border-color:var(--ac)}
-.chat-send{width:44px;height:44px;flex:none;border:0;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;cursor:pointer}
-.chat-send:disabled{opacity:.5;cursor:default}.chat-send svg{width:19px;height:19px}
+.chat-log{max-height:52vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:4px 2px 8px;scroll-behavior:smooth}
+.chat-log .chips{margin-top:10px;justify-content:center}
+
+/* empty state */
+.chat-hero{text-align:center;padding:22px 10px 6px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.chat-hero-ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#fff;
+ background:linear-gradient(135deg,#7c3aed,#db2777);box-shadow:0 10px 24px -10px rgba(124,58,237,.65)}
+.chat-hero-ic svg{width:26px;height:26px}
+.chat-hero b{font-size:17px}
+.chat-hero p{max-width:420px;margin:0}
+
+/* rows */
+.msg{display:flex;gap:9px;align-items:flex-end}
+.msg.ai{align-items:flex-start}
+.msg.me{justify-content:flex-end}
+.msg-av{width:30px;height:30px;flex:none;border-radius:50%;display:grid;place-items:center;color:#fff;
+ background:linear-gradient(135deg,#7c3aed,#db2777);box-shadow:0 4px 10px -4px rgba(124,58,237,.6)}
+.msg-av svg{width:16px;height:16px}
+
+/* bubbles */
+.bub{position:relative;max-width:min(600px,80%);padding:12px 15px;border-radius:18px;font-size:14.8px;line-height:1.55;word-break:break-word}
+.msg.me .bub{background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 92%,#fff),var(--ac));color:#fff;
+ border-bottom-right-radius:6px;box-shadow:0 6px 16px -8px color-mix(in srgb,var(--ac) 85%,transparent);white-space:pre-wrap}
+.msg.ai .bub{background:var(--card);border:1px solid var(--bd);border-bottom-left-radius:6px;
+ box-shadow:0 2px 8px -4px rgba(16,24,40,.14);padding-right:38px}
+:root[data-theme=dark] .msg.ai .bub{background:#232327;border-color:#34343a;box-shadow:none}
+
+/* answer formatting */
+.bub .md-p{margin:0 0 8px}
+.bub .md-p:last-child{margin-bottom:0}
+.bub .md-h{font-weight:700}
+.bub .md-list{margin:0 0 8px;padding-left:20px;display:flex;flex-direction:column;gap:5px}
+.bub .md-list:last-child{margin-bottom:0}
+.bub .md-list li{padding-left:2px}
+.bub .md-list li::marker{color:var(--ac);font-weight:700}
+.bub strong{font-weight:700}
+.bub code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;
+ background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:1px 5px}
+
+/* copy */
+.bub-copy{position:absolute;top:7px;right:7px;width:26px;height:26px;padding:0;border:0;border-radius:8px;
+ background:transparent;color:var(--mu);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .18s,background .18s,color .18s}
+.msg.ai:hover .bub-copy,.bub-copy:focus-visible{opacity:1}
+.bub-copy:hover{background:var(--bg);color:var(--ac)}
+.bub-copy.ok{opacity:1;color:var(--ok,#16a34a)}
+.bub-copy svg{width:15px;height:15px}
+@media(hover:none){.bub-copy{opacity:.55}}
+
+/* typing */
+.bub.typing{display:flex;gap:5px;align-items:center;padding:15px 16px}
+.bub.typing i{width:7px;height:7px;border-radius:50%;background:var(--mu);display:block;animation:tdot 1.3s infinite ease-in-out}
+.bub.typing i:nth-child(2){animation-delay:.18s}.bub.typing i:nth-child(3){animation-delay:.36s}
+@keyframes tdot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+
+/* composer */
+.chat-row{display:flex;gap:9px;align-items:flex-end;margin-top:14px}
+.chat-in{flex:1;resize:none;min-height:46px;max-height:140px;padding:12px 16px;border:1px solid var(--bd);border-radius:16px;
+ background:var(--card);color:inherit;font:inherit;font-size:14.8px;line-height:1.45;
+ box-shadow:0 1px 2px rgba(16,24,40,.05);transition:border-color .18s,box-shadow .18s}
+.chat-in:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 16%,transparent)}
+.chat-send{width:46px;height:46px;flex:none;border:0;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;cursor:pointer}
+.chat-send:disabled{opacity:.45;cursor:default}.chat-send svg{width:19px;height:19px}
+@media(max-width:820px){.bub{max-width:88%;font-size:14.2px}.chat-log{max-height:58vh}}
 .ai-err{border:1px solid #f3c2c2;background:#fff5f5;border-radius:12px;padding:12px 14px;margin:8px 0}
 .ai-err b{display:block;color:#b42318;margin-bottom:4px}
 .ai-err p,.ai-err li{font-size:13.5px;line-height:1.45;word-break:break-word;margin:3px 0}
@@ -1084,7 +1134,7 @@ async function add(){
 }
 async function del(id){await sb.from("entries").delete().eq("id",id);load()}
 $("add").onclick=add;
-const ICP={send:'<path d="M4.5 12 20 4.5 15.5 20 12 13z"/><path d="M12 13 4.5 12"/>',up:'<path d="M7 17 17 7M8 7h9v9"/>',down:'<path d="M7 7l10 10M17 8v9H8"/>',flat:'<path d="M5 12h14M15 8l4 4-4 4"/>',
+const ICP={copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',send:'<path d="M4.5 12 20 4.5 15.5 20 12 13z"/><path d="M12 13 4.5 12"/>',up:'<path d="M7 17 17 7M8 7h9v9"/>',down:'<path d="M7 7l10 10M17 8v9H8"/>',flat:'<path d="M5 12h14M15 8l4 4-4 4"/>',
 edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',save:'<path d="m5 12.5 4.5 4.5L19 7"/>',cancel:'<path d="M6 6l12 12M18 6 6 18"/>',
 details:'<path d="m6 9 6 6 6-6"/>',hide:'<path d="m6 15 6-6 6 6"/>',plus:'<path d="M12 5v14M5 12h14"/>',
 camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',key:'<circle cx="8" cy="15" r="4"/><path d="m11 12 8-8M16 7l3 3"/>',
@@ -2073,19 +2123,70 @@ function chatContext(k){
     part_goals:partDefs(k).filter(p=>pg[p.id]>0).map(p=>({part:p.name,goal:pg[p.id]})),
     weak_parts:c&&c.parts.length?c.parts.slice().sort((a,b)=>a.p-b.p).slice(0,2).map(x=>x.name):[]};
 }
+// small, safe markdown: no innerHTML, every piece becomes a real DOM node
+function mdInline(str,parent){
+  const re=/\*\*([^*\n]+)\*\*|__([^_\n]+)__|`([^`\n]+)`|(?<!\*)\*([^*\n]+)\*(?!\*)/g;
+  let i=0,m;
+  while((m=re.exec(str))){
+    if(m.index>i)parent.appendChild(document.createTextNode(str.slice(i,m.index)));
+    const tag=m[3]?"code":m[4]?"em":"strong",n=document.createElement(tag);
+    n.textContent=m[1]||m[2]||m[3]||m[4];parent.appendChild(n);
+    i=re.lastIndex;
+  }
+  if(i<str.length)parent.appendChild(document.createTextNode(str.slice(i)));
+}
+function mdRender(text){
+  const frag=document.createDocumentFragment(),lines=String(text).replace(/\r/g,"").split("\n");
+  let list=null;
+  const flush=()=>{if(list){frag.appendChild(list);list=null}};
+  lines.forEach(ln=>{
+    const t=ln.trim();
+    if(!t){flush();return}
+    const b=t.match(/^[-*\u2022]\s+(.*)$/),n=t.match(/^(\d+)[.)]\s+(.*)$/);
+    if(b||n){
+      const want=n?"OL":"UL";
+      if(!list||list.tagName!==want){flush();list=document.createElement(want);list.className="md-list"}
+      const li=document.createElement("li");mdInline(b?b[1]:n[2],li);list.appendChild(li);return;
+    }
+    flush();
+    const h=t.match(/^#{1,4}\s+(.*)$/),p=document.createElement("p");
+    p.className=h?"md-p md-h":"md-p";mdInline(h?h[1]:t,p);frag.appendChild(p);
+  });
+  flush();
+  return frag;
+}
+function chatRow(m){
+  const r=el("div",null,"msg "+(m.role==="ai"?"ai":"me"));
+  if(m.role==="ai"){const av=el("div",null,"msg-av");av.innerHTML=IC("spark");r.appendChild(av)}
+  const bub=el("div",null,"bub");
+  if(m.role==="ai"){
+    bub.appendChild(mdRender(m.text));
+    const c=el("button",null,"bub-copy");c.type="button";c.title="Copy";c.innerHTML=IC("copy");
+    c.onclick=async()=>{try{await navigator.clipboard.writeText(m.text);c.classList.add("ok");setTimeout(()=>c.classList.remove("ok"),1200)}catch(e){}};
+    bub.appendChild(c);
+  }else bub.textContent=m.text;
+  r.appendChild(bub);
+  return r;
+}
 function chatBlock(k){
   const b=el("div",null,"block");
   chatLoad();
   const log=el("div",null,"chat-log");
   if(!chatLog.length){
-    log.appendChild(el("p","Ask me anything about your exams, study plan, subjects or university choice.","mu"));
+    const hero=el("div",null,"chat-hero"),ic=el("div",null,"chat-hero-ic");ic.innerHTML=IC("spark");
+    hero.append(ic,el("b","AI Coach"),el("p","Ask me anything about your exams, study plan, subjects or university choice.","mu"));
+    log.appendChild(hero);
     const q=el("div",null,"chips");
     ["How do I fix my weakest part?","Make me a plan for this week","What universities fit my portfolio?","Explain my chance in simple words"]
       .forEach(t=>{const c=el("button",t,"hbtn");c.type="button";c.onclick=()=>chatSend(k,(siteLang!=="en"&&tr1(t))||t);q.appendChild(c)});
     log.appendChild(q);
   }
-  chatLog.forEach(m=>{const r=el("div",null,"msg "+(m.role==="ai"?"ai":"me"));r.appendChild(el("div",m.text,"bub"));log.appendChild(r)});
-  if(chatBusy){const r=el("div",null,"msg ai");r.appendChild(el("div","\u2026","bub"));log.appendChild(r)}
+  chatLog.forEach(m=>log.appendChild(chatRow(m)));
+  if(chatBusy){
+    const r=el("div",null,"msg ai"),av=el("div",null,"msg-av");av.innerHTML=IC("spark");
+    const bub=el("div",null,"bub typing");bub.innerHTML="<i></i><i></i><i></i>";
+    r.append(av,bub);log.appendChild(r);
+  }
   b.appendChild(log);
   if(chatErr){const w=el("div",null,"ai-err");w.append(el("b","Chat did not answer"),el("p",chatErr));b.appendChild(w)}
   const row=el("div",null,"chat-row"),ta=document.createElement("textarea");
