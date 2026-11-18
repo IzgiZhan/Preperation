@@ -890,18 +890,16 @@ function renderProgressExtra(){
   $("cmpBox").innerHTML=h+"</div>";
   const C2="--cols:minmax(0,1.4fr) repeat(3,minmax(0,.8fr)) 64px 78px";
   let g=`<div class="tbl"><div class="tbl-h" style="${C2}"><span>Section</span><span class="n">Latest</span><span class="n">Best</span><span class="n">Average</span><span class="n">Change</span><span class="n">To goal</span></div>`;
-  const goal=typeof targets!=="undefined"&&targets[k]>0?targets[k]:null,D=examPartsFor(k).map(p=>{
+  const D=examPartsFor(k).map(p=>{
     const es=entries.filter(e=>e.exam===k&&e.subject===p.id&&inRange(e.date)).sort((x,y)=>x.date<y.date?-1:x.date>y.date?1:(x.ts||0)-(y.ts||0)),v=es.map(e=>e.score),mx=maxOf(k,p.id);
     return {p,v,mx,l:v[v.length-1],le:es[es.length-1]}}),have=D.filter(x=>x.v.length),weak=have.length>1?have.reduce((a,b)=>b.l/b.mx<a.l/a.mx?b:a):null;
   D.forEach(({p,v,mx,l,le})=>{
     if(!v.length){g+=`<div class="tbl-r" style="${C2}"><b>${p.name}</b><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span><span class="n mu">\u2014</span></div>`;return}
     const d=v.length>1?+(l-v[v.length-2]).toFixed(2):0,avg=+(v.reduce((t,x)=>t+x,0)/v.length).toFixed(2),avgR=k==="IELTS"?Math.round(avg*2)/2:avg;
     let gap='<span class="n mu">\u2014</span>';
-    if(goal){const tg=goal*mx/EX[k].max;gap=l>=tg-1e-9?'<span class="n" style="color:#16a34a">\u2713</span>':`<span class="n" style="display:inline-flex;align-items:center;justify-content:flex-end;gap:4px">${fs(k,+(tg-l).toFixed(k==="IELTS"?1:0))}<span style="width:13px;height:13px;display:inline-flex;opacity:.7;position:relative;top:-3px">${IC("target")}</span></span>`}
-    const w=v.slice(-8);let sp="";
-    if(w.length>1){const a=Math.min(...w),b=Math.max(...w),r=b-a||1;sp=`<svg width="90" height="18" viewBox="0 0 90 18" style="display:block;margin-top:3px"><polyline fill="none" stroke="currentColor" stroke-width="1.6" opacity=".6" points="${w.map((y,n)=>(n*90/(w.length-1)).toFixed(1)+","+(16-(y-a)/r*14).toFixed(1)).join(" ")}"/></svg>`}
-    const tag="";
-    g+=`<div class="tbl-r" style="${C2}"><div><b>${p.name}</b>${tag}${sp}</div><span class="n">${fs(k,l)}${le&&le.rc!=null?` <small class="mu">(${le.rc}/${le.rt})</small>`:""}</span><span class="n">${fs(k,Math.max(...v))}</span><span class="n">${fs(k,avgR)}</span><span class="n">${chg(d)}</span>${gap}</div>`});
+    const tg=partTarget(k,p.id);
+    if(tg){gap=l>=tg-1e-9?'<span class="n" style="color:#16a34a">\u2713</span>':`<span class="n" style="display:inline-flex;align-items:center;justify-content:flex-end;gap:4px">${fs(k,+(tg-l).toFixed(k==="IELTS"?1:0))}<span style="width:13px;height:13px;display:inline-flex;opacity:.7;position:relative;top:-3px">${IC("target")}</span></span>`}
+    g+=`<div class="tbl-r" style="${C2}"><div><b>${p.name}</b></div><span class="n">${fs(k,l)}${le&&le.rc!=null?` <small class="mu">(${le.rc}/${le.rt})</small>`:""}</span><span class="n">${fs(k,Math.max(...v))}</span><span class="n">${fs(k,avgR)}</span><span class="n">${chg(d)}</span>${gap}</div>`});
   $("secStats").innerHTML=g+"</div>";
 }
 function partName(ex,id){if(!id||id==="full")return "Total";if(ex==="ENT")return subName(id);const f=examPartsFor(ex).find(p=>p.id===id);return f?f.name:id[0].toUpperCase()+id.slice(1)}
@@ -1869,18 +1867,62 @@ const roundTo=(k,v)=>{const q=EX[k].step;return +(Math.round(v/q)*q).toFixed(1)}
 function erf(x){const t=1/(1+.3275911*Math.abs(x)),y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-x*x);return x>=0?y:-y}
 const Phi=z=>.5*(1+erf(z/Math.SQRT2));
 // chance = probability that the forecast score on the exam date is at least the goal
+// Fits a line through the recent results, carries the real uncertainty of that
+// line forward to the exam date, and never projects away more than half of the
+// room that is left. No flattering numbers.
+function projectSeries(ys,ds,mx,horizon){
+  const m=ys.length;if(!m)return null;
+  const level=m>=3?ys[m-1]*.5+ys[m-2]*.3+ys[m-3]*.2:m===2?ys[1]*.65+ys[0]*.35:ys[0];
+  let slope=0,se=0,resid=mx*.05;
+  if(m>=3){
+    const xs=ds.map(dayNum),xm=avgA(xs),ym=avgA(ys);
+    let num=0,den=0;for(let i=0;i<m;i++){num+=(xs[i]-xm)*(ys[i]-ym);den+=(xs[i]-xm)**2}
+    if(den>0&&xs[m-1]-xs[0]>=7){
+      slope=num/den;let ss=0;
+      for(let i=0;i<m;i++){const f=ym+slope*(xs[i]-xm);ss+=(ys[i]-f)**2}
+      resid=Math.sqrt(ss/(m-2));se=resid/Math.sqrt(den);          // how shaky the trend itself is
+    }else{const my=avgA(ys);resid=Math.sqrt(ys.reduce((t,y)=>t+(y-my)**2,0)/(m-1))}
+  }else if(m===2)resid=Math.max(Math.abs(ys[1]-ys[0])/1.4,mx*.04);
+  resid=Math.max(resid,mx*.025);
+  slope=clampN(slope,-mx*.02/7,mx*.02/7);
+  let gain=slope*horizon;
+  // growth slows near the ceiling: more time closes more of the gap, never all of it
+  if(gain>0)gain=Math.min(gain,Math.max(0,mx-level)*.8*(1-Math.exp(-horizon/200)));
+  const proj=clampN(level+gain,0,mx);
+  const sig=Math.sqrt(resid*resid*(1+1/m)+(se*horizon)**2+(mx*.006)**2*(horizon/7));
+  return {proj,sig:Math.max(sig,mx*.02),slope,n:m,level};
+}
+// Parts are not independent - a strong student is usually strong everywhere -
+// so the joint chance uses a shared factor instead of multiplying them out.
+function jointP(zs,rho){
+  if(!zs.length)return null;
+  if(zs.length===1)return Phi(zs[0]);
+  const a=Math.sqrt(rho),b=Math.sqrt(1-rho);let s=0,w=0;
+  for(let i=-40;i<=40;i++){const u=i*.1,f=Math.exp(-u*u/2);
+    let pr=1;for(let j=0;j<zs.length;j++)pr*=Phi((zs[j]+a*u)/b);
+    s+=f*pr;w+=f}
+  return s/w;
+}
 function chanceOf(k,att){
   const a=att||attemptsOf(k),g=goalOf(k),dl=deadlines[k]||null,M=EX[k].max;
   if(!a.length||!g)return null;
-  const r=a.slice(-6),n=r.length,last=r[n-1],mean=avgA(r.slice(-3).map(x=>x.score));
-  let slope=0;
-  if(n>=3){const xs=r.map(x=>dayNum(x.date)),ys=r.map(x=>x.score),mx=avgA(xs),my=avgA(ys);let num=0,den=0;for(let i=0;i<n;i++){num+=(xs[i]-mx)*(ys[i]-my);den+=(xs[i]-mx)**2}if(den&&xs[n-1]-xs[0]>=7)slope=num/den}
-  slope=clampN(slope,-M*.03/7,M*.03/7);
-  const horizon=dl?Math.max(0,dayNum(dl)-dayNum(last.date)):0,proj=clampN(mean+slope*horizon,0,M);
-  const ys=r.map(x=>x.score),my=avgA(ys),sd=n>1?Math.sqrt(ys.reduce((s,y)=>s+(y-my)**2,0)/(n-1)):M*.05;
-  const sig=Math.sqrt(Math.max(sd,M*.03)**2+(M*.012)**2*(horizon/7));
-  const p=Math.round(clampN(Phi((proj-g)/sig),.02,.98)*100);
-  return {p,proj,projR:roundTo(k,proj),week:slope*7,n,g,dl};
+  const last=a[a.length-1],horizon=dl?Math.max(0,dayNum(dl)-dayNum(last.date)):0;
+  const T=projectSeries(a.slice(-6).map(x=>x.score),a.slice(-6).map(x=>x.date),M,horizon);
+  // the goal is reached only when every part with a goal of its own is reached
+  const pg=partGoals[k]||{},defs=partDefs(k),cd=last.date,cts=last.ts||0;
+  const parts=[];const zs=[];
+  defs.forEach(p=>{
+    const tg=pg[p.id];if(!(tg>0))return;
+    const es=entries.filter(e=>e.exam===k&&e.subject===p.id&&(e.date<cd||(e.date===cd&&(e.ts||0)<=cts)))
+      .sort((x,y)=>x.date<y.date?-1:x.date>y.date?1:(x.ts||0)-(y.ts||0)).slice(-6);
+    if(!es.length){zs.push(0);parts.push({id:p.id,name:p.name,tg,n:0,p:50});return}
+    const s=projectSeries(es.map(e=>e.score),es.map(e=>e.date),maxOf(k,p.id),horizon),z=(s.proj-tg)/s.sig;
+    zs.push(z);
+    parts.push({id:p.id,name:p.name,tg,n:s.n,proj:s.proj,projR:roundTo(k,s.proj),p:Math.round(clampN(Phi(z),.02,.98)*100)});
+  });
+  const raw=zs.length?jointP(zs,.6):Phi((T.proj-g)/T.sig);
+  return {p:Math.round(clampN(raw,.02,.98)*100),proj:T.proj,projR:roundTo(k,T.proj),week:T.slope*7,
+          n:a.length,g,dl,parts,basis:zs.length?"parts":"total",untested:parts.filter(x=>!x.n).length};
 }
 function sectionStats(k){
   return examPartsFor(k).map(p=>{
@@ -1974,6 +2016,20 @@ function chanceBlock(k){
   info.append(infoRow("Your goal",fs(k,g)),infoRow(dl?"Expected on exam day":"Your level now",fs(k,c.projR)),infoRow("Exam",dl?daysText(daysTo(dl)):"no date"));
   top.appendChild(info);b.appendChild(top);
   const msg=el("p",c.p>=70?"👍 You are on track. Keep going.":c.p>=40?"💪 You can do it. Work on your weak parts.":"⚠️ Hard for now. Follow the plan every day.");msg.style.fontWeight="600";b.appendChild(msg);
+  // show the arithmetic: the whole goal is only reached when every part is
+  if(c.parts.length){
+    b.appendChild(el("div","Chance for each part","step"));
+    const pb=el("div",null,"info");
+    c.parts.slice().sort((x,y)=>x.p-y.p).forEach(x=>{
+      const r=infoRow(x.name,x.n?x.p+"%":"no results yet");
+      const bb=r.querySelector("b");bb.style.color=x.n?(x.p>=70?"var(--ok,#16a34a)":x.p>=40?"#f59e0b":"var(--bad)"):"var(--mu)";
+      if(x.n){const sm=document.createElement("small");sm.textContent=fs(k,x.projR)+" of "+fs(k,x.tg);
+        sm.style.cssText="display:block;font-weight:600;color:var(--mu)";bb.appendChild(sm)}
+      pb.appendChild(r)});
+    b.appendChild(pb);
+    const note=c.untested?"A part with no results counts as a coin flip, so the number stays honest.":"The whole goal counts only if every part reaches its own goal.";
+    b.appendChild(el("p",note,"mu"));
+  }
   const bar=el("div",null,"chips");bar.append(goBtn("What to fix",()=>{asstTab="test";renderAssistant()}));
   const p2=el("button","My plan","hbtn");p2.type="button";p2.onclick=()=>{asstTab="plan";renderAssistant()};bar.appendChild(p2);
   b.appendChild(bar);return b;
@@ -2085,7 +2141,9 @@ function renderStats(){
     const top=el("div",null,"chance");
     top.innerHTML=`<div class="ring sm" style="--p:${ready||0};--rc:${col}"><b>${ready==null?"—":ready+"%"}</b></div><div><b style="font-size:22px;color:${col}">${EX[k].n}</b><div class="mu">${l?(g?"Last "+fs(k,l.score)+" of goal "+fs(k,g):"Last "+fs(k,l.score)+" of "+EX[k].max):"No results yet"}</div></div>`;
     card.appendChild(top);
-    sectionStats(k).forEach(s=>card.appendChild(pRow(s.name,s.n?s.pct:null,s.n?fs(k,s.last)+" / "+s.mx:null)));
+    sectionStats(k).forEach(s=>{
+      const base=s.tg||s.mx,pc=s.n?Math.min(100,Math.round(s.last/base*100)):null;
+      card.appendChild(pRow(s.name,pc,s.n?fs(k,s.last)+" / "+fs(k,base):null))});
     box.appendChild(card)});
   const pb=el("div",null,"block st-long"),ps=portStats();pb.style.setProperty("--c","var(--ac)");
   const top=el("div",null,"chance");top.innerHTML=`<div class="ring sm" style="--p:${ps.overall}"><b>${ps.items.length?ps.overall+"%":"—"}</b></div><div><b style="font-size:22px;color:var(--ac)">Portfolio</b><div class="mu">${ps.items.length?ps.items.length+" topics":"No topics yet"}</div></div>`;
