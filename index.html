@@ -671,6 +671,7 @@ button.main.go::after{content:none;display:none}button.main.go .ico{display:none
 .grp-banner>*{position:relative;z-index:1}
 .grp-banner h2{margin:0;color:#fff;font-size:28px;letter-spacing:-.02em}.grp-banner .gb-n{margin:4px 0 0;color:rgba(255,255,255,.88);font-weight:600}
 .grp-badge.big{width:72px;height:72px;border-radius:22px;font-size:34px;box-shadow:0 0 0 3px rgba(255,255,255,.55)}
+.grp-badge{overflow:hidden}.grp-badge img{width:100%;height:100%;object-fit:cover}
 .pick-prev{display:flex;justify-content:center;margin-bottom:14px}
 .pick-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}
 .pick{width:44px;height:44px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);font-size:22px;display:grid;place-items:center;padding:0}
@@ -3071,17 +3072,24 @@ const people=n=>n+(n===1?" member":" members");
 G.icons={};
 const EMO=["🔥","⚡","🚀","🎯","📚","🏆","🧠","🌟","🦁","🐺","🦅","🐉","🌊","🌿","🍀","💎","👑","🎓","☀️","🌙","🎮","⚽","🎵","🛡️"],COL=["#ef4444","#f97316","#f59e0b","#22c55e","#14b8a6","#0ea5e9","#6366f1","#a855f7","#ec4899","#64748b"];
 function gcol(n){let h=0;for(const x of n)h=(h*31+x.charCodeAt(0))%360;return["hsl("+h+" 80% 58%)","hsl("+((h+40)%360)+" 80% 42%)"]}
-function gbadge(n,id){const ic=G.icons[String(id)],s=el("span",null,"grp-badge");let c1,c2,t;if(ic){const p=ic.split("|");t=p[0];c1=p[1];c2="color-mix(in srgb,"+p[1]+" 60%,#000)"}else{const c=gcol(n);c1=c[0];c2=c[1];t=(n.trim().charAt(0)||"G").toUpperCase()}s.textContent=t;s.style.setProperty("--g1",c1);s.style.setProperty("--g2",c2);return s}
+function gbadge(n,id){const ic=G.icons[String(id)],s=el("span",null,"grp-badge");let c1,c2,t;if(ic&&ic.indexOf("http")===0){const im=document.createElement("img");im.src=ic;im.alt="";s.append(im);c1=gcol(n)[0];c2=gcol(n)[1];t=null}else if(ic){const p=ic.split("|");t=p[0];c1=p[1];c2="color-mix(in srgb,"+p[1]+" 60%,#000)"}else{const c=gcol(n);c1=c[0];c2=c[1];t=(n.trim().charAt(0)||"G").toUpperCase()}if(t!=null)s.textContent=t;s.style.setProperty("--g1",c1);s.style.setProperty("--g2",c2);return s}
 async function loadIcons(ids){try{if(!ids.length)return;const r=await sb.from("group_icons").select("group_id,icon").in("group_id",ids.map(String));(r.data||[]).forEach(x=>{G.icons[x.group_id]=x.icon})}catch(e){}}
-function banner(){const d=el("div",null,"grp-banner"),bg=gbadge(G.gname,G.gid);bg.classList.add("big");const t=el("div");t.append(el("h2",G.gname),el("p",people(G.rows.length),"gb-n"));d.append(bg,t);const ic=G.icons[String(G.gid)];d.style.setProperty("--bc",ic?ic.split("|")[1]:gcol(G.gname)[0]);return d}
-function iconEditor(){const box=el("div",null,"card");box.append(el("h3","Group icon"));
- let cur=(G.icons[String(G.gid)]||"🔥|#6366f1").split("|"),pe=cur[0],pc=cur[1];
- const prev=el("span",null,"grp-badge big"),setP=()=>{prev.textContent=pe;prev.style.setProperty("--g1",pc);prev.style.setProperty("--g2","color-mix(in srgb,"+pc+" 60%,#000)")};setP();
- const eg=el("div",null,"pick-grid"),cg=el("div",null,"pick-grid");
- EMO.forEach(e=>{const b=el("button",e,"pick");b.type="button";b.onclick=()=>{pe=e;setP()};eg.append(b)});
- COL.forEach(c=>{const b=el("button",null,"pick dot");b.type="button";b.style.background=c;b.onclick=()=>{pc=c;setP()};cg.append(b)});
- const sv=btn("Save","pri ok wide",async()=>{try{sv.disabled=true;const r=await sb.from("group_icons").upsert({group_id:String(G.gid),icon:pe+"|"+pc},{onConflict:"group_id"});if(r.error)throw new Error("Run the group_icons SQL first");G.icons[String(G.gid)]=pe+"|"+pc;msg("Saved",true);drawSettings()}catch(e){msg(e.message);sv.disabled=false}});
- const pr=el("div",null,"pick-prev");pr.append(prev);box.append(pr,eg,cg,sv);return box}
+function banner(){const d=el("div",null,"grp-banner"),bg=gbadge(G.gname,G.gid);bg.classList.add("big");const t=el("div");t.append(el("h2",G.gname),el("p",people(G.rows.length),"gb-n"));d.append(bg,t);const ic=G.icons[String(G.gid)];d.style.setProperty("--bc",ic&&ic.indexOf("http")!==0?ic.split("|")[1]:gcol(G.gname)[0]);return d}
+function iconEditor(){const box=el("div",null,"card");box.append(el("h3","Group photo"));
+ const pr=el("div",null,"pick-prev"),prev=gbadge(G.gname,G.gid);prev.classList.add("big");pr.append(prev);
+ const f=document.createElement("input");f.type="file";f.accept="image/*";f.hidden=true;
+ const up=btn("Choose photo from gallery","pri wide",()=>f.click());
+ f.onchange=async()=>{const file=f.files&&f.files[0];if(!file)return;try{up.disabled=true;msg("Uploading...");
+  const im=await loadImg(file),w=im.naturalWidth||im.width,h=im.naturalHeight||im.height,q=Math.min(w,h),S=512,c=document.createElement("canvas");c.width=c.height=S;
+  const cx=c.getContext("2d");cx.imageSmoothingQuality="high";cx.drawImage(im,(w-q)/2,(h-q)/2,q,q,0,0,S,S);
+  const blob=await new Promise(res=>c.toBlob(res,"image/jpeg",.9));if(!blob)throw new Error("Could not process the image");
+  const path=uid+"/group-"+G.gid+".jpg",u=await sb.storage.from("avatars").upload(path,blob,{upsert:true,contentType:"image/jpeg"});if(u.error)throw u.error;
+  const url=sb.storage.from("avatars").getPublicUrl(path).data.publicUrl+"?v="+Date.now();
+  const r2=await sb.from("group_icons").upsert({group_id:String(G.gid),icon:url},{onConflict:"group_id"});if(r2.error)throw new Error("Run the group_icons SQL first");
+  G.icons[String(G.gid)]=url;msg("Saved",true);drawSettings()}catch(e){msg(e.message);up.disabled=false}};
+ box.append(pr,up,f);
+ if(G.icons[String(G.gid)]){const rm=btn("Remove photo","danger wide",async()=>{await sb.from("group_icons").delete().eq("group_id",String(G.gid));delete G.icons[String(G.gid)];msg("Removed",true);drawSettings()});rm.style.marginTop="8px";box.append(rm)}
+ return box}
 const isOwner=()=>{const o=G.rows.find(r=>r.is_owner);return !!o&&o.user_id===uid};
 
 async function loadHome(){try{G.mine=await rpc("my_groups")||[]}catch(e){G.mine=[];msg(e.message)}await loadIcons(G.mine.map(g=>g.id));drawHome()}
