@@ -628,6 +628,30 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
  .sidebar .nav-btn[data-panel=profilePanel]{margin-top:auto}
  .sidebar .logout-link{margin-top:0;flex:none}
 }
+/* Groups */
+.grp-duo{margin-top:0}.grp-row{display:flex;gap:8px;margin:12px 0}.grp-row input{flex:1}.grp-row .main{width:auto;padding:0 18px}
+#grpBody .card h3{margin:0 0 6px}#grpBody .card .mu{margin:0 0 10px}
+.grp-item{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;padding:12px 14px;margin-top:8px;border:1px solid var(--bd);border-radius:14px;background:var(--card);color:var(--tx);font:inherit}
+button.grp-item:hover{border-color:var(--ac)}.grp-item.static{flex-wrap:wrap}.grp-item.static input{flex:1;min-width:120px}
+.grp-item b{display:block}.grp-item .mu{font-size:13px}.grp-item .ico{width:18px;height:18px;stroke:var(--mu);fill:none;stroke-width:2}
+.grp-msg{color:var(--bad);font-weight:600;min-height:20px}.grp-msg.ok{color:var(--ok)}
+.grp-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}.grp-top h2{margin:0}.grp-top .mu{margin:0}.grp-top>div:nth-child(2){flex:1;min-width:140px}
+.grp-top .hbtn{display:inline-flex;align-items:center;gap:6px}.grp-top .ico,.podium .ico{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.grp-act{display:flex;gap:8px}.grp-seg{overflow-x:auto;margin-bottom:6px}
+.grp-av{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;overflow:hidden;background:var(--ac2);color:var(--ac);font-weight:700}.grp-av img{width:100%;height:100%;object-fit:cover}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin:6px 0 22px}
+.pod{position:relative;flex:1;max-width:170px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px 10px;border-radius:18px;background:var(--bg);text-align:center;--m:#9aa3b2}
+.pod1{--m:#f5b301;padding-top:22px;min-height:178px}.pod2{--m:#9aa3b2;min-height:150px}.pod3{--m:#c47f3a;min-height:134px}
+.pod .grp-av{width:52px;height:52px;box-shadow:0 0 0 3px var(--m)}.pod b{font-size:14px;word-break:break-word}.pod.me{outline:2px solid var(--ac)}
+.pod-v{font-weight:700;color:var(--m)}.pod-n{margin-top:auto;width:26px;height:26px;border-radius:50%;background:var(--m);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+.pod-crown{position:absolute;top:-14px;color:#f5b301}.pod-crown .ico{width:24px;height:24px;fill:#f5b301;stroke:#f5b301}
+.grp-rank{display:flex;align-items:center;gap:12px;padding:10px 8px;border-radius:14px}.grp-rank+.grp-rank{border-top:1px solid var(--bd)}.grp-rank.me{background:var(--ac2)}
+.rk{width:28px;text-align:center;font-weight:800;color:var(--mu)}.rk1{color:#f5b301}.rk2{color:#9aa3b2}.rk3{color:#c47f3a}
+.rk-mid{flex:1;min-width:0}.rk-mid b{display:flex;align-items:center;gap:8px}.you-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--ac);color:#fff}
+.rk-bar{height:7px;border-radius:99px;background:var(--bg);margin-top:6px;overflow:hidden}.rk-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--ac2),var(--ac))}
+.rk-val{font-weight:700;min-width:70px;text-align:right}
+.grp-tbl{overflow-x:auto}.grp-tbl table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}.grp-tbl th,.grp-tbl td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}.grp-tbl th{color:var(--mu);font-weight:600}.grp-tbl tr.me td{background:var(--ac2)}
+@media(max-width:700px){.grp-row{flex-direction:column}.pod{padding:12px 4px 8px}}
 </style>
 </head>
 <body>
@@ -689,6 +713,7 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
       <button class="nav-btn" data-panel="goalsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M13 3.055a9 9 0 1 0 7.941 7.945"/><path d="M15 6v3h3l3-3h-3v-3z"/><path d="M15 9l-3 3"/></svg>Goals</button>
       <button class="nav-btn" data-panel="subjectsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>Portfolio</button>
       <button class="nav-btn" data-panel="plannerPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/><path d="m9 15 2 2 4-4"/></svg>Plans</button>
+      <button class="nav-btn" data-panel="groupsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.2c2.7.2 4.5 2 4.5 4.8"/></svg>Groups</button>
       <button class="nav-btn" data-panel="historyPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>History</button>
       <button class="nav-btn" data-panel="notifPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Notifications<span class="nbadge" id="nBadge" hidden></span></button>
       <button class="nav-btn" data-panel="profilePanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
@@ -732,6 +757,7 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
 </section>
 <section class="app-panel" id="subjectsPanel"><div id="portBody"></div></section>
 <section class="app-panel" id="assistantPanel"><div id="asstBody"></div></section>
+<section class="app-panel own" id="groupsPanel"><div id="grpBody"></div></section>
 <section class="app-panel" id="statsPanel"><div id="statsBody"></div></section>
 
     <section class="app-panel" id="profilePanel"><div class="seg tabs" id="setTabs"></div>
@@ -1517,7 +1543,7 @@ function loadNotifUI(){
   const on=S.browser&&("Notification" in window)&&Notification.permission==="granted";$("nBrowser").textContent=on?"Turn off browser notifications":"Turn on browser notifications";
 }
 function saveNotifUI(){lsSet("notif",Object.assign(nSet(),{daily:$("nDaily").checked,streak:$("nStreak").checked,goals:$("nGoals").checked,improve:$("nImprove").checked,plan:$("nPlan").checked,freeOnly:$("nFree").checked}));renderNotif()}
-function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"Settings",subjectsPanel:"Portfolio",assistantPanel:"AI Coach",statsPanel:"Percentages",plannerPanel:"Plans",notifPanel:"Notifications",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel()}window.openPanel=openPanel;
+function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"Settings",subjectsPanel:"Portfolio",assistantPanel:"AI Coach",statsPanel:"Percentages",plannerPanel:"Plans",groupsPanel:"Groups",notifPanel:"Notifications",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel();if(id==="groupsPanel"&&window.renderGroups)window.renderGroups()}window.openPanel=openPanel;
 function updateShare(){const sl=$("pslug").value.trim().toLowerCase();if(sl)$("plink").value=location.origin+location.pathname+"?u="+sl}
 async function loadProfile(){
   const {data:p}=await sb.from("profiles").select("*").eq("user_id",uid).maybeSingle();
@@ -2954,5 +2980,102 @@ const PUB=new URLSearchParams(location.search).get("u");
 if(PUB){document.body.classList.add("pub");loadPublic(PUB)}
 else{document.body.classList.add("auth-mode");sb.auth.onAuthStateChange((_ev,s)=>{if(_ev==="PASSWORD_RECOVERY"){recovering=true;setTimeout(showRecover,0);return}setTimeout(()=>show(s),0)});sb.auth.getSession().then(({data})=>show(data.session))}
 </script>
+<script>
+/* ===== Groups ===== */
+(function(){
+const G={view:"home",gid:null,gname:"",tab:"overall",rows:[],mine:[],found:null,msg:"",ok:false,busy:false};
+const rpc=async(n,a)=>{const r=await sb.rpc(n,a||{});if(r.error)throw new Error(r.error.message);return r.data};
+const SV=p=>'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">'+p+'</svg>';
+const CHEV=SV('<path d="m9 6 6 6-6 6"/>'),BACK=SV('<path d="m15 6-6 6 6 6"/>'),CROWN=SV('<path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"/>');
+const TABS=[["overall","Overall"],["IELTS","IELTS"],["SAT","SAT"],["ENT","ҰБТ"],["streak","Streak"],["week","This week"]];
+const MAX={IELTS:9,SAT:1600,ENT:140},KEY={IELTS:"ielts_last",SAT:"sat_last",ENT:"ent_last"},BEST={IELTS:"ielts_best",SAT:"sat_best",ENT:"ent_best"};
+const num=v=>v==null?null:Number(v);
+function overall(r){const v=[];Object.keys(MAX).forEach(k=>{const x=num(r[KEY[k]]);if(x!=null)v.push(x/MAX[k]*100)});return v.length?v.reduce((a,c)=>a+c,0)/v.length:null}
+function metric(r,t){if(t==="overall")return overall(r);if(MAX[t])return num(r[KEY[t]]);return num(t==="streak"?r.streak:r.week_attempts)}
+function label(v,t){if(v==null)return "—";if(t==="overall")return Math.round(v)+"%";if(t==="IELTS")return v.toFixed(1);if(t==="streak")return v+(v===1?" day":" days");if(t==="week")return v+(v===1?" attempt":" attempts");return String(v)}
+function msg(t,ok){G.msg=t||"";G.ok=!!ok;const m=$("grpMsg");if(m){m.textContent=G.msg;m.className="grp-msg"+(ok?" ok":"")}}
+function av(r){const d=el("span",null,"grp-av");if(r.avatar_url){const i=document.createElement("img");i.src=r.avatar_url;i.alt="";d.append(i)}else d.textContent=(r.display_name||"S").trim().charAt(0).toUpperCase();return d}
+function field(ph,type,max){const i=document.createElement("input");i.type=type||"text";i.placeholder=ph;if(max)i.maxLength=max;i.autocomplete="off";return i}
+function btn(t,cls,fn){const b=el("button",t,cls||"main");b.type="button";b.onclick=fn;return b}
+
+async function loadHome(){try{G.mine=await rpc("my_groups")||[]}catch(e){G.mine=[];msg(e.message)}drawHome()}
+async function loadGroup(){try{G.rows=await rpc("group_standings",{p_id:G.gid,p_today:today()})||[]}catch(e){G.rows=[];msg(e.message)}drawGroup()}
+function open(g){G.gid=g.id;G.gname=g.name;G.view="group";G.tab="overall";G.rows=[];msg("");drawGroup();loadGroup()}
+
+function drawHome(){
+  const b=$("grpBody");if(!b)return;b.replaceChildren();
+  const intro=el("div",null,"page-intro");intro.append(el("h2","Groups"),el("p","Study together. Join a group or create your own, then compete in the standings.","mu"));b.append(intro);
+  const mine=el("div",null,"card own");mine.append(el("h3","My groups"));
+  if(!G.mine.length)mine.append(el("p","You are not in any group yet.","mu"));
+  G.mine.forEach(g=>{const r=el("button",null,"grp-item");r.type="button";const l=el("div");l.append(el("b",g.name),el("span",g.members+(g.members===1?" member":" members")+(g.is_owner?" · owner":""),"mu"));r.append(l);r.insertAdjacentHTML("beforeend",CHEV);r.onclick=()=>open(g);mine.append(r)});
+  b.append(mine);
+
+  const duo=el("div",null,"duo grp-duo");
+  // join
+  const jn=el("div",null,"card own");jn.append(el("h3","Join a group"),el("p","Search by group name, then enter its password.","mu"));
+  const q=field("Group name","search",30),res=el("div",null,"grp-res");
+  const go=async()=>{try{res.replaceChildren(el("p","Searching…","mu"));const d=await rpc("search_groups",{p_q:q.value});G.found=d;drawRes(res,d)}catch(e){res.replaceChildren(el("p",e.message,"grp-msg"))}};
+  q.addEventListener("keydown",e=>{if(e.key==="Enter")go()});
+  const row=el("div",null,"grp-row");row.append(q,btn("Search","main",go));jn.append(row,res);
+  if(G.found)drawRes(res,G.found);
+  // create
+  const cr=el("div",null,"card own");cr.append(el("h3","Create a group"),el("p","Choose a name and a password. Share them with your friends.","mu"));
+  const n=field("Group name (3–30 characters)","text",30),pw=field("Password (min 4 characters)","password",40);
+  const mk=btn("Create group","main",async()=>{try{mk.disabled=true;const id=await rpc("create_group",{p_name:n.value,p_password:pw.value});open({id,name:n.value.trim()})}catch(e){msg(e.message)}mk.disabled=false});
+  cr.append(n,pw,mk);
+  duo.append(jn,cr);b.append(duo);
+  const m=el("p",G.msg,"grp-msg");m.id="grpMsg";b.append(m);
+}
+function drawRes(box,d){
+  box.replaceChildren();if(!d.length){box.append(el("p","No groups found.","mu"));return}
+  d.forEach(g=>{const r=el("div",null,"grp-item static");const l=el("div");l.append(el("b",g.name),el("span",g.members+(g.members===1?" member":" members"),"mu"));r.append(l);
+    if(g.joined){r.append(btn("Open","hbtn",()=>open(g)))}
+    else{const j=btn("Join","hbtn",()=>{j.hidden=true;const p=field("Password","password",40),ok=btn("Enter","hbtn amber",async()=>{try{ok.disabled=true;await rpc("join_group",{p_id:g.id,p_password:p.value});open(g)}catch(e){msg(e.message);ok.disabled=false}});p.addEventListener("keydown",e=>{if(e.key==="Enter")ok.click()});r.append(p,ok);p.focus()});r.append(j)}
+    box.append(r)})
+}
+
+function drawGroup(){
+  const b=$("grpBody");if(!b)return;b.replaceChildren();
+  const top=el("div",null,"grp-top");
+  const back=btn("","hbtn",()=>{G.view="home";msg("");loadHome()});back.innerHTML=BACK+" Groups";
+  const ttl=el("div");ttl.append(el("h2",G.gname),el("p",G.rows.length+(G.rows.length===1?" member":" members"),"mu"));
+  const leave=btn("Leave","hbtn",async()=>{if(!confirm("Leave "+G.gname+"?"))return;try{await rpc("leave_group",{p_id:G.gid});G.view="home";loadHome()}catch(e){msg(e.message)}});
+  const ref=btn("Refresh","hbtn",loadGroup);
+  const act=el("div",null,"grp-act");act.append(ref,leave);top.append(back,ttl,act);b.append(top);
+
+  const seg=el("div",null,"seg");TABS.forEach(([id,n])=>{const s=el("button",n,"seg-btn"+(G.tab===id?" on":""));s.type="button";s.onclick=()=>{G.tab=id;drawGroup()};seg.append(s)});
+  const sw=el("div",null,"grp-seg");sw.append(seg);b.append(sw);
+
+  const t=G.tab,rows=G.rows.slice().sort((x,y)=>{const a=metric(x,t),c=metric(y,t);if(a==null&&c==null)return y.total_attempts-x.total_attempts;if(a==null)return 1;if(c==null)return -1;return c-a||y.total_attempts-x.total_attempts});
+  const vals=rows.map(r=>metric(r,t)),mx=Math.max(1,...vals.filter(v=>v!=null));
+  const scale=v=>t==="overall"?v:MAX[t]?v/MAX[t]*100:v/mx*100;
+
+  const card=el("div",null,"card");
+  const pod=rows.filter(r=>metric(r,t)!=null).slice(0,3);
+  if(pod.length>=2){const p=el("div",null,"podium");[1,0,2].forEach(i=>{const r=pod[i];if(!r)return;const c=el("div",null,"pod pod"+(i+1)+(r.user_id===uid?" me":""));if(i===0){const cw=el("span",null,"pod-crown");cw.innerHTML=CROWN;c.append(cw)}c.append(av(r),el("b",r.display_name||"Student"),el("span",label(metric(r,t),t),"pod-v"),el("span",String(i+1),"pod-n"));p.append(c)});card.append(p)}
+  const list=el("div",null,"grp-list");
+  rows.forEach((r,i)=>{const v=metric(r,t),it=el("div",null,"grp-rank"+(r.user_id===uid?" me":""));
+    it.append(el("span",String(i+1),"rk rk"+(i<3?i+1:"")),av(r));
+    const mid=el("div",null,"rk-mid"),nm=el("b",r.display_name||"Student");if(r.user_id===uid)nm.append(el("span","You","you-tag"));
+    const pb=el("div",null,"rk-bar"),f=el("i");f.style.width=(v==null?0:Math.max(4,Math.min(100,scale(v))))+"%";pb.append(f);mid.append(nm,pb);
+    it.append(mid,el("span",label(v,t),"rk-val"));list.append(it)});
+  if(!rows.length)list.append(el("p","Loading…","mu"));
+  card.append(list);b.append(card);
+
+  // everyone's stats
+  const st=el("div",null,"card"),h=el("h3","All members");st.append(h);
+  const w=el("div",null,"grp-tbl"),tb=document.createElement("table");
+  tb.innerHTML="<thead><tr><th>Member</th><th>IELTS</th><th>SAT</th><th>ҰБТ</th><th>Streak</th><th>Week</th><th>Total</th></tr></thead>";
+  const body=document.createElement("tbody");
+  rows.forEach(r=>{const tr=document.createElement("tr");if(r.user_id===uid)tr.className="me";
+    const c=(k)=>{const l=num(r[KEY[k]]),bs=num(r[BEST[k]]);return l==null?"—":(k==="IELTS"?l.toFixed(1):l)+(bs!=null&&bs!==l?" (best "+(k==="IELTS"?bs.toFixed(1):bs)+")":"")};
+    [r.display_name||"Student",c("IELTS"),c("SAT"),c("ENT"),r.streak+"d",r.week_attempts,r.total_attempts].forEach(x=>{const td=document.createElement("td");td.textContent=x;tr.append(td)});body.append(tr)});
+  tb.append(body);w.append(tb);st.append(w);b.append(st);
+  const m=el("p",G.msg,"grp-msg");m.id="grpMsg";b.append(m);
+}
+window.renderGroups=function(){if(!uid||viewUid)return;if(G.view==="group"){drawGroup();loadGroup()}else loadHome()};
+})();
+</script>
+
 </body>
 </html>
