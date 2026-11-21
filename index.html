@@ -750,6 +750,7 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
 <label class="switch"><input type="checkbox" id="nPlan"> Plan task alerts</label>
 <label class="switch"><input type="checkbox" id="nFree"> 🕒 Send only in my free time</label>
 <button class="main" id="nBrowser" type="button">Turn on browser notifications</button><p class="mu" id="nMsg"></p></div>
+<div class="card own" id="tgSet" data-tab="tg"></div>
 <div class="card own" data-tab="password"><h3 class="sub-h">Change password</h3><div class="row"><div><label>Current password</label><input type="password" id="oldpw" autocomplete="current-password"></div><div><label>New password</label><input type="password" id="newpw" autocomplete="new-password"></div></div><button class="main" id="pwBtn" type="button">Change password</button><p class="mu" id="pwMsg"></p></div>
 <input id="pslug" type="hidden"><input id="plink" type="hidden"><select id="sub1" hidden></select><select id="sub2" hidden></select><div id="shareRow" hidden></div><button id="psave" hidden></button>
 </section>
@@ -2446,9 +2447,9 @@ function renderFree(){
 let setTab0="profile";
 function setTab(t){
   setTab0=t;const tabs=$("setTabs");if(!tabs)return;tabs.replaceChildren();
-  [["profile","👤 Profile"],["site","🌐 Site"],["notif","🔔 Notifications"],["password","🔒 Password"]].forEach(([k,n])=>{const b=el("button",n,"seg-btn"+(k===t?" on":""));b.type="button";b.onclick=()=>setTab(k);tabs.appendChild(b)});
+  [["profile","👤 Profile"],["site","🌐 Site"],["notif","🔔 Notifications"],["tg","✈️ Telegram"],["password","🔒 Password"]].forEach(([k,n])=>{const b=el("button",n,"seg-btn"+(k===t?" on":""));b.type="button";b.onclick=()=>setTab(k);tabs.appendChild(b)});
   document.querySelectorAll("#profilePanel [data-tab]").forEach(c=>c.hidden=c.dataset.tab!==t);
-  if(t==="site")renderSiteSet();
+  if(t==="site")renderSiteSet();if(t==="tg")renderTgSet();
 }
 function renderSiteSet(){
   const box=$("siteSet");if(!box)return;box.replaceChildren();
@@ -2460,6 +2461,34 @@ function renderSiteSet(){
   {const sh=el("div","Share my profile","step");box.appendChild(sh);
   const r=el("div",null,"save-bar");const cp=el("button","Copy profile link","main go");cp.type="button";cp.onclick=async()=>{try{await navigator.clipboard.writeText($("plink").value);cp.lastChild.textContent=tr("Copied!")}catch(e){}};
   r.appendChild(cp);box.appendChild(r);}
+}
+
+/* ===================== TELEGRAM ===================== */
+const TG_BOT="YOUR_BOT_USERNAME"; // username of your bot from @BotFather, without @
+async function renderTgSet(){
+  const box=$("tgSet");if(!box||!uid)return;box.replaceChildren(el("p","Loading...","mu"));
+  const {data,error}=await sb.from("telegram_links").select("chat_id,link_code,code_expires").eq("user_id",uid).maybeSingle();
+  box.replaceChildren();box.appendChild(el("h3","Telegram bot","sub-h"));
+  if(error){box.appendChild(el("p","Run telegram.sql in the Supabase SQL editor.","mu"));return}
+  if(data&&data.chat_id){
+    box.appendChild(el("p","✅ Connected. The bot sends reminders, progress charts and asks every day when you are free."));
+    const row=el("div",null,"save-bar"),off=el("button","Disconnect","hbtn gray");off.type="button";
+    off.onclick=async()=>{await sb.rpc("tg_unlink");renderTgSet()};row.appendChild(off);box.appendChild(row);return;
+  }
+  box.appendChild(el("p","Get notifications, progress charts and the daily question \"when are you free?\" in Telegram, so you do not need to open the site.","mu"));
+  const row=el("div",null,"save-bar"),go=el("button","Connect Telegram","main go"),msg=el("p","","mu");go.type="button";
+  go.onclick=async()=>{
+    const code=Array.from(crypto.getRandomValues(new Uint8Array(12)),b=>"abcdefghjkmnpqrstuvwxyz23456789"[b%31]).join("");
+    go.disabled=true;
+    const {error:e}=await sb.from("telegram_links").upsert({user_id:uid,link_code:code,code_expires:new Date(Date.now()+15*60000).toISOString()},{onConflict:"user_id"});
+    go.disabled=false;if(e){msg.textContent=e.message;return}
+    const url="https://t.me/"+TG_BOT+"?start="+code;
+    window.open(url,"_blank");
+    msg.replaceChildren(document.createTextNode("Open the bot and press Start. The link works for 15 minutes. "));
+    const a=document.createElement("a");a.href=url;a.target="_blank";a.rel="noopener";a.textContent="Open bot";msg.appendChild(a);
+    const chk=el("button","Check connection","hbtn");chk.type="button";chk.onclick=renderTgSet;msg.appendChild(document.createTextNode(" "));msg.appendChild(chk);
+  };
+  row.appendChild(go);box.append(row,msg);
 }
 
 /* ===================== BUTTON STYLES ===================== */
@@ -2836,6 +2865,12 @@ Sep|сен|қыр
 Oct|окт|қаз
 Nov|ноя|қар
 Dec|дек|жел
+✈️ Telegram|✈️ Telegram|✈️ Telegram
+Telegram bot|Telegram-бот|Telegram-бот
+Connect Telegram|Подключить Telegram|Telegram қосу
+Disconnect|Отключить|Ажырату
+Check connection|Проверить подключение|Қосылымды тексеру
+Open bot|Открыть бота|Ботты ашу
 Best:|Рекорд:|Рекорд:`;
 const TR={};TRL.split("\n").forEach(l=>{const [e,r,k]=l.split("|");TR[e]=[r,k]});
 const MG={ru:["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"],kk:["қаңтар", "ақпан", "наурыз", "сәуір", "мамыр", "маусым", "шілде", "тамыз", "қыркүйек", "қазан", "қараша", "желтоқсан"]};
