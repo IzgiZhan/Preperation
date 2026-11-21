@@ -663,8 +663,24 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
 @media(max-width:700px){.pod{padding:12px 4px 8px}}
 
 /* Groups v2 */
+button.main.go::after{content:none;display:none}button.main.go .ico{display:none}
+.grp-top>.grp-act{margin-left:auto}
+.grp-banner{position:relative;overflow:hidden;display:flex;align-items:center;gap:16px;padding:22px;margin-bottom:14px;border-radius:24px;color:#fff;background:linear-gradient(135deg,var(--bc,var(--ac)),color-mix(in srgb,var(--bc,var(--ac)) 45%,#0b1f4d))}
+.grp-banner::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.08) 0 2px,transparent 2px 18px)}
+.grp-banner::after{content:"";position:absolute;right:-50px;top:-70px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.14)}
+.grp-banner>*{position:relative;z-index:1}
+.grp-banner h2{margin:0;color:#fff;font-size:28px;letter-spacing:-.02em}.grp-banner .gb-n{margin:4px 0 0;color:rgba(255,255,255,.88);font-weight:600}
+.grp-badge.big{width:72px;height:72px;border-radius:22px;font-size:34px;box-shadow:0 0 0 3px rgba(255,255,255,.55)}
+.pick-prev{display:flex;justify-content:center;margin-bottom:14px}
+.pick-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}
+.pick{width:44px;height:44px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);font-size:22px;display:grid;place-items:center;padding:0}
+.pick:hover{border-color:var(--ac)}.pick.dot{border:3px solid var(--card);box-shadow:0 0 0 1px var(--bd);border-radius:50%;width:34px;height:34px}
+.gbtn.blue{background:var(--ac2);color:var(--ac);border-color:transparent}.gbtn.blue:hover{color:var(--ac);border-color:var(--ac)}
+.gbtn.ok{background:var(--okbg);color:var(--ok);border-color:transparent}.gbtn.ok:hover{color:var(--ok);border-color:var(--ok)}
+button.gbtn.pri.ok{background:var(--ok);color:#fff}button.gbtn.pri.ok:hover{color:#fff;border-color:var(--ok)}
+button.gbtn.danger.solid{background:var(--bad);color:#fff;border-color:var(--bad)}button.gbtn.danger.solid:hover{color:#fff;background:var(--bad);opacity:.9}
 .gbtn{box-shadow:none}
-button.gbtn.danger{background:var(--card);color:var(--bad);box-shadow:none;border:1px solid color-mix(in srgb,var(--bad) 40%,var(--bd))}
+button.gbtn.danger{background:var(--badbg);color:var(--bad);box-shadow:none;border:1px solid color-mix(in srgb,var(--bad) 40%,var(--bd))}
 button.gbtn.danger:hover{background:var(--badbg);color:var(--bad);transform:none;box-shadow:none;border-color:var(--bad)}
 button.gbtn.pri{box-shadow:none;background:var(--ac);color:#fff}
 .app-panel *{scrollbar-width:none}.app-panel *::-webkit-scrollbar{display:none}
@@ -3052,21 +3068,32 @@ function field(ph,type,max){const i=document.createElement("input");i.type=type|
 function pw(ph){const w=el("div",null,"pw"),i=field(ph,"password",40),b=document.createElement("button");b.type="button";b.className="pw-eye";b.setAttribute("aria-label","Show password");b.innerHTML=EYE;b.onclick=()=>{const s=i.type==="password";i.type=s?"text":"password";b.innerHTML=s?EYEOFF:EYE};w.append(i,b);w.input=i;return w}
 function btn(t,cls,fn,icon){const b=document.createElement("button");b.type="button";b.className="gbtn "+(cls||"");if(icon)b.innerHTML=icon;if(t)b.append(t);b.onclick=fn;return b}
 const people=n=>n+(n===1?" member":" members");
-function gbadge(n){let h=0;for(const x of n)h=(h*31+x.charCodeAt(0))%360;const s=el("span",(n.trim().charAt(0)||"G").toUpperCase(),"grp-badge");s.style.setProperty("--g1","hsl("+h+" 80% 58%)");s.style.setProperty("--g2","hsl("+((h+40)%360)+" 80% 42%)");return s}
+G.icons={};
+const EMO=["🔥","⚡","🚀","🎯","📚","🏆","🧠","🌟","🦁","🐺","🦅","🐉","🌊","🌿","🍀","💎","👑","🎓","☀️","🌙","🎮","⚽","🎵","🛡️"],COL=["#ef4444","#f97316","#f59e0b","#22c55e","#14b8a6","#0ea5e9","#6366f1","#a855f7","#ec4899","#64748b"];
+function gcol(n){let h=0;for(const x of n)h=(h*31+x.charCodeAt(0))%360;return["hsl("+h+" 80% 58%)","hsl("+((h+40)%360)+" 80% 42%)"]}
+function gbadge(n,id){const ic=G.icons[String(id)],s=el("span",null,"grp-badge");let c1,c2,t;if(ic){const p=ic.split("|");t=p[0];c1=p[1];c2="color-mix(in srgb,"+p[1]+" 60%,#000)"}else{const c=gcol(n);c1=c[0];c2=c[1];t=(n.trim().charAt(0)||"G").toUpperCase()}s.textContent=t;s.style.setProperty("--g1",c1);s.style.setProperty("--g2",c2);return s}
+async function loadIcons(ids){try{if(!ids.length)return;const r=await sb.from("group_icons").select("group_id,icon").in("group_id",ids.map(String));(r.data||[]).forEach(x=>{G.icons[x.group_id]=x.icon})}catch(e){}}
+function banner(){const d=el("div",null,"grp-banner"),bg=gbadge(G.gname,G.gid);bg.classList.add("big");const t=el("div");t.append(el("h2",G.gname),el("p",people(G.rows.length),"gb-n"));d.append(bg,t);const ic=G.icons[String(G.gid)];d.style.setProperty("--bc",ic?ic.split("|")[1]:gcol(G.gname)[0]);return d}
+function iconEditor(){const box=el("div",null,"card");box.append(el("h3","Group icon"));
+ let cur=(G.icons[String(G.gid)]||"🔥|#6366f1").split("|"),pe=cur[0],pc=cur[1];
+ const prev=el("span",null,"grp-badge big"),setP=()=>{prev.textContent=pe;prev.style.setProperty("--g1",pc);prev.style.setProperty("--g2","color-mix(in srgb,"+pc+" 60%,#000)")};setP();
+ const eg=el("div",null,"pick-grid"),cg=el("div",null,"pick-grid");
+ EMO.forEach(e=>{const b=el("button",e,"pick");b.type="button";b.onclick=()=>{pe=e;setP()};eg.append(b)});
+ COL.forEach(c=>{const b=el("button",null,"pick dot");b.type="button";b.style.background=c;b.onclick=()=>{pc=c;setP()};cg.append(b)});
+ const sv=btn("Save","pri ok wide",async()=>{try{sv.disabled=true;const r=await sb.from("group_icons").upsert({group_id:String(G.gid),icon:pe+"|"+pc},{onConflict:"group_id"});if(r.error)throw new Error("Run the group_icons SQL first");G.icons[String(G.gid)]=pe+"|"+pc;msg("Saved",true);drawSettings()}catch(e){msg(e.message);sv.disabled=false}});
+ const pr=el("div",null,"pick-prev");pr.append(prev);box.append(pr,eg,cg,sv);return box}
 const isOwner=()=>{const o=G.rows.find(r=>r.is_owner);return !!o&&o.user_id===uid};
 
-async function loadHome(){try{G.mine=await rpc("my_groups")||[]}catch(e){G.mine=[];msg(e.message)}drawHome()}
+async function loadHome(){try{G.mine=await rpc("my_groups")||[]}catch(e){G.mine=[];msg(e.message)}await loadIcons(G.mine.map(g=>g.id));drawHome()}
 async function loadGroup(){try{G.rows=await rpc("group_standings",{p_id:G.gid,p_today:today()})||[]}catch(e){G.rows=[];msg(e.message)}G.view==="group"&&draw()}
-function open(g){G.gid=g.id;G.gname=g.name;G.view="group";G.sub="board";G.tab="overall";G.rows=[];msg("");draw();loadGroup()}
+function open(g){G.gid=g.id;G.gname=g.name;G.view="group";G.sub="board";G.tab="overall";G.rows=[];msg("");draw();loadGroup();loadIcons([g.id]).then(()=>{if(G.view==="group"&&G.gid===g.id)draw()})}
 const draw=()=>G.sub==="settings"?drawSettings():drawGroup();
 
 function drawHome(){
   const b=$("grpBody");if(!b)return;b.replaceChildren();
-  const hd=el("div",null,"grp-top");hd.append(el("h2","Groups"));b.append(hd);
-
   const mine=el("div",null,"card own");
   if(!G.mine.length)mine.append(el("p","No groups","mu"));
-  G.mine.forEach(g=>{const r=el("button",null,"grp-item");r.type="button";const l=el("div");l.append(el("b",g.name),el("span",people(g.members),"mu"));r.append(gbadge(g.name),l);r.insertAdjacentHTML("beforeend",CHEV);r.onclick=()=>open(g);mine.append(r)});
+  G.mine.forEach(g=>{const r=el("button",null,"grp-item");r.type="button";const l=el("div");l.append(el("b",g.name),el("span",people(g.members),"mu"));r.append(gbadge(g.name,g.id),l);r.insertAdjacentHTML("beforeend",CHEV);r.onclick=()=>open(g);mine.append(r)});
   b.append(mine);
   if(G.mine.length){b.append(el("p","You can be in one group. Leave it to join another.","mu"));const m0=el("p",G.msg,"grp-msg");m0.id="grpMsg";b.append(m0);return}
 
@@ -3077,16 +3104,16 @@ function drawHome(){
   row.append(q,btn("Search","pri",go));find.append(row,res);if(G.found)drawRes(res,G.found);b.append(find);
 
   const cr=el("div",null,"card own");
-  const tg=btn(G.create?"Cancel":"New group","wide",()=>{G.create=!G.create;drawHome()});cr.append(tg);
-  if(G.create){const n=field("Group name","text",30),p=pw("Password"),mk=btn("Create","pri wide",async()=>{try{mk.disabled=true;const id=await rpc("create_group",{p_name:n.value,p_password:p.input.value});open({id,name:n.value.trim()})}catch(e){msg(e.message);mk.disabled=false}});const f=el("div",null,"grp-form");f.append(n,p,mk);cr.append(f)}
+  const tg=btn(G.create?"Cancel":"New group","wide blue",()=>{G.create=!G.create;drawHome()});cr.append(tg);
+  if(G.create){const n=field("Group name","text",30),p=pw("Password"),mk=btn("Create","pri ok wide",async()=>{try{mk.disabled=true;const id=await rpc("create_group",{p_name:n.value,p_password:p.input.value});open({id,name:n.value.trim()})}catch(e){msg(e.message);mk.disabled=false}});const f=el("div",null,"grp-form");f.append(n,p,mk);cr.append(f)}
   b.append(cr);
   const m=el("p",G.msg,"grp-msg");m.id="grpMsg";b.append(m);
 }
 function drawRes(box,d){
   box.replaceChildren();if(!d.length){box.append(el("p","Nothing found","mu"));return}
-  d.forEach(g=>{const r=el("div",null,"grp-item static"),l=el("div");l.append(el("b",g.name),el("span",people(g.members),"mu"));r.append(gbadge(g.name),l);
-    if(g.joined)r.append(btn("Open","",()=>open(g)));
-    else{const j=btn("Join","",()=>{j.hidden=true;const p=pw("Password"),ok=btn("OK","pri",async()=>{try{ok.disabled=true;await rpc("join_group",{p_id:g.id,p_password:p.input.value});open(g)}catch(e){msg(e.message);ok.disabled=false}});p.input.addEventListener("keydown",e=>{if(e.key==="Enter")ok.click()});const x=el("div",null,"grp-join");x.append(p,ok);r.append(x);p.input.focus()});r.append(j)}
+  d.forEach(g=>{const r=el("div",null,"grp-item static"),l=el("div");l.append(el("b",g.name),el("span",people(g.members),"mu"));r.append(gbadge(g.name,g.id),l);
+    if(g.joined)r.append(btn("Open","blue",()=>open(g)));
+    else{const j=btn("Join","ok",()=>{j.hidden=true;const p=pw("Password"),ok=btn("OK","pri",async()=>{try{ok.disabled=true;await rpc("join_group",{p_id:g.id,p_password:p.input.value});open(g)}catch(e){msg(e.message);ok.disabled=false}});p.input.addEventListener("keydown",e=>{if(e.key==="Enter")ok.click()});const x=el("div",null,"grp-join");x.append(p,ok);r.append(x);p.input.focus()});r.append(j)}
     box.append(r)})
 }
 
@@ -3096,14 +3123,14 @@ function topBar(){
   const ttl=el("div");ttl.append(el("h2",G.gname),el("p",people(G.rows.length),"mu"));
   const act=el("div",null,"grp-act");
   if(G.sub==="board"){
-    if(isOwner())act.append(btn("Settings","",()=>{G.sub="settings";msg("");draw()},GEAR));
-    act.append(btn("Leave","",async()=>{if(!confirm("Leave "+G.gname+"?"))return;try{await rpc("leave_group",{p_id:G.gid});G.view="home";loadHome()}catch(e){msg(e.message)}},EXIT));
+    if(isOwner())act.append(btn("Settings","blue",()=>{G.sub="settings";msg("");draw()},GEAR));
+    act.append(btn("Leave","danger",async()=>{if(!confirm("Leave "+G.gname+"?"))return;try{await rpc("leave_group",{p_id:G.gid});G.view="home";loadHome()}catch(e){msg(e.message)}},EXIT));
   }
-  top.append(back,ttl,act);return top;
+  top.append(back,act);return top;
 }
 
 function drawGroup(){
-  const b=$("grpBody");if(!b)return;b.replaceChildren();b.style.setProperty("--tc",TCOL[G.tab]||"var(--ac)");b.append(topBar());
+  const b=$("grpBody");if(!b)return;b.replaceChildren();b.style.setProperty("--tc",TCOL[G.tab]||"var(--ac)");b.append(topBar(),banner());
   const seg=el("div",null,"seg");TABS.forEach(([id,n])=>{const s=el("button",n,"seg-btn"+(G.tab===id?" on":""));s.type="button";s.onclick=()=>{G.tab=id;drawGroup()};seg.append(s)});
   const sw=el("div",null,"grp-seg");sw.append(seg);b.append(sw);
 
@@ -3136,11 +3163,11 @@ function drawGroup(){
 }
 
 function drawSettings(){
-  const b=$("grpBody");if(!b)return;b.replaceChildren();b.append(topBar());
+  const b=$("grpBody");if(!b)return;b.replaceChildren();b.append(topBar(),banner(),iconEditor());
   // add by nickname
   const add=el("div",null,"card"),nick=field("Nickname","text",20),row=el("div",null,"grp-row");
   const go=async()=>{try{await rpc("group_add_member",{p_id:G.gid,p_nick:nick.value});nick.value="";msg("Added",true);await loadGroup()}catch(e){msg(e.message)}};
-  nick.addEventListener("keydown",e=>{if(e.key==="Enter")go()});row.append(nick,btn("Add","pri",go));add.append(el("h3","Add member"),row);b.append(add);
+  nick.addEventListener("keydown",e=>{if(e.key==="Enter")go()});row.append(nick,btn("Add","pri ok",go));add.append(el("h3","Add member"),row);b.append(add);
   // members
   const mem=el("div",null,"card");mem.append(el("h3","Members"));
   G.rows.forEach(r=>{const it=el("div",null,"grp-item static"),l=el("div",null,"grp-who");l.append(av(r),el("b",r.display_name||"Student"));it.append(l);
@@ -3153,7 +3180,7 @@ function drawSettings(){
   r2.append(p,btn("Save","pri",async()=>{try{await rpc("group_set_password",{p_id:G.gid,p_password:p.input.value});p.input.value="";msg("Password changed",true)}catch(e){msg(e.message)}}));
   ps.append(el("h3","Password"),r2);b.append(ps);
   // delete
-  const dl=el("div",null,"card");dl.append(btn("Delete group","danger wide",async()=>{if(!confirm("Delete "+G.gname+" for everyone?"))return;try{await rpc("group_delete",{p_id:G.gid});G.view="home";loadHome()}catch(e){msg(e.message)}}));b.append(dl);
+  const dl=el("div",null,"card");dl.append(btn("Delete group","danger solid wide",async()=>{if(!confirm("Delete "+G.gname+" for everyone?"))return;try{await rpc("group_delete",{p_id:G.gid});G.view="home";loadHome()}catch(e){msg(e.message)}}));b.append(dl);
   const m=el("p",G.msg,"grp-msg");m.id="grpMsg";b.append(m);
 }
 window.renderGroups=function(){if(!uid||viewUid)return;if(G.view==="group"){draw();loadGroup()}else loadHome()};
