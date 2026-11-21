@@ -663,6 +663,11 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
 @media(max-width:700px){.pod{padding:12px 4px 8px}}
 
 /* Groups v2 */
+.gbtn{box-shadow:none}
+button.gbtn.danger{background:var(--card);color:var(--bad);box-shadow:none;border:1px solid color-mix(in srgb,var(--bad) 40%,var(--bd))}
+button.gbtn.danger:hover{background:var(--badbg);color:var(--bad);transform:none;box-shadow:none;border-color:var(--bad)}
+button.gbtn.pri{box-shadow:none;background:var(--ac);color:#fff}
+.app-panel *{scrollbar-width:none}.app-panel *::-webkit-scrollbar{display:none}
 #grpBody{--tc:var(--ac)}
 #grpBody .card{border-radius:22px}
 .grp-top h2{font-size:26px;letter-spacing:-.02em}
@@ -3032,7 +3037,7 @@ const SV=p=>'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">'+p+'</svg>
 const CHEV=SV('<path d="m9 6 6 6-6 6"/>'),BACK=SV('<path d="m15 6-6 6 6 6"/>'),CROWN=SV('<path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"/>'),
 EYE=SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
 EYEOFF=SV('<path d="M3 3l18 18"/><path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a10 10 0 0 0 4.3-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'),
-GEAR=SV('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>'),
+GEAR=SV('<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>'),EXIT=SV('<path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9"/>'),
 USERS=SV('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/>');
 const TABS=[["overall","Overall"],["IELTS","IELTS"],["SAT","SAT"],["ENT","ҰБТ"],["streak","Streak"],["week","Week"]];
 const TCOL={overall:"var(--ac)",IELTS:"var(--ielts)",SAT:"var(--sat)",ENT:"var(--ent)",streak:"#f59e0b",week:"#22c55e"};
@@ -3092,7 +3097,7 @@ function topBar(){
   const act=el("div",null,"grp-act");
   if(G.sub==="board"){
     if(isOwner())act.append(btn("Settings","",()=>{G.sub="settings";msg("");draw()},GEAR));
-    act.append(btn("Leave","",async()=>{if(!confirm("Leave "+G.gname+"?"))return;try{await rpc("leave_group",{p_id:G.gid});G.view="home";loadHome()}catch(e){msg(e.message)}}));
+    act.append(btn("Leave","",async()=>{if(!confirm("Leave "+G.gname+"?"))return;try{await rpc("leave_group",{p_id:G.gid});G.view="home";loadHome()}catch(e){msg(e.message)}},EXIT));
   }
   top.append(back,ttl,act);return top;
 }
