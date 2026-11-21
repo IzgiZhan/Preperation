@@ -2464,7 +2464,7 @@ function renderSiteSet(){
 }
 
 /* ===================== TELEGRAM ===================== */
-const TG_BOT="YOUR_BOT_USERNAME"; // username of your bot from @BotFather, without @
+const TG_BOT="`9150273434:AAFWX9PqFHJJ5SLLU_cI3ROh91TeOg3P9rQ`"; // username of your bot from @BotFather, without @
 async function renderTgSet(){
   const box=$("tgSet");if(!box||!uid)return;box.replaceChildren(el("p","Loading...","mu"));
   const {data,error}=await sb.from("telegram_links").select("chat_id,link_code,code_expires").eq("user_id",uid).maybeSingle();
