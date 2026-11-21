@@ -661,6 +661,37 @@ button.main.add{background:linear-gradient(180deg,color-mix(in srgb,#0891b2 82%,
 .rk-val{font-weight:700;min-width:60px;text-align:right}
 .grp-tbl{overflow-x:auto}.grp-tbl table{width:100%;border-collapse:collapse;font-size:14px;min-width:540px}.grp-tbl th,.grp-tbl td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}.grp-tbl th{color:var(--mu);font-weight:600}.grp-tbl tr.me td{background:var(--ac2)}
 @media(max-width:700px){.pod{padding:12px 4px 8px}}
+
+/* Groups v2 */
+#grpBody{--tc:var(--ac)}
+#grpBody .card{border-radius:22px}
+.grp-top h2{font-size:26px;letter-spacing:-.02em}
+.grp-item{padding:14px 16px;border-radius:18px;gap:14px;transition:transform .15s,border-color .15s,box-shadow .15s}
+button.grp-item:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,0,.10)}
+.grp-item>div:not(.grp-join){flex:1;min-width:0;text-align:left}
+.grp-badge{width:46px;height:46px;border-radius:14px;flex:none;display:grid;place-items:center;font-weight:800;font-size:19px;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.grp-hero{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;margin-bottom:14px;border-radius:22px;color:#fff;background:linear-gradient(135deg,var(--tc),color-mix(in srgb,var(--tc) 50%,#0b1f4d))}
+.grp-hero::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.08) 0 2px,transparent 2px 18px);pointer-events:none}
+.grp-hero>*{position:relative;z-index:1}
+.gh-l{font-size:13px;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.06em}
+.gh-n{font-size:40px;font-weight:800;line-height:1.05}.gh-n small{font-size:18px;font-weight:700;opacity:.8}
+.gh-v{font-size:30px;font-weight:800;padding:8px 16px;border-radius:16px;background:rgba(255,255,255,.18)}
+.grp-seg .seg-btn.on,#grpBody .seg-btn.on{background:var(--tc);color:#fff}
+.podium{gap:12px;margin:10px 0 20px}
+.pod{border-radius:22px 22px 12px 12px;background:linear-gradient(180deg,color-mix(in srgb,var(--m) 26%,var(--card)),var(--bg));border:1px solid color-mix(in srgb,var(--m) 40%,transparent)}
+.pod1{min-height:204px}.pod2{min-height:170px}.pod3{min-height:150px}
+.pod b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pod-v{font-size:19px}
+.grp-rank{padding:12px 10px}
+.rk{width:30px;height:30px;line-height:30px;border-radius:50%;background:var(--bg);font-size:14px;flex:none}
+.rk1{background:#f5b301;color:#fff}.rk2{background:#9aa3b2;color:#fff}.rk3{background:#c47f3a;color:#fff}
+.rk-bar{height:9px}.rk-bar i{background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 45%,transparent),var(--tc))}
+.grp-rank.me{background:color-mix(in srgb,var(--tc) 12%,transparent);box-shadow:inset 3px 0 0 var(--tc)}
+.you-tag{background:var(--tc)}
+.rk-val{font-size:17px}
+.grp-tbl th{font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.grp-tbl th:first-child,.grp-tbl td:first-child{position:sticky;left:0;z-index:1;background:var(--card);font-weight:700}
+.grp-tbl tr.me td{background:color-mix(in srgb,var(--tc) 12%,var(--card))}
 </style>
 </head>
 <body>
@@ -1165,6 +1196,7 @@ async function add(){
   records.push({exam:cur,subject:null,entry_date:date,kind,score})
  }
  const {error}=await sb.from("entries").insert(records);if(error){alert(error.message);return}
+ try{sb.functions.invoke("telegram-notify",{body:{exam:cur}}).catch(()=>{})}catch(e){}
  await markPlansDone(cur,date,records);
  $("score").value="";document.querySelectorAll(".part-toggle").forEach(c=>{c.checked=false;c.closest(".part-row").querySelector(".part-score").hidden=true});document.querySelectorAll(".part-value,.raw-c").forEach(i=>i.value="");document.querySelectorAll(".raw-c").forEach(r=>{rawRangeUI(r,null);const q=r.closest(".stp");if(q)q.hidden=true});updateCalculatedScore();aDate.set(today());chartEx=cur;chartSub="full";asstEx=cur;asstTab="test";const ex0=cur;openPanel("assistantPanel");load().then(()=>runAI(ex0));
 }
@@ -3003,6 +3035,7 @@ EYEOFF=SV('<path d="M3 3l18 18"/><path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 
 GEAR=SV('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>'),
 USERS=SV('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/>');
 const TABS=[["overall","Overall"],["IELTS","IELTS"],["SAT","SAT"],["ENT","ҰБТ"],["streak","Streak"],["week","Week"]];
+const TCOL={overall:"var(--ac)",IELTS:"var(--ielts)",SAT:"var(--sat)",ENT:"var(--ent)",streak:"#f59e0b",week:"#22c55e"};
 const MAX={IELTS:9,SAT:1600,ENT:140},KEY={IELTS:"ielts_last",SAT:"sat_last",ENT:"ent_last"},BEST={IELTS:"ielts_best",SAT:"sat_best",ENT:"ent_best"};
 const num=v=>v==null?null:Number(v);
 function overall(r){const v=[];Object.keys(MAX).forEach(k=>{const x=num(r[KEY[k]]);if(x!=null)v.push(x/MAX[k]*100)});return v.length?v.reduce((a,c)=>a+c,0)/v.length:null}
@@ -3014,6 +3047,7 @@ function field(ph,type,max){const i=document.createElement("input");i.type=type|
 function pw(ph){const w=el("div",null,"pw"),i=field(ph,"password",40),b=document.createElement("button");b.type="button";b.className="pw-eye";b.setAttribute("aria-label","Show password");b.innerHTML=EYE;b.onclick=()=>{const s=i.type==="password";i.type=s?"text":"password";b.innerHTML=s?EYEOFF:EYE};w.append(i,b);w.input=i;return w}
 function btn(t,cls,fn,icon){const b=document.createElement("button");b.type="button";b.className="gbtn "+(cls||"");if(icon)b.innerHTML=icon;if(t)b.append(t);b.onclick=fn;return b}
 const people=n=>n+(n===1?" member":" members");
+function gbadge(n){let h=0;for(const x of n)h=(h*31+x.charCodeAt(0))%360;const s=el("span",(n.trim().charAt(0)||"G").toUpperCase(),"grp-badge");s.style.setProperty("--g1","hsl("+h+" 80% 58%)");s.style.setProperty("--g2","hsl("+((h+40)%360)+" 80% 42%)");return s}
 const isOwner=()=>{const o=G.rows.find(r=>r.is_owner);return !!o&&o.user_id===uid};
 
 async function loadHome(){try{G.mine=await rpc("my_groups")||[]}catch(e){G.mine=[];msg(e.message)}drawHome()}
@@ -3027,7 +3061,7 @@ function drawHome(){
 
   const mine=el("div",null,"card own");
   if(!G.mine.length)mine.append(el("p","No groups","mu"));
-  G.mine.forEach(g=>{const r=el("button",null,"grp-item");r.type="button";const l=el("div");l.append(el("b",g.name),el("span",people(g.members),"mu"));r.append(l);r.insertAdjacentHTML("beforeend",CHEV);r.onclick=()=>open(g);mine.append(r)});
+  G.mine.forEach(g=>{const r=el("button",null,"grp-item");r.type="button";const l=el("div");l.append(el("b",g.name),el("span",people(g.members),"mu"));r.append(gbadge(g.name),l);r.insertAdjacentHTML("beforeend",CHEV);r.onclick=()=>open(g);mine.append(r)});
   b.append(mine);
 
   const find=el("div",null,"card own");
@@ -3044,7 +3078,7 @@ function drawHome(){
 }
 function drawRes(box,d){
   box.replaceChildren();if(!d.length){box.append(el("p","Nothing found","mu"));return}
-  d.forEach(g=>{const r=el("div",null,"grp-item static"),l=el("div");l.append(el("b",g.name),el("span",people(g.members),"mu"));r.append(l);
+  d.forEach(g=>{const r=el("div",null,"grp-item static"),l=el("div");l.append(el("b",g.name),el("span",people(g.members),"mu"));r.append(gbadge(g.name),l);
     if(g.joined)r.append(btn("Open","",()=>open(g)));
     else{const j=btn("Join","",()=>{j.hidden=true;const p=pw("Password"),ok=btn("OK","pri",async()=>{try{ok.disabled=true;await rpc("join_group",{p_id:g.id,p_password:p.input.value});open(g)}catch(e){msg(e.message);ok.disabled=false}});p.input.addEventListener("keydown",e=>{if(e.key==="Enter")ok.click()});const x=el("div",null,"grp-join");x.append(p,ok);r.append(x);p.input.focus()});r.append(j)}
     box.append(r)})
@@ -3063,7 +3097,7 @@ function topBar(){
 }
 
 function drawGroup(){
-  const b=$("grpBody");if(!b)return;b.replaceChildren();b.append(topBar());
+  const b=$("grpBody");if(!b)return;b.replaceChildren();b.style.setProperty("--tc",TCOL[G.tab]||"var(--ac)");b.append(topBar());
   const seg=el("div",null,"seg");TABS.forEach(([id,n])=>{const s=el("button",n,"seg-btn"+(G.tab===id?" on":""));s.type="button";s.onclick=()=>{G.tab=id;drawGroup()};seg.append(s)});
   const sw=el("div",null,"grp-seg");sw.append(seg);b.append(sw);
 
@@ -3071,6 +3105,8 @@ function drawGroup(){
   const vals=rows.map(r=>metric(r,t)),mx=Math.max(1,...vals.filter(v=>v!=null));
   const scale=v=>t==="overall"?v:MAX[t]?v/MAX[t]*100:v/mx*100;
 
+  const mi=rows.findIndex(r=>r.user_id===uid);
+  if(mi>=0&&metric(rows[mi],t)!=null){const h=el("div",null,"grp-hero");h.innerHTML='<div><span class="gh-l">Your place</span><div class="gh-n">#'+(mi+1)+'<small> / '+rows.length+'</small></div></div><div class="gh-v">'+label(metric(rows[mi],t),t)+'</div>';b.append(h)}
   const card=el("div",null,"card");
   const pod=rows.filter(r=>metric(r,t)!=null).slice(0,3);
   if(pod.length>=2){const p=el("div",null,"podium");[1,0,2].forEach(i=>{const r=pod[i];if(!r)return;const c=el("div",null,"pod pod"+(i+1)+(r.user_id===uid?" me":""));if(i===0){const cw=el("span",null,"pod-crown");cw.innerHTML=CROWN;c.append(cw)}c.append(av(r),el("b",r.display_name||"Student"),el("span",label(metric(r,t),t),"pod-v"),el("span",String(i+1),"pod-n"));p.append(c)});card.append(p)}
