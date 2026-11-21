@@ -3063,6 +3063,7 @@ function drawHome(){
   if(!G.mine.length)mine.append(el("p","No groups","mu"));
   G.mine.forEach(g=>{const r=el("button",null,"grp-item");r.type="button";const l=el("div");l.append(el("b",g.name),el("span",people(g.members),"mu"));r.append(gbadge(g.name),l);r.insertAdjacentHTML("beforeend",CHEV);r.onclick=()=>open(g);mine.append(r)});
   b.append(mine);
+  if(G.mine.length){b.append(el("p","You can be in one group. Leave it to join another.","mu"));const m0=el("p",G.msg,"grp-msg");m0.id="grpMsg";b.append(m0);return}
 
   const find=el("div",null,"card own");
   const q=field("Group name","search",30),res=el("div",null,"grp-res"),row=el("div",null,"grp-row");
