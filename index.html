@@ -714,6 +714,23 @@ button.grp-item:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,
 .grp-tbl th{font-size:12px;text-transform:uppercase;letter-spacing:.05em}
 .grp-tbl th:first-child,.grp-tbl td:first-child{position:sticky;left:0;z-index:1;background:var(--card);font-weight:700}
 .grp-tbl tr.me td{background:color-mix(in srgb,var(--tc) 12%,var(--card))}
+
+/* compact group look */
+.grp-banner{padding:12px 16px;gap:12px;margin-bottom:10px;border-radius:18px}
+.grp-banner h2{font-size:19px}.grp-banner .gb-n{margin:2px 0 0;font-size:13px}
+.grp-banner::after{width:120px;height:120px;right:-30px;top:-50px}
+.grp-badge.big{width:44px;height:44px;border-radius:13px;font-size:20px;box-shadow:0 0 0 2px rgba(255,255,255,.55)}
+.grp-hero{padding:10px 14px;margin-bottom:10px;border-radius:16px}
+.gh-l{font-size:11px}.gh-n{font-size:22px}.gh-n small{font-size:13px}.gh-v{font-size:17px;padding:5px 12px;border-radius:12px}
+.podium{gap:8px;margin:6px 0 12px}
+.pod{padding:10px 6px 8px;border-radius:16px 16px 10px 10px;max-width:130px}
+.pod1{min-height:120px;padding-top:14px}.pod2{min-height:100px}.pod3{min-height:88px}
+.pod .grp-av{width:36px;height:36px}.pod b{font-size:13px}.pod-v{font-size:14px}
+.pod-n{width:20px;height:20px;font-size:11px}.pod-crown{top:-10px}.pod-crown .ico{width:18px;height:18px}
+.grp-rank{padding:8px 8px}.rk{width:24px;height:24px;line-height:24px;font-size:12px}
+.rk-val{font-size:14px}.rk-bar{height:6px}
+.grp-top h2{font-size:20px}
+.grp-item{padding:10px 12px}.grp-badge{width:38px;height:38px;font-size:16px}
 </style>
 </head>
 <body>
@@ -3057,14 +3074,14 @@ EYE=SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="
 EYEOFF=SV('<path d="M3 3l18 18"/><path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a10 10 0 0 0 4.3-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'),
 GEAR=SV('<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>'),EXIT=SV('<path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9"/>'),
 USERS=SV('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/>');
-const TABS=[["overall","Overall"],["IELTS","IELTS"],["SAT","SAT"],["ENT","ҰБТ"],["parts","By parts"],["streak","Best streak"],["week","Week"]];
+const TABS=[["overall","Overall"],["IELTS","IELTS"],["SAT","SAT"],["ENT","ҰБТ"],["streak","Best streak"],["week","Week"]];
 const TCOL={overall:"var(--ac)",IELTS:"var(--ielts)",SAT:"var(--sat)",ENT:"var(--ent)",streak:"#f59e0b",week:"#22c55e",parts:"#8b5cf6"};
 const MAX={IELTS:9,SAT:1600,ENT:140},KEY={IELTS:"ielts_last",SAT:"sat_last",ENT:"ent_last"},BEST={IELTS:"ielts_best",SAT:"sat_best",ENT:"ent_best"};
 const num=v=>v==null?null:Number(v);
 const smax=r=>{const m=G.maxs&&G.maxs[r.user_id];return m!=null?Number(m):Number(r.streak||0)};
 function overall(r){const v=[];Object.keys(MAX).forEach(k=>{const x=num(r[KEY[k]]);if(x!=null)v.push(x/MAX[k]*100)});return v.length?v.reduce((a,c)=>a+c,0)/v.length:null}
 function metric(r,t){if(t==="overall")return overall(r);if(MAX[t])return num(r[KEY[t]]);return num(t==="streak"?smax(r):r.week_attempts)}
-function label(v,t){if(v==null)return "—";if(t==="overall")return Math.round(v)+"%";if(t==="IELTS")return v.toFixed(1);if(t==="streak")return v+"d";return String(v)}
+function label(v,t){if(v==null)return "—";if(t==="overall")return Math.round(v)+"%";if(t==="IELTS")return v.toFixed(1);if(t==="streak")return v+(v===1?" day":" days");return String(v)}
 function msg(t,ok){G.msg=t||"";G.ok=!!ok;const m=$("grpMsg");if(m){m.textContent=G.msg;m.className="grp-msg"+(ok?" ok":"")}}
 function av(r){const d=el("span",null,"grp-av");if(r.avatar_url){const i=document.createElement("img");i.src=r.avatar_url;i.alt="";d.append(i)}else d.textContent=(r.display_name||"S").trim().charAt(0).toUpperCase();return d}
 function field(ph,type,max){const i=document.createElement("input");i.type=type||"text";i.placeholder=ph;if(max)i.maxLength=max;i.autocomplete="off";return i}
@@ -3145,58 +3162,33 @@ function topBar(){
 const PN={listening:"Listening",reading:"Reading",writing:"Writing",speaking:"Speaking",sat_reading:"Reading & Writing",sat_math:"Math",hist:"History of Kazakhstan",math_l:"Math literacy",read_l:"Reading literacy",math:"Mathematics",phys:"Physics",chem:"Chemistry",bio:"Biology",geo:"Geography",whist:"World history",eng:"English",inf:"Computer science",kzl:"Kazakh language",rul:"Russian language",law:"Fundamentals of law"};
 const PMX={listening:9,reading:9,writing:9,speaking:9,sat_reading:800,sat_math:800,hist:20,math_l:10,read_l:10};
 const pmax=id=>PMX[id]||50,pfmt=(ex,v)=>ex==="IELTS"?Number(v).toFixed(1):String(Math.round(v));
-function drawParts(b){
-  const ex=G.pex||"IELTS",exs=[["IELTS","IELTS"],["SAT","SAT"],["ENT","ҰБТ"]];
-  const sw=el("div",null,"grp-seg"),seg=el("div",null,"seg");
-  exs.forEach(([id,n])=>{const x=el("button",n,"seg-btn"+(ex===id?" on":""));x.type="button";x.onclick=()=>{G.pex=id;G.ppart=null;drawGroup()};seg.append(x)});sw.append(seg);b.append(sw);
-  if(G.pdata==null){const c=el("div",null,"card");c.append(el("h3","By parts"),el("p","Parts are not available yet. Run the group_parts SQL once in Supabase, then reopen this tab.","mu"));b.append(c);return}
-  const sc={};G.pdata.forEach(x=>{if(x.exam!==ex)return;(sc[x.user_id]??={})[x.subject]=Number(x.score)});
-  const ids=Object.keys(PN).filter(id=>Object.keys(sc).some(u=>sc[u][id]!=null));
-  if(!ids.length){const c=el("div",null,"card");c.append(el("p","No section results in this group yet.","mu"));b.append(c);return}
-  if(!G.ppart||ids.indexOf(G.ppart)<0)G.ppart=ids[0];
-  const pid=G.ppart,mx=pmax(pid);
-  const ps=el("div",null,"grp-seg"),pg=el("div",null,"seg");
-  ids.forEach(id=>{const x=el("button",PN[id],"seg-btn"+(pid===id?" on":""));x.type="button";x.onclick=()=>{G.ppart=id;drawGroup()};pg.append(x)});ps.append(pg);b.append(ps);
-  const rows=G.rows.slice().sort((x,y)=>{const a=(sc[x.user_id]||{})[pid],c=(sc[y.user_id]||{})[pid];if(a==null&&c==null)return 0;if(a==null)return 1;if(c==null)return -1;return c-a});
-  const card=el("div",null,"card");card.append(el("h3",PN[pid]+" · max "+pfmt(ex,mx)));
-  const list=el("div",null,"grp-list");
-  rows.forEach((r,i)=>{const v=(sc[r.user_id]||{})[pid],it=el("div",null,"grp-rank"+(r.user_id===uid?" me":""));
-    it.append(el("span",String(i+1),"rk rk"+(i<3&&v!=null?i+1:"")),av(r));
-    const mid=el("div",null,"rk-mid"),nm=el("b",r.display_name||"Student");if(r.user_id===uid)nm.append(el("span","You","you-tag"));
-    const pb=el("div",null,"rk-bar"),f=el("i");f.style.width=(v==null?0:Math.max(4,Math.min(100,v/mx*100)))+"%";pb.append(f);mid.append(nm,pb);
-    it.append(mid,el("span",v==null?"—":pfmt(ex,v),"rk-val"));list.append(it)});
-  card.append(list);b.append(card);
-  const st=el("div",null,"card"),w=el("div",null,"grp-tbl"),tb=document.createElement("table");
-  tb.innerHTML="<thead><tr><th>Member</th>"+ids.map(id=>"<th>"+PN[id]+"</th>").join("")+"</tr></thead>";
-  const body=document.createElement("tbody"),top={};
-  ids.forEach(id=>{top[id]=Math.max(...G.rows.map(r=>(sc[r.user_id]||{})[id]).filter(v=>v!=null))});
-  rows.forEach(r=>{const tr=document.createElement("tr");if(r.user_id===uid)tr.className="me";
-    const t0=document.createElement("td");t0.textContent=r.display_name||"Student";tr.append(t0);
-    ids.forEach(id=>{const v=(sc[r.user_id]||{})[id],td=document.createElement("td");td.textContent=v==null?"—":pfmt(ex,v);if(v!=null&&v===top[id]){td.style.fontWeight="800";td.style.color="var(--ok)"}tr.append(td)});body.append(tr)});
-  tb.append(body);w.append(tb);st.append(w);b.append(st);
-}
-
 function drawGroup(){
   const b=$("grpBody");if(!b)return;b.replaceChildren();b.style.setProperty("--tc",TCOL[G.tab]||"var(--ac)");b.append(topBar(),banner());
-  const seg=el("div",null,"seg");TABS.forEach(([id,n])=>{const s=el("button",n,"seg-btn"+(G.tab===id?" on":""));s.type="button";s.onclick=()=>{G.tab=id;drawGroup()};seg.append(s)});
+  const seg=el("div",null,"seg");TABS.forEach(([id,n])=>{const s=el("button",n,"seg-btn"+(G.tab===id?" on":""));s.type="button";s.onclick=()=>{G.tab=id;G.ppart=null;drawGroup()};seg.append(s)});
   const sw=el("div",null,"grp-seg");sw.append(seg);b.append(sw);
-  if(G.tab==="parts"){drawParts(b);const pm=el("p",G.msg,"grp-msg");pm.id="grpMsg";b.append(pm);return}
-
-  const t=G.tab,rows=G.rows.slice().sort((x,y)=>{const a=metric(x,t),c=metric(y,t);if(a==null&&c==null)return y.total_attempts-x.total_attempts;if(a==null)return 1;if(c==null)return -1;return c-a||y.total_attempts-x.total_attempts});
-  const vals=rows.map(r=>metric(r,t)),mx=Math.max(1,...vals.filter(v=>v!=null));
-  const scale=v=>t==="overall"?v:MAX[t]?v/MAX[t]*100:v/mx*100;
+  const t=G.tab;let sc=null,pids=[];
+  if(MAX[t]&&G.pdata){sc={};G.pdata.forEach(x=>{if(x.exam!==t)return;(sc[x.user_id]??={})[x.subject]=Number(x.score)});pids=Object.keys(PN).filter(id=>Object.keys(sc).some(u=>sc[u][id]!=null))}
+  if(pids.indexOf(G.ppart)<0)G.ppart=null;
+  const part=G.ppart;
+  if(pids.length){const ps=el("div",null,"grp-seg"),pg=el("div",null,"seg mini");
+    [[null,"Total"],...pids.map(id=>[id,PN[id]])].forEach(([id,n])=>{const x=el("button",n,"seg-btn"+(part===id?" on":""));x.type="button";x.onclick=()=>{G.ppart=id;drawGroup()};pg.append(x)});ps.append(pg);b.append(ps)}
+  const mf=r=>part?((sc[r.user_id]||{})[part]??null):metric(r,t);
+  const lb=v=>part?(v==null?"—":pfmt(t,v)):label(v,t);
+  const rows=G.rows.slice().sort((x,y)=>{const a=mf(x),c=mf(y);if(a==null&&c==null)return y.total_attempts-x.total_attempts;if(a==null)return 1;if(c==null)return -1;return c-a||y.total_attempts-x.total_attempts});
+  const vals=rows.map(mf),mx=Math.max(1,...vals.filter(v=>v!=null));
+  const scale=v=>part?v/pmax(part)*100:t==="overall"?v:MAX[t]?v/MAX[t]*100:v/mx*100;
 
   const mi=rows.findIndex(r=>r.user_id===uid);
-  if(mi>=0&&metric(rows[mi],t)!=null){const h=el("div",null,"grp-hero");h.innerHTML='<div><span class="gh-l">Your place</span><div class="gh-n">#'+(mi+1)+'<small> / '+rows.length+'</small></div></div><div class="gh-v">'+label(metric(rows[mi],t),t)+'</div>';b.append(h)}
+  if(mi>=0&&mf(rows[mi])!=null){const h=el("div",null,"grp-hero");h.innerHTML='<div><span class="gh-l">Your place</span><div class="gh-n">#'+(mi+1)+'<small> / '+rows.length+'</small></div></div><div class="gh-v">'+lb(mf(rows[mi]))+'</div>';b.append(h)}
   const card=el("div",null,"card");
-  const pod=rows.filter(r=>metric(r,t)!=null).slice(0,3);
-  if(pod.length>=2){const p=el("div",null,"podium");[1,0,2].forEach(i=>{const r=pod[i];if(!r)return;const c=el("div",null,"pod pod"+(i+1)+(r.user_id===uid?" me":""));if(i===0){const cw=el("span",null,"pod-crown");cw.innerHTML=CROWN;c.append(cw)}c.append(av(r),el("b",r.display_name||"Student"),el("span",label(metric(r,t),t),"pod-v"),el("span",String(i+1),"pod-n"));p.append(c)});card.append(p)}
+  const pod=rows.filter(r=>mf(r)!=null).slice(0,3);
+  if(pod.length>=2){const p=el("div",null,"podium");[1,0,2].forEach(i=>{const r=pod[i];if(!r)return;const c=el("div",null,"pod pod"+(i+1)+(r.user_id===uid?" me":""));if(i===0){const cw=el("span",null,"pod-crown");cw.innerHTML=CROWN;c.append(cw)}c.append(av(r),el("b",r.display_name||"Student"),el("span",lb(mf(r)),"pod-v"),el("span",String(i+1),"pod-n"));p.append(c)});card.append(p)}
   const list=el("div",null,"grp-list");
-  rows.forEach((r,i)=>{const v=metric(r,t),it=el("div",null,"grp-rank"+(r.user_id===uid?" me":""));
-    it.append(el("span",String(i+1),"rk rk"+(i<3?i+1:"")),av(r));
+  rows.forEach((r,i)=>{const v=mf(r),it=el("div",null,"grp-rank"+(r.user_id===uid?" me":""));
+    it.append(el("span",String(i+1),"rk rk"+(i<3&&v!=null?i+1:"")),av(r));
     const mid=el("div",null,"rk-mid"),nm=el("b",r.display_name||"Student");if(r.user_id===uid)nm.append(el("span","You","you-tag"));
     const pb=el("div",null,"rk-bar"),f=el("i");f.style.width=(v==null?0:Math.max(4,Math.min(100,scale(v))))+"%";pb.append(f);mid.append(nm,pb);
-    it.append(mid,el("span",label(v,t),"rk-val"));list.append(it)});
+    it.append(mid,el("span",lb(v),"rk-val"));list.append(it)});
   if(!rows.length)list.append(el("p","…","mu"));
   card.append(list);b.append(card);
 
@@ -3205,7 +3197,7 @@ function drawGroup(){
   const body=document.createElement("tbody");
   rows.forEach(r=>{const tr=document.createElement("tr");if(r.user_id===uid)tr.className="me";
     const c=k=>{const l=num(r[KEY[k]]),bs=num(r[BEST[k]]);return l==null?"—":(k==="IELTS"?l.toFixed(1):l)+(bs!=null&&bs!==l?" / "+(k==="IELTS"?bs.toFixed(1):bs):"")};
-    [r.display_name||"Student",c("IELTS"),c("SAT"),c("ENT"),smax(r)+"d",r.week_attempts,r.total_attempts].forEach(x=>{const td=document.createElement("td");td.textContent=x;tr.append(td)});body.append(tr)});
+    [r.display_name||"Student",c("IELTS"),c("SAT"),c("ENT"),smax(r)+(smax(r)===1?" day":" days"),r.week_attempts,r.total_attempts].forEach(x=>{const td=document.createElement("td");td.textContent=x;tr.append(td)});body.append(tr)});
   tb.append(body);w.append(tb);st.append(w);b.append(st);
   const m=el("p",G.msg,"grp-msg");m.id="grpMsg";b.append(m);
 }
