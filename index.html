@@ -775,7 +775,7 @@ button.grp-item:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,
       <button class="nav-btn" data-panel="goalsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M13 3.055a9 9 0 1 0 7.941 7.945"/><path d="M15 6v3h3l3-3h-3v-3z"/><path d="M15 9l-3 3"/></svg>Goals</button>
       <button class="nav-btn" data-panel="subjectsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>Portfolio</button>
       <button class="nav-btn" data-panel="plannerPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/><path d="m9 15 2 2 4-4"/></svg>Plans</button>
-      <button class="nav-btn" data-panel="groupsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.2c2.7.2 4.5 2 4.5 4.8"/></svg>Groups</button>
+      <button class="nav-btn" data-panel="groupsPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.2c2.7.2 4.5 2 4.5 4.8"/></svg>Group</button>
       <button class="nav-btn" data-panel="historyPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>History</button>
       <button class="nav-btn" data-panel="notifPanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Notifications<span class="nbadge" id="nBadge" hidden></span></button>
       <button class="nav-btn" data-panel="profilePanel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
@@ -1606,7 +1606,7 @@ function loadNotifUI(){
   const on=S.browser&&("Notification" in window)&&Notification.permission==="granted";$("nBrowser").textContent=on?"Turn off browser notifications":"Turn on browser notifications";
 }
 function saveNotifUI(){lsSet("notif",Object.assign(nSet(),{daily:$("nDaily").checked,streak:$("nStreak").checked,goals:$("nGoals").checked,improve:$("nImprove").checked,plan:$("nPlan").checked,freeOnly:$("nFree").checked}));renderNotif()}
-function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"Settings",subjectsPanel:"Portfolio",assistantPanel:"AI Coach",statsPanel:"Percentages",plannerPanel:"Plans",groupsPanel:"Groups",notifPanel:"Notifications",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel();if(id==="groupsPanel"&&window.renderGroups)window.renderGroups()}window.openPanel=openPanel;
+function openPanel(id){document.querySelectorAll(".app-panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));const names={overview:"Overview",addPanel:"Add Exam",progressPanel:"Progress",profilePanel:"Settings",subjectsPanel:"Portfolio",assistantPanel:"AI Coach",statsPanel:"Percentages",plannerPanel:"Plans",groupsPanel:"Group",notifPanel:"Notifications",goalsPanel:"Goals",historyPanel:"History"};$("pageTitle").textContent=names[id]||"Overview";document.body.dataset.panel=id;window.scrollTo({top:0,behavior:"smooth"});if(id==="progressPanel")chart();if(id==="overview")freq();if(id==="addPanel")setTodayLabel();if(id==="groupsPanel"&&window.renderGroups)window.renderGroups()}window.openPanel=openPanel;
 function updateShare(){const sl=$("pslug").value.trim().toLowerCase();if(sl)$("plink").value=location.origin+location.pathname+"?u="+sl}
 async function loadProfile(){
   const {data:p}=await sb.from("profiles").select("*").eq("user_id",uid).maybeSingle();
@@ -2603,6 +2603,7 @@ Percentages|Проценты|Пайыздар
 Goals|Цели|Мақсаттар
 Portfolio|Портфолио|Портфолио
 Plans|Планы|Жоспарлар
+Group|Группа|Топ
 History|История|Тарих
 Notifications|Уведомления|Хабарламалар
 Settings|Настройки|Баптаулар
@@ -3056,12 +3057,13 @@ EYE=SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="
 EYEOFF=SV('<path d="M3 3l18 18"/><path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a10 10 0 0 0 4.3-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'),
 GEAR=SV('<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>'),EXIT=SV('<path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9"/>'),
 USERS=SV('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/>');
-const TABS=[["overall","Overall"],["IELTS","IELTS"],["SAT","SAT"],["ENT","ҰБТ"],["streak","Streak"],["week","Week"]];
-const TCOL={overall:"var(--ac)",IELTS:"var(--ielts)",SAT:"var(--sat)",ENT:"var(--ent)",streak:"#f59e0b",week:"#22c55e"};
+const TABS=[["overall","Overall"],["IELTS","IELTS"],["SAT","SAT"],["ENT","ҰБТ"],["parts","By parts"],["streak","Best streak"],["week","Week"]];
+const TCOL={overall:"var(--ac)",IELTS:"var(--ielts)",SAT:"var(--sat)",ENT:"var(--ent)",streak:"#f59e0b",week:"#22c55e",parts:"#8b5cf6"};
 const MAX={IELTS:9,SAT:1600,ENT:140},KEY={IELTS:"ielts_last",SAT:"sat_last",ENT:"ent_last"},BEST={IELTS:"ielts_best",SAT:"sat_best",ENT:"ent_best"};
 const num=v=>v==null?null:Number(v);
+const smax=r=>{const m=G.maxs&&G.maxs[r.user_id];return m!=null?Number(m):Number(r.streak||0)};
 function overall(r){const v=[];Object.keys(MAX).forEach(k=>{const x=num(r[KEY[k]]);if(x!=null)v.push(x/MAX[k]*100)});return v.length?v.reduce((a,c)=>a+c,0)/v.length:null}
-function metric(r,t){if(t==="overall")return overall(r);if(MAX[t])return num(r[KEY[t]]);return num(t==="streak"?r.streak:r.week_attempts)}
+function metric(r,t){if(t==="overall")return overall(r);if(MAX[t])return num(r[KEY[t]]);return num(t==="streak"?smax(r):r.week_attempts)}
 function label(v,t){if(v==null)return "—";if(t==="overall")return Math.round(v)+"%";if(t==="IELTS")return v.toFixed(1);if(t==="streak")return v+"d";return String(v)}
 function msg(t,ok){G.msg=t||"";G.ok=!!ok;const m=$("grpMsg");if(m){m.textContent=G.msg;m.className="grp-msg"+(ok?" ok":"")}}
 function av(r){const d=el("span",null,"grp-av");if(r.avatar_url){const i=document.createElement("img");i.src=r.avatar_url;i.alt="";d.append(i)}else d.textContent=(r.display_name||"S").trim().charAt(0).toUpperCase();return d}
@@ -3093,8 +3095,11 @@ function iconEditor(){const box=el("div",null,"card");box.append(el("h3","Group 
 const isOwner=()=>{const o=G.rows.find(r=>r.is_owner);return !!o&&o.user_id===uid};
 
 async function loadHome(){try{G.mine=await rpc("my_groups")||[]}catch(e){G.mine=[];msg(e.message)}await loadIcons(G.mine.map(g=>g.id));drawHome()}
-async function loadGroup(){try{G.rows=await rpc("group_standings",{p_id:G.gid,p_today:today()})||[]}catch(e){G.rows=[];msg(e.message)}G.view==="group"&&draw()}
-function open(g){G.gid=g.id;G.gname=g.name;G.view="group";G.sub="board";G.tab="overall";G.rows=[];msg("");draw();loadGroup();loadIcons([g.id]).then(()=>{if(G.view==="group"&&G.gid===g.id)draw()})}
+async function loadGroup(){try{G.rows=await rpc("group_standings",{p_id:G.gid,p_today:today()})||[]}catch(e){G.rows=[];msg(e.message)}
+  G.view==="group"&&draw();
+  try{const d=await rpc("group_parts",{p_id:String(G.gid),p_today:today()});G.pdata=(d&&d.parts)||[];G.maxs=(d&&d.streaks)||{}}catch(e){G.pdata=null;G.maxs=null}
+  G.view==="group"&&G.sub==="board"&&draw()}
+function open(g){G.gid=g.id;G.gname=g.name;G.view="group";G.sub="board";G.tab="overall";G.rows=[];G.pdata=null;G.maxs=null;G.ppart=null;msg("");draw();loadGroup();loadIcons([g.id]).then(()=>{if(G.view==="group"&&G.gid===g.id)draw()})}
 const draw=()=>G.sub==="settings"?drawSettings():drawGroup();
 
 function drawHome(){
@@ -3127,7 +3132,7 @@ function drawRes(box,d){
 
 function topBar(){
   const top=el("div",null,"grp-top");
-  const back=btn("Groups","",()=>{if(G.sub==="settings"){G.sub="board";draw()}else{G.view="home";msg("");loadHome()}},BACK);
+  const back=btn("Group","",()=>{if(G.sub==="settings"){G.sub="board";draw()}else{G.view="home";msg("");loadHome()}},BACK);
   const ttl=el("div");ttl.append(el("h2",G.gname),el("p",people(G.rows.length),"mu"));
   const act=el("div",null,"grp-act");
   if(G.sub==="board"){
@@ -3137,10 +3142,45 @@ function topBar(){
   top.append(back,act);return top;
 }
 
+const PN={listening:"Listening",reading:"Reading",writing:"Writing",speaking:"Speaking",sat_reading:"Reading & Writing",sat_math:"Math",hist:"History of Kazakhstan",math_l:"Math literacy",read_l:"Reading literacy",math:"Mathematics",phys:"Physics",chem:"Chemistry",bio:"Biology",geo:"Geography",whist:"World history",eng:"English",inf:"Computer science",kzl:"Kazakh language",rul:"Russian language",law:"Fundamentals of law"};
+const PMX={listening:9,reading:9,writing:9,speaking:9,sat_reading:800,sat_math:800,hist:20,math_l:10,read_l:10};
+const pmax=id=>PMX[id]||50,pfmt=(ex,v)=>ex==="IELTS"?Number(v).toFixed(1):String(Math.round(v));
+function drawParts(b){
+  const ex=G.pex||"IELTS",exs=[["IELTS","IELTS"],["SAT","SAT"],["ENT","ҰБТ"]];
+  const sw=el("div",null,"grp-seg"),seg=el("div",null,"seg");
+  exs.forEach(([id,n])=>{const x=el("button",n,"seg-btn"+(ex===id?" on":""));x.type="button";x.onclick=()=>{G.pex=id;G.ppart=null;drawGroup()};seg.append(x)});sw.append(seg);b.append(sw);
+  if(G.pdata==null){const c=el("div",null,"card");c.append(el("h3","By parts"),el("p","Parts are not available yet. Run the group_parts SQL once in Supabase, then reopen this tab.","mu"));b.append(c);return}
+  const sc={};G.pdata.forEach(x=>{if(x.exam!==ex)return;(sc[x.user_id]??={})[x.subject]=Number(x.score)});
+  const ids=Object.keys(PN).filter(id=>Object.keys(sc).some(u=>sc[u][id]!=null));
+  if(!ids.length){const c=el("div",null,"card");c.append(el("p","No section results in this group yet.","mu"));b.append(c);return}
+  if(!G.ppart||ids.indexOf(G.ppart)<0)G.ppart=ids[0];
+  const pid=G.ppart,mx=pmax(pid);
+  const ps=el("div",null,"grp-seg"),pg=el("div",null,"seg");
+  ids.forEach(id=>{const x=el("button",PN[id],"seg-btn"+(pid===id?" on":""));x.type="button";x.onclick=()=>{G.ppart=id;drawGroup()};pg.append(x)});ps.append(pg);b.append(ps);
+  const rows=G.rows.slice().sort((x,y)=>{const a=(sc[x.user_id]||{})[pid],c=(sc[y.user_id]||{})[pid];if(a==null&&c==null)return 0;if(a==null)return 1;if(c==null)return -1;return c-a});
+  const card=el("div",null,"card");card.append(el("h3",PN[pid]+" · max "+pfmt(ex,mx)));
+  const list=el("div",null,"grp-list");
+  rows.forEach((r,i)=>{const v=(sc[r.user_id]||{})[pid],it=el("div",null,"grp-rank"+(r.user_id===uid?" me":""));
+    it.append(el("span",String(i+1),"rk rk"+(i<3&&v!=null?i+1:"")),av(r));
+    const mid=el("div",null,"rk-mid"),nm=el("b",r.display_name||"Student");if(r.user_id===uid)nm.append(el("span","You","you-tag"));
+    const pb=el("div",null,"rk-bar"),f=el("i");f.style.width=(v==null?0:Math.max(4,Math.min(100,v/mx*100)))+"%";pb.append(f);mid.append(nm,pb);
+    it.append(mid,el("span",v==null?"—":pfmt(ex,v),"rk-val"));list.append(it)});
+  card.append(list);b.append(card);
+  const st=el("div",null,"card"),w=el("div",null,"grp-tbl"),tb=document.createElement("table");
+  tb.innerHTML="<thead><tr><th>Member</th>"+ids.map(id=>"<th>"+PN[id]+"</th>").join("")+"</tr></thead>";
+  const body=document.createElement("tbody"),top={};
+  ids.forEach(id=>{top[id]=Math.max(...G.rows.map(r=>(sc[r.user_id]||{})[id]).filter(v=>v!=null))});
+  rows.forEach(r=>{const tr=document.createElement("tr");if(r.user_id===uid)tr.className="me";
+    const t0=document.createElement("td");t0.textContent=r.display_name||"Student";tr.append(t0);
+    ids.forEach(id=>{const v=(sc[r.user_id]||{})[id],td=document.createElement("td");td.textContent=v==null?"—":pfmt(ex,v);if(v!=null&&v===top[id]){td.style.fontWeight="800";td.style.color="var(--ok)"}tr.append(td)});body.append(tr)});
+  tb.append(body);w.append(tb);st.append(w);b.append(st);
+}
+
 function drawGroup(){
   const b=$("grpBody");if(!b)return;b.replaceChildren();b.style.setProperty("--tc",TCOL[G.tab]||"var(--ac)");b.append(topBar(),banner());
   const seg=el("div",null,"seg");TABS.forEach(([id,n])=>{const s=el("button",n,"seg-btn"+(G.tab===id?" on":""));s.type="button";s.onclick=()=>{G.tab=id;drawGroup()};seg.append(s)});
   const sw=el("div",null,"grp-seg");sw.append(seg);b.append(sw);
+  if(G.tab==="parts"){drawParts(b);const pm=el("p",G.msg,"grp-msg");pm.id="grpMsg";b.append(pm);return}
 
   const t=G.tab,rows=G.rows.slice().sort((x,y)=>{const a=metric(x,t),c=metric(y,t);if(a==null&&c==null)return y.total_attempts-x.total_attempts;if(a==null)return 1;if(c==null)return -1;return c-a||y.total_attempts-x.total_attempts});
   const vals=rows.map(r=>metric(r,t)),mx=Math.max(1,...vals.filter(v=>v!=null));
@@ -3161,11 +3201,11 @@ function drawGroup(){
   card.append(list);b.append(card);
 
   const st=el("div",null,"card"),w=el("div",null,"grp-tbl"),tb=document.createElement("table");
-  tb.innerHTML="<thead><tr><th>Member</th><th>IELTS</th><th>SAT</th><th>ҰБТ</th><th>Streak</th><th>Week</th><th>Total</th></tr></thead>";
+  tb.innerHTML="<thead><tr><th>Member</th><th>IELTS</th><th>SAT</th><th>ҰБТ</th><th>Best streak</th><th>Week</th><th>Total</th></tr></thead>";
   const body=document.createElement("tbody");
   rows.forEach(r=>{const tr=document.createElement("tr");if(r.user_id===uid)tr.className="me";
     const c=k=>{const l=num(r[KEY[k]]),bs=num(r[BEST[k]]);return l==null?"—":(k==="IELTS"?l.toFixed(1):l)+(bs!=null&&bs!==l?" / "+(k==="IELTS"?bs.toFixed(1):bs):"")};
-    [r.display_name||"Student",c("IELTS"),c("SAT"),c("ENT"),r.streak+"d",r.week_attempts,r.total_attempts].forEach(x=>{const td=document.createElement("td");td.textContent=x;tr.append(td)});body.append(tr)});
+    [r.display_name||"Student",c("IELTS"),c("SAT"),c("ENT"),smax(r)+"d",r.week_attempts,r.total_attempts].forEach(x=>{const td=document.createElement("td");td.textContent=x;tr.append(td)});body.append(tr)});
   tb.append(body);w.append(tb);st.append(w);b.append(st);
   const m=el("p",G.msg,"grp-msg");m.id="grpMsg";b.append(m);
 }
@@ -3174,13 +3214,13 @@ function drawSettings(){
   const b=$("grpBody");if(!b)return;b.replaceChildren();b.append(topBar(),banner(),iconEditor());
   // add by nickname
   const add=el("div",null,"card"),nick=field("Nickname","text",20),row=el("div",null,"grp-row");
-  const go=async()=>{try{await rpc("group_add_member",{p_id:G.gid,p_nick:nick.value});nick.value="";msg("Added",true);await loadGroup()}catch(e){msg(e.message)}};
+  const go=async()=>{try{await rpc("group_add_member",{p_id:G.gid,p_nick:nick.value});nick.value="";msg("");await loadGroup()}catch(e){msg(e.message)}};
   nick.addEventListener("keydown",e=>{if(e.key==="Enter")go()});row.append(nick,btn("Add","pri ok",go));add.append(el("h3","Add member"),row);b.append(add);
   // members
   const mem=el("div",null,"card");mem.append(el("h3","Members"));
   G.rows.forEach(r=>{const it=el("div",null,"grp-item static"),l=el("div",null,"grp-who");l.append(av(r),el("b",r.display_name||"Student"));it.append(l);
     if(r.is_owner)it.append(el("span","Owner","mu"));
-    else it.append(btn("Remove","danger",async()=>{if(!confirm("Remove "+(r.display_name||"member")+"?"))return;try{await rpc("group_kick",{p_id:G.gid,p_user:r.user_id});msg("Removed",true);await loadGroup()}catch(e){msg(e.message)}}));
+    else it.append(btn("Remove","danger",async()=>{if(!confirm("Remove "+(r.display_name||"member")+"?"))return;try{await rpc("group_kick",{p_id:G.gid,p_user:r.user_id});msg("");await loadGroup()}catch(e){msg(e.message)}}));
     mem.append(it)});
   b.append(mem);
   // password
