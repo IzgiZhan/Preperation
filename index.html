@@ -793,6 +793,71 @@ button.grp-item:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,
 .bub .caret{display:inline-block;width:7px;height:15px;margin-left:2px;vertical-align:-2px;border-radius:2px;background:#a855f7;animation:blink .8s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
 #asstBody .seg.tabs{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(112px,1fr);overflow-x:auto}#asstBody .seg.tabs .seg-btn{justify-content:center;min-height:42px}
+
+/* ===== round 2: tabs without scrolling, richer chat ===== */
+#asstBody .seg.tabs{display:grid;grid-template-columns:repeat(5,1fr);grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;gap:4px}
+#asstBody .seg.tabs .seg-btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:8px 6px;font-size:14px;white-space:nowrap}
+#asstBody .seg.tabs .seg-btn .ico{width:18px;height:18px;flex:none}
+@media(max-width:760px){#asstBody .seg.tabs .seg-btn{flex-direction:column;gap:3px;font-size:11.5px;min-height:54px;padding:7px 2px}#asstBody .seg.tabs .seg-btn .ico{width:20px;height:20px}}
+#asstBody .chips .chip .ico{width:18px;height:18px}
+
+.pd-sub{gap:10px;flex-wrap:wrap;justify-content:flex-start}.pd-sub span{background:var(--bg);border-radius:8px;padding:3px 9px}.pd-sub b{color:var(--tx)}
+.pd-note{grid-column:1/-1;font-size:12px;color:#b45309;background:color-mix(in srgb,#f59e0b 14%,var(--card));border-radius:8px;padding:6px 10px}
+.why-box{margin:14px 0 4px;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(219,39,119,.06));border:1px solid color-mix(in srgb,#a855f7 25%,var(--bd))}
+.why-box b{display:block;margin-bottom:4px}.why-box p{margin:0;font-size:13.5px;line-height:1.5;color:var(--mu)}
+
+.aichat{border-radius:24px;box-shadow:0 24px 50px -26px rgba(124,58,237,.85)}
+.aichat-in{border-radius:23px}
+.aichat-head{padding:16px 18px;color:#fff;border-bottom:0;position:relative;overflow:hidden;
+ background:radial-gradient(120% 170% at 0 0,#7c3aed 0,transparent 55%),radial-gradient(110% 170% at 100% 100%,#db2777 0,transparent 60%),#1e1b4b}
+.aichat-head::before{content:"";position:absolute;width:160px;height:160px;right:-40px;top:-70px;border-radius:50%;background:rgba(255,255,255,.12);filter:blur(8px);animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:translate(-24px,16px)}}
+.aichat-head>*{position:relative}
+.aichat-av{width:44px;height:44px;border-radius:15px;background:rgba(255,255,255,.18);backdrop-filter:blur(6px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.aichat-av::after{border-color:#2a2170}
+.aichat-ti b{font-size:17px;color:#fff}.aichat-ti span{color:rgba(255,255,255,.78)}
+.aichat-clr{color:rgba(255,255,255,.85)}.aichat-clr:hover{background:rgba(255,255,255,.18);color:#fff}
+.aichat-ctx{display:flex;gap:8px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--bd);background:var(--card)}
+.aichat-ctx span{font-size:12.5px;font-weight:650;padding:5px 11px;border-radius:999px;background:linear-gradient(135deg,rgba(124,58,237,.10),rgba(219,39,119,.08));color:var(--tx)}
+.aichat .chat-log{min-height:300px;max-height:56vh;gap:16px;padding:18px 16px 10px}
+.aichat .msg.ai .bub{background:var(--card);border:1px solid var(--bd);border-left:3px solid #a855f7;box-shadow:0 8px 20px -14px rgba(76,29,149,.5);font-size:15px}
+:root[data-theme=dark] .aichat .msg.ai .bub{background:#232327;border-color:#34343a;border-left-color:#a855f7}
+.aichat .msg.me .bub{background:linear-gradient(135deg,#7c3aed,#db2777);box-shadow:0 10px 22px -12px rgba(124,58,237,.9)}
+.aichat .bub.typing{gap:6px;padding:13px 16px}.aichat .bub.typing em{font-style:normal;font-size:13px;color:var(--mu);margin-left:6px}
+.qr{display:flex;gap:8px;flex-wrap:wrap;padding:6px 14px 0}.qr[hidden]{display:none}
+#asstBody .qr button.qrb{min-height:34px;min-width:0;padding:0 14px;border-radius:999px;font-size:13px;gap:7px;background:var(--bg);color:var(--tx)}
+#asstBody .qr button.qrb .ico{width:15px;height:15px;color:#a855f7}
+#asstBody .qr button.qrb:hover{background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff}#asstBody .qr button.qrb:hover .ico{color:#fff}
+.aichat .chat-row{border-top:0;padding:10px 14px 14px}
+.aichat .chat-in{background:var(--bg);border:1px solid transparent;font-size:15px}
+.sug .sug-ic{box-shadow:0 6px 14px -8px rgba(124,58,237,.9)}
+.chat-hero-ic{width:60px;height:60px;border-radius:20px;animation:pulseg 3.2s ease-in-out infinite}
+@keyframes pulseg{50%{box-shadow:0 14px 34px -8px rgba(219,39,119,.65)}}
+
+/* ===== part cards ===== */
+.pcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin:8px 0 6px}
+.pcard{--pc:var(--mu);position:relative;overflow:hidden;display:flex;flex-direction:column;gap:12px;padding:16px 16px 14px 20px;border:1px solid var(--bd);border-radius:20px;background:var(--card);box-shadow:0 10px 26px -20px rgba(16,24,40,.45)}
+.pcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--pc)}
+.pcard.empty{border-style:dashed;box-shadow:none}
+.pc-head{display:flex;align-items:center;gap:12px}
+.pc-ic{width:44px;height:44px;flex:none;border-radius:14px;display:grid;place-items:center;color:var(--pc);background:color-mix(in srgb,var(--pc) 14%,var(--card))}
+.pc-ic .ico{width:23px;height:23px}
+.pc-nm{flex:1;min-width:0;line-height:1.25}.pc-nm b{display:block;font-size:16.5px}.pc-nm small{font-size:12px;font-weight:700;color:var(--pc)}
+.pc-pct{font-size:28px;font-weight:800;letter-spacing:-.04em;color:var(--pc)}
+.pc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.pc-t{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:13px;background:var(--bg);min-width:0}
+.pc-t>.ico{width:19px;height:19px;flex:none}
+.pc-t small{display:block;font-size:11px;color:var(--mu);font-weight:650;line-height:1.2}.pc-t b{font-size:15px;white-space:nowrap}
+.pc-t .dl{font-size:11px;font-weight:800;margin-left:5px}.dl.up{color:var(--ok)}.dl.down{color:var(--bad)}
+.pc-t.t-last>.ico{color:var(--ac)}.pc-t.t-best>.ico{color:#f59e0b}.pc-t.t-avg>.ico{color:#8b5cf6}.pc-t.t-goal>.ico{color:var(--ok)}
+.pc-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;color:var(--mu)}
+.pc-foot>span:first-child{display:inline-flex;align-items:center;gap:6px;font-weight:650}.pc-foot .ico{width:16px;height:16px;color:var(--pc)}.pc-foot b{color:var(--tx)}
+.pc-foot .pd-note{margin:0;padding:3px 9px}
+#asstBody .pcard button.pc-add{min-height:36px;min-width:0;padding:0 14px;border-radius:999px;font-size:13px;gap:6px;box-shadow:none}
+@media(max-width:560px){.pc-stats{grid-template-columns:1fr 1fr}.pcards{grid-template-columns:1fr}}
+
+#asstBody .abar{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));max-width:620px}
+#asstBody .abar>button{min-width:0;width:100%}
 </style>
 </head>
 <body>
@@ -1319,6 +1384,7 @@ target:'<circle cx="12" cy="12" r="1"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M
 cal:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/><path d="m9 15 2 2 4-4"/>'};
 const IC=n=>'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">'+ICP[n]+'</svg>',EXICON={IELTS:"globe",SAT:"clip",ENT:"flag"};
 Object.assign(ICP,{wrench:'<path d="M14.7 6.3a4 4 0 0 0 5 5L12 19l-3-3 7.7-7.7z"/><path d="m9 16-4 4"/>',refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',cap:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>',chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',bolt:'<path d="M13 3 5 13h6l-1 8 8-10h-6z"/>',compass:'<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',pen:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>'});
+Object.assign(ICP,{headphones:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/>',book:'<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',calc:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/>',trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H4v1a3 3 0 0 0 4 3M16 6h4v1a3 3 0 0 1-4 3M12 13v4M8 20h8M10 17h4"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'});
 const fs=(ex,v)=>ex==="IELTS"&&v!=null&&v!==""&&!isNaN(v)?Number(v).toFixed(1):v;
 const fd=(ex,d)=>(d>0?"+":"")+(ex==="IELTS"?Number(d).toFixed(1):d);
 const BI=[[/^save/i,"save"],[/^edit/i,"edit"],[/^add/i,"plus"],[/^cancel/i,"cancel"],[/^details/i,"details"],[/^hide/i,"hide"],[/^change photo/i,"camera"],[/^change password/i,"key"],[/^share/i,"share"],[/^log in/i,"login"],[/^create account/i,"userplus"],[/^mark/i,"save"],[/^turn/i,"bell"]];
@@ -2174,11 +2240,13 @@ function projectSeries(ys,ds,mx,horizon){
   }else if(m===2)resid=Math.max(Math.abs(ys[1]-ys[0])/1.4,mx*.04);
   resid=Math.max(resid,mx*.025);
   slope=clampN(slope,-mx*.02/7,mx*.02/7);
-  let gain=slope*horizon;
+  let gs=slope,seG=se;
+  if(m<3&&horizon>0){gs=mx*.0003;seG=mx*.0004}   // too few results to see a trend: assume a normal slow improvement
+  let gain=gs*horizon;
   // growth slows near the ceiling: more time closes more of the gap, never all of it
   if(gain>0)gain=Math.min(gain,Math.max(0,mx-level)*.8*(1-Math.exp(-horizon/200)));
   const proj=clampN(level+gain,0,mx);
-  const sig=Math.sqrt(resid*resid*(1+1/m)+(se*horizon)**2+(mx*.006)**2*(horizon/7));
+  const sig=Math.sqrt(resid*resid*(1+1/m)+(seG*horizon)**2+(mx*.006)**2*(horizon/7));
   return {proj,sig:Math.max(sig,mx*.02),slope,n:m,level};
 }
 // Chance for one part: how far the forecast sits from that part's goal,
@@ -2289,11 +2357,23 @@ function chatSave(){lsSet(CHAT_KEY,chatLog.slice(-30))}
 // a short picture of the student so answers are about them, not about exams in general
 function chatContext(k){
   const c=chanceOf(k),l=attemptsOf(k).slice(-1)[0],pg=partGoals[k]||{};
-  return {exam:EX[k].n,max:EX[k].max,goal:goalOf(k),exam_date:deadlines[k]||null,
+  const o={exam:EX[k].n,max:EX[k].max,goal:goalOf(k),exam_date:deadlines[k]||null,
     days_left:deadlines[k]?daysTo(deadlines[k]):null,
     last_score:l?l.score:null,chance_percent:c?c.p:null,
     part_goals:partDefs(k).filter(p=>pg[p.id]>0).map(p=>({part:p.name,goal:pg[p.id]})),
     weak_parts:c&&c.parts.length?c.parts.slice().sort((a,b)=>a.p-b.p).slice(0,2).map(x=>x.name):[]};
+  // the student's profile and everything else the site knows, so the coach never has to ask for it
+  try{
+    const nm=$("pname")&&$("pname").value.trim(),gr=$("pgrade")&&$("pgrade").value;
+    o.profile={name:nm||null,status:gr||null,quote:quoteTxt||null};
+    o.parts=c?c.parts.map(p=>({part:p.name,goal:p.tg,chance_percent:p.p,last_score:p.now==null?null:p.now,results:p.n})):[];
+    o.all_exams=Object.keys(EX).map(x=>{const g=goalOf(x),cc=g?chanceOf(x):null,ll=attemptsOf(x).slice(-1)[0];
+      return {exam:EX[x].n,goal:g,last_score:ll?ll.score:null,chance_percent:cc?cc.p:null,days_left:deadlines[x]?daysTo(deadlines[x]):null}});
+    o.top_careers=careerScores().filter(x=>x.score>0).slice(0,3).map(x=>x.n+" "+x.score+"%");
+    o.portfolio_topics=portfolio.length;
+    o.ent_subjects=entSubs.filter(s=>SUBJ[s]).map(s=>SUBJ[s].en);
+  }catch(e){}
+  return o;
 }
 // small, safe markdown: no innerHTML, every piece becomes a real DOM node
 function mdInline(str,parent){
@@ -2327,9 +2407,9 @@ function mdRender(text){
   flush();
   return frag;
 }
-let chatLogEl=null;
-const CHAT_HINT="\n\n[Reply fast: max 4 short sentences or 5 bullets, no intro, no repetition.]";
-const SUGS=[["bulb","How do I fix my weakest part?"],["cal","Make me a plan for this week"],["cap","What universities fit my portfolio?"],["chart","Explain my chance in simple words"]];
+let chatLogEl=null,chatQrEl=null;
+const CHAT_HINT="\n\n[Reply fast: max 4 short sentences or 5 bullets, no intro. Use 2-3 fitting emojis. Reply in the language of my message above.]";
+const SUGS=[["bulb","How do I fix my weakest part?"],["target","Why is my chance so low?"],["cal","Make me a plan for this week"],["bolt","What should I study today?"],["cap","What universities fit my portfolio?"],["chart","Explain my chance in simple words"]];
 function copyBtn(text){const c=el("button",null,"bub-copy");c.type="button";c.title="Copy";c.innerHTML=IC("copy");
   c.onclick=async()=>{try{await navigator.clipboard.writeText(text);c.classList.add("ok");setTimeout(()=>c.classList.remove("ok"),1200)}catch(e){}};return c}
 function chatRow(m,empty){
@@ -2342,9 +2422,9 @@ function chatRow(m,empty){
   return r;
 }
 function typingRow(){const r=el("div",null,"msg ai typ"),av=el("div",null,"msg-av");av.innerHTML=IC("spark");
-  const bub=el("div",null,"bub typing");bub.innerHTML="<i></i><i></i><i></i>";r.append(av,bub);return r}
+  const bub=el("div",null,"bub typing");bub.innerHTML="<i></i><i></i><i></i><em>Thinking...</em>";r.append(av,bub);return r}
 // the answer appears word by word, so it feels alive and the wait does not feel long
-function typeIn(row,text,log){
+function typeIn(row,text,log,done){
   const bub=row.querySelector(".bub"),n=text.length,step=Math.max(3,Math.ceil(n/70));let i=0;
   const tick=()=>{
     if(!bub.isConnected)return;
@@ -2352,14 +2432,15 @@ function typeIn(row,text,log){
     bub.replaceChildren(mdRender(text.slice(0,i)));
     if(i<n){const caret=el("span",null,"caret");let t=bub.lastElementChild;
       if(t&&(t.tagName==="UL"||t.tagName==="OL")&&t.lastElementChild)t=t.lastElementChild;(t||bub).appendChild(caret)}
-    else bub.appendChild(copyBtn(text));
+    else{bub.appendChild(copyBtn(text));if(done)done()}
     if(log.scrollHeight-log.scrollTop-log.clientHeight<140)log.scrollTop=log.scrollHeight;
     if(i<n)setTimeout(tick,16);
   };tick();
 }
 function chatHero(k){
   const w=el("div",null,"chat-empty"),hero=el("div",null,"chat-hero"),ic=el("div",null,"chat-hero-ic");ic.innerHTML=IC("spark");
-  hero.append(ic,el("b","How can I help you today?"),el("p","Ask me anything about your exams, study plan, subjects or university choice.","mu"));
+  const nm=(chatContext(k).profile||{}).name;
+  hero.append(ic,el("b",nm?"Hi, "+nm+"! \u{1F44B}":"How can I help you today?"),el("p","Ask me anything about your exams, study plan, subjects or university choice.","mu"));
   w.appendChild(hero);
   const g=el("div",null,"sug-grid");
   SUGS.forEach(([icn,t])=>{const c=el("button",null,"hbtn sug");c.type="button";
@@ -2367,6 +2448,17 @@ function chatHero(k){
     c.onclick=()=>chatSend(k,(siteLang!=="en"&&tr1(t))||t);g.appendChild(c)});
   w.appendChild(g);return w;
 }
+// what the coach knows about you, shown as small chips so it is clear it sees your profile
+function chatCtxStrip(k){
+  const s=el("div",null,"aichat-ctx");let c;try{c=chatContext(k)}catch(e){return s}
+  const add=t=>{const x=el("span",t);s.appendChild(x)};
+  if(c.profile&&c.profile.name)add("\u{1F464} "+c.profile.name);
+  if(c.goal)add("\u{1F3AF} "+c.exam+" "+fs(k,c.goal));
+  if(c.days_left!=null&&c.days_left>=0)add("\u23F3 "+daysText(c.days_left));
+  if(c.chance_percent!=null)add("\u{1F4CA} "+c.chance_percent+"%");
+  s.hidden=!s.children.length;return s;
+}
+const QR=[["refresh","Explain simpler"],["cal","Make it a plan"],["bolt","Give an example"]];
 function chatBlock(k){
   const b=el("div",null,"block");
   chatLoad();
@@ -2376,12 +2468,17 @@ function chatBlock(k){
   const cl=el("button",null,"aichat-clr");cl.type="button";cl.title="Clear chat";cl.setAttribute("aria-label","Clear chat");cl.innerHTML=IC("trash");
   cl.onclick=()=>{if(chatBusy)return;chatLog=[];chatSave();renderAssistant()};
   head.append(av,ti,cl);inn.appendChild(head);
+  inn.appendChild(chatCtxStrip(k));
   const log=el("div",null,"chat-log");chatLogEl=log;
   if(!chatLog.length)log.appendChild(chatHero(k));
   chatLog.forEach(m=>log.appendChild(chatRow(m)));
   if(chatBusy)log.appendChild(typingRow());
   inn.appendChild(log);
   if(chatErr){const w=el("div",null,"ai-err");w.append(el("b","Chat did not answer"),el("p",chatErr));w.style.margin="0 12px 8px";inn.appendChild(w)}
+  const qr=el("div",null,"qr");chatQrEl=qr;qr.hidden=!chatLog.length||chatBusy;
+  QR.forEach(([icn,t])=>{const c=el("button",null,"hbtn qrb");c.type="button";c.innerHTML=IC(icn);c.append(el("span",t));
+    c.onclick=()=>chatSend(k,(siteLang!=="en"&&tr1(t))||t);qr.appendChild(c)});
+  inn.appendChild(qr);
   const row=el("div",null,"chat-row"),ta=document.createElement("textarea");
   ta.rows=1;ta.placeholder="Write your question\u2026";ta.className="chat-in";
   const send=el("button",null,"chat-send");send.type="button";send.innerHTML=IC("send");send.title="Send";
@@ -2399,15 +2496,14 @@ async function chatSend(k,text){
   chatLoad();
   chatLog.push({role:"me",text});chatSave();
   chatBusy=true;chatErr="";
-  // add the message right away without redrawing the whole panel: no flicker, answer feels instant
   const live=chatLogEl&&chatLogEl.isConnected&&asstTab==="chat";let tp=null;
   if(live){
     const blk=chatLogEl.closest(".aichat-in"),e=chatLogEl.querySelector(".chat-empty"),er=blk&&blk.querySelector(".ai-err"),ta=blk&&blk.querySelector(".chat-in");
     if(e)e.remove();if(er)er.remove();if(ta){ta.value="";ta.style.height="auto"}
+    if(chatQrEl)chatQrEl.hidden=true;
     chatLogEl.appendChild(chatRow({role:"me",text}));tp=typingRow();chatLogEl.appendChild(tp);
     chatLogEl.scrollTop=chatLogEl.scrollHeight;
   }else renderAssistant();
-  // send less history and ask for a short answer: fewer tokens in and out = faster reply
   const hist=chatLog.slice(-6).map((m,i,a)=>({role:m.role,text:String(m.text).slice(0,i===a.length-1&&m.role==="me"?600:500)+(i===a.length-1&&m.role==="me"?CHAT_HINT:"")}));
   const body={chat:true,fast:true,max_words:120,language:{en:"English",ru:"Russian",kk:"Kazakh"}[asstLang]||"English",
     context:chatContext(k),messages:hist};
@@ -2415,19 +2511,19 @@ async function chatSend(k,text){
   chatBusy=false;
   if(error||!data||data.error||!data.reply){chatErr=await errDetail(error,data);renderAssistant();return}
   const m={role:"ai",text:data.reply};chatLog.push(m);chatSave();
-  if(tp&&tp.isConnected&&chatLogEl&&chatLogEl.isConnected){const row=chatRow(m,true);tp.replaceWith(row);typeIn(row,m.text,chatLogEl)}
+  if(tp&&tp.isConnected&&chatLogEl&&chatLogEl.isConnected){const row=chatRow(m,true);tp.replaceWith(row);typeIn(row,m.text,chatLogEl,()=>{if(chatQrEl)chatQrEl.hidden=false})}
   else renderAssistant();
 }
-const goBtn=(text,fn,cls,ic)=>{const b=el("button",null,"main "+(cls||"go"));b.type="button";b.innerHTML=IC(ic||"bolt");b.append(el("span",text));b.onclick=fn;return b};
+const goBtn=(text,fn,cls,ic)=>{const b=el("button",null,"main "+(cls||"pri"));b.type="button";b.innerHTML=IC(ic||"bolt");b.append(el("span",text));b.onclick=fn;return b};
 const hb=(text,fn,ic,cls)=>{const b=el("button",null,"hbtn"+(cls?" "+cls:""));b.type="button";b.innerHTML=IC(ic);b.append(el("span",text));b.onclick=fn;return b};
-const emptyMsg=(box,text,btn,fn)=>{box.appendChild(el("p",text,"mu"));if(btn)box.appendChild(goBtn(btn,fn,"go",/goal/i.test(btn)?"target":/result/i.test(btn)?"plus":"compass"))};
+const emptyMsg=(box,text,btn,fn)=>{box.appendChild(el("p",text,"mu"));if(btn)box.appendChild(goBtn(btn,fn,"pri",/goal/i.test(btn)?"target":/result/i.test(btn)?"plus":"compass"))};
 function renderAssistant(){
   const box=$("asstBody");if(!box||viewUid||!uid)return;
   if(box.contains(document.activeElement)&&document.activeElement.tagName==="INPUT")return;
   box.replaceChildren();
-  const exc=el("div",null,"chips");chips(exc,asstEx,k=>{asstEx=k;renderAssistant()});box.appendChild(exc);
+  const exc=el("div",null,"chips");chips(exc,asstEx,k=>{asstEx=k;renderAssistant()});exc.querySelectorAll(".chip").forEach(c=>{if(EXICON[c.dataset.ex])c.insertAdjacentHTML("afterbegin",IC(EXICON[c.dataset.ex]))});box.appendChild(exc);
   const tabs=el("div",null,"seg tabs");
-  [["chance","🎯 Chance"],["test","📝 Last test"],["plan","📅 Plan"],["career","🧭 Careers"],["chat","💬 Chat"]].forEach(([k,n])=>{const b=el("button",n,"seg-btn"+(k===asstTab?" on":""));b.type="button";b.onclick=()=>{asstTab=k;renderAssistant()};tabs.appendChild(b)});
+  [["chance","target","Chance"],["test","pen","Last test"],["plan","cal","Plan"],["career","compass","Careers"],["chat","chat","Chat"]].forEach(([k,ic,n])=>{const b=el("button",null,"seg-btn"+(k===asstTab?" on":""));b.type="button";b.innerHTML=IC(ic);b.append(el("span",n));b.onclick=()=>{asstTab=k;renderAssistant()};tabs.appendChild(b)});
   box.appendChild(tabs);
   const k=asstEx;
   box.appendChild(asstTab==="test"?practiceBlock(k):asstTab==="plan"?scheduleBlock(k):asstTab==="career"?careerBlock():asstTab==="chat"?chatBlock(k):chanceBlock(k));
@@ -2446,25 +2542,45 @@ function chanceBlock(k){
   // show the arithmetic: the whole goal is only reached when every part is
   if(c.parts.length){
     b.appendChild(el("div","Chance for each part","step"));
-    const pb=el("div",null,"pdiag");
+    const pb=el("div",null,"pcards"),PIC={listening:"headphones",reading:"book",writing:"pen",speaking:"mic",sat_reading:"book",sat_math:"calc"};
+    const fa=v=>k==="IELTS"?(Math.round(v*10)/10).toFixed(1):String(Math.round(v));
     c.parts.slice().sort((x,y)=>x.p-y.p).forEach(x=>{
       const pc=x.n?(x.p>=70?"var(--ok)":x.p>=40?"#f59e0b":"var(--bad)"):"var(--mu)";
-      const r=el("div",null,"pd-row");r.style.setProperty("--pc",pc);
-      const v=el("span",x.n?x.p+"%":"no results yet","pd-val");v.style.color=pc;
-      const tk=el("div",null,"pd-track"+(x.n?"":" empty")),f=el("i",null,"pd-fill");tk.appendChild(f);
-      r.append(el("span",x.name,"pd-name"),v,tk);
-      if(x.n){const sb=el("div",null,"pd-sub");sb.append(el("span","goal "+fs(k,x.tg)));r.appendChild(sb)}
-      pb.appendChild(r);
+      const sc=entries.filter(e=>e.exam===k&&e.subject===x.id).sort((p,q)=>p.date<q.date?-1:p.date>q.date?1:(p.ts||0)-(q.ts||0)).map(e=>e.score);
+      const card=el("div",null,"pcard"+(x.n?"":" empty"));card.style.setProperty("--pc",pc);
+      const hd=el("div",null,"pc-head"),ic=el("span",null,"pc-ic");ic.innerHTML=IC(PIC[x.id]||"clip");
+      const nm=el("div",null,"pc-nm");nm.append(el("b",x.name),el("small",x.n?(x.p>=70?"On track":x.p>=40?"Needs work":"Hard"):"no results yet"));
+      hd.append(ic,nm);
+      if(x.n)hd.appendChild(el("span",x.p+"%","pc-pct"));
+      else hd.appendChild(hb("Add result",()=>{setEx(k);openPanel("addPanel")},"plus","pc-add"));
+      card.appendChild(hd);
+      const tk=el("div",null,"pd-track"+(x.n?"":" empty")),f=el("i",null,"pd-fill");tk.appendChild(f);card.appendChild(tk);
       requestAnimationFrame(()=>requestAnimationFrame(()=>{f.style.width=(x.n?Math.max(3,x.p):0)+"%"}));
+      const tile=(cls,icn,lab,val,extra)=>{const t=el("div",null,"pc-t "+cls);t.innerHTML=IC(icn);const d=el("div"),l=el("small",lab),v=el("b",val);
+        if(extra)v.appendChild(extra);d.append(l,v);t.appendChild(d);return t};
+      const st=el("div",null,"pc-stats");
+      if(sc.length){
+        const last=sc[sc.length-1],prev=sc.length>1?sc[sc.length-2]:null,best=Math.max(...sc),avg=sc.reduce((a,b)=>a+b,0)/sc.length;
+        let dl=null;if(prev!=null&&last!==prev){dl=el("span",fd(k,last-prev),"dl "+(last>prev?"up":"down"))}
+        st.append(tile("t-last","clock","Latest",fs(k,last),dl),tile("t-best","trophy","Best",fs(k,best)),tile("t-avg","chart","Average",fa(avg)),tile("t-goal","target","Goal",fs(k,x.tg)));
+      }else st.append(tile("t-goal","target","Goal",fs(k,x.tg)));
+      card.appendChild(st);
+      if(x.n){const ft=el("div",null,"pc-foot");const fi=document.createElement("span");fi.innerHTML=IC("up");fi.append(el("span","Forecast"),document.createTextNode(" "),el("b",fs(k,x.projR)));ft.appendChild(fi);
+        if(x.n<3)ft.appendChild(el("span","Few results so far. Add more tests for a better forecast.","pd-note"));card.appendChild(ft)}
+      pb.appendChild(card);
     });
     b.appendChild(pb);
     const lg=el("div",null,"pd-legend");
     [["var(--ok)","On track"],["#f59e0b","Needs work"],["var(--bad)","Hard"]].forEach(([c,t])=>{const s=el("span");const d=document.createElement("i");d.style.background=c;s.append(d,document.createTextNode(t));lg.appendChild(s)});
     b.appendChild(lg);
+    
+const ex=el("div",null,"why-box");
+    ex.append(el("b","Why this number?"),el("p","We take your latest results, forecast your level on exam day and compare it with your goal. The whole exam needs every part to reach its goal, so the weakest part pulls the total down."));
+    b.appendChild(ex);
 
     b.appendChild(el("p","The total sits close to your weakest part."+(c.untested?" A part with no results counts as 50%.":""),"mu"));
   }
-  const bar=el("div",null,"abar");bar.append(goBtn("What to fix",()=>{asstTab="test";renderAssistant()},"go","wrench"),hb("My plan",()=>{asstTab="plan";renderAssistant()},"cal"));
+  const bar=el("div",null,"abar");bar.append(goBtn("What to fix",()=>{asstTab="test";renderAssistant()},"pri","wrench"),hb("My plan",()=>{asstTab="plan";renderAssistant()},"cal"),hb("Why this number?",()=>{asstTab="chat";renderAssistant();chatSend(k,(siteLang!=="en"&&tr1("Why is my chance so low?"))||"Why is my chance so low?")},"bulb"));
   b.appendChild(bar);return b;
 }
 function careerBlock(){
@@ -2895,6 +3011,17 @@ no date|нет даты|күні жоқ
 💪 You can do it. Work on your weak parts.|💪 У тебя получится. Подтяни слабые части.|💪 Сен істей аласың. Әлсіз жерлерді жақсарт.
 ⚠️ Hard for now. Follow the plan every day.|⚠️ Пока сложно. Занимайся по плану каждый день.|⚠️ Әзірге қиын. Күн сайын жоспармен оқы.
 What to fix|Что исправить|Не түзету керек
+Why is my chance so low?|Почему мой шанс такой низкий?|Менің мүмкіндігім неге төмен?
+What should I study today?|Что мне учить сегодня?|Бүгін не оқуым керек?
+Explain simpler|Объясни проще|Қарапайымырақ түсіндір
+Make it a plan|Сделай из этого план|Мұны жоспар қылып бер
+Give an example|Приведи пример|Мысал келтір
+Why this number?|Почему такое число?|Неге бұл сан?
+Now|Сейчас|Қазір
+Forecast|Прогноз|Болжам
+Few results so far. Add more tests for a better forecast.|Пока мало результатов. Добавь больше тестов для точного прогноза.|Әзірге нәтиже аз. Болжам дәлірек болу үшін көбірек тест қос.
+We take your latest results, forecast your level on exam day and compare it with your goal. The whole exam needs every part to reach its goal, so the weakest part pulls the total down.|Мы берём твои последние результаты, прогнозируем уровень на день экзамена и сравниваем с целью. Чтобы достичь цели, нужно набрать её в каждой части, поэтому самая слабая часть тянет общий шанс вниз.|Біз соңғы нәтижелеріңді алып, емтихан күніндегі деңгейді болжап, мақсатпен салыстырамыз. Мақсатқа жету үшін әр бөлімде мақсатқа жету керек, сондықтан ең әлсіз бөлім жалпы мүмкіндікті төмендетеді.
+Thinking...|Думаю...|Ойланып жатырмын...
 How can I help you today?|Чем могу помочь сегодня?|Бүгін қалай көмектесе аламын?
 Online · replies in seconds|Онлайн · отвечает за секунды|Онлайн · секундтарда жауап береді
 On track|В порядке|Жақсы
