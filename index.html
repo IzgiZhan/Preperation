@@ -902,16 +902,31 @@ button .ico{flex:none}
 #grpBody .grp-seg .seg.mini .seg-btn.on{background:var(--ac);border-color:var(--ac)!important;color:#fff}
 .el-det{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.el-det>span{display:inline-flex;gap:8px;padding:4px 10px;border-radius:8px;background:var(--card);border:1px solid var(--bd);font-size:13px;color:var(--mu)}.el-det b{display:inline;color:var(--tx)}
 /* ===== Serious buttons: flat, square-ish, each kind keeps its own colour ===== */
-html body button.main,html body button.hbtn:not(.sug):not(.qrb),html body #grpBody button.gbtn{--k:#1764c0;min-height:40px;height:auto;padding:8px 16px;border-radius:6px!important;font-size:14px;font-weight:600;letter-spacing:0;box-shadow:none!important;transform:none!important;transition:filter .12s;background:var(--k)!important;border:1px solid var(--k)!important;color:#fff!important}
-html body button.main.save,html body #grpBody button.gbtn.ok{--k:#1b7f46}
-html body button.main.add{--k:#0e7490}
-html body button.main.ai,html body button.hbtn.ai.ai.ai{--k:#6341c0}
-html body button.hbtn.amber.amber.amber,html body #grpBody button.gbtn.amber{--k:#a85d00}
-html body button.hbtn.gray.gray.gray,html body #grpBody button.gbtn:not(.pri):not(.ok):not(.blue):not(.danger){--k:#5b6472}
-html body button.main.go,html body #grpBody button.gbtn.blue{--k:#4750b8}
-html body button.main.danger,html body #grpBody button.gbtn.danger{--k:#c0271d}
+html body button.main,html body button.hbtn:not(.sug):not(.qrb),html body #grpBody button.gbtn{--k:#0a6cff;min-height:40px;height:auto;padding:8px 16px;border-radius:6px!important;font-size:14px;font-weight:600;letter-spacing:0;box-shadow:none!important;transform:none!important;transition:filter .12s;background:var(--k)!important;border:1px solid var(--k)!important;color:#fff!important}
+html body button.main.save,html body #grpBody button.gbtn.ok{--k:#0b9e4b}
+html body button.main.add{--k:#008bbd}
+html body button.main.ai,html body button.hbtn.ai.ai.ai{--k:#8b35ff}
+html body button.hbtn.amber.amber.amber,html body #grpBody button.gbtn.amber{--k:#e06700}
+html body button.hbtn.gray.gray.gray,html body #grpBody button.gbtn:not(.pri):not(.ok):not(.blue):not(.danger){--k:#64748b}
+html body button.main.go,html body #grpBody button.gbtn.blue{--k:#5145ff}
+html body button.main.danger,html body #grpBody button.gbtn.danger{--k:#f0213a}
 html body button.main:hover,html body button.hbtn:not(.sug):not(.qrb):hover,html body #grpBody button.gbtn:hover{filter:brightness(1.12)}
 html body button .ico{width:16px;height:16px;stroke-width:1.8}
+/* shapes: every kind has its own */
+html body button.main{border-radius:999px!important}
+html body button.main.save,html body #grpBody button.gbtn.ok{border-radius:14px!important}
+html body button.main.ai,html body button.hbtn.ai.ai.ai{border-radius:20px 6px 20px 6px!important}
+html body button.main.go,html body #grpBody button.gbtn.blue{border-radius:6px 20px 6px 20px!important}
+html body button.main.add,html body #grpBody button.gbtn.pri:not(.ok){border-radius:999px!important}
+html body button.hbtn:not(.sug):not(.qrb){border-radius:12px!important}
+html body button.hbtn.amber.amber.amber{border-radius:999px!important}
+html body button.main.danger,html body #grpBody button.gbtn.danger{border-radius:8px 8px 18px 18px!important}
+/* quick reaction to hover and tap */
+html body button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+html body button.main,html body button.hbtn:not(.sug):not(.qrb),html body #grpBody button.gbtn{transition:transform .09s ease,filter .09s ease!important}
+html body button.main:not(:disabled):hover,html body button.hbtn:not(.sug):not(.qrb):not(:disabled):hover,html body #grpBody button.gbtn:not(:disabled):hover{transform:translateY(-2px) scale(1.03)!important}
+html body button.main:not(:disabled):active,html body button.hbtn:not(.sug):not(.qrb):not(:disabled):active,html body #grpBody button.gbtn:not(:disabled):active{transform:scale(.92)!important;filter:brightness(.9)}
+html body button.wide:hover,html body .auth-submit:hover{transform:translateY(-2px)!important}
 /* ===== Less lag: no blur or endless decoration ===== */
 *,*::before,*::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 .aichat-head::before{animation:none;filter:none}.chat-hero-ic{animation:none}
