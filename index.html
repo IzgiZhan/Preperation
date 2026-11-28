@@ -901,6 +901,19 @@ button .ico{flex:none}
 #grpBody .grp-seg .seg-btn.on{color:var(--ac);border-bottom-color:var(--ac)!important}
 #grpBody .grp-seg .seg.mini .seg-btn.on{background:var(--ac);border-color:var(--ac)!important;color:#fff}
 .el-det{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.el-det>span{display:inline-flex;gap:8px;padding:4px 10px;border-radius:8px;background:var(--card);border:1px solid var(--bd);font-size:13px;color:var(--mu)}.el-det b{display:inline;color:var(--tx)}
+/* ===== Serious buttons ===== */
+:root{--btn:#1d3557;--btn-bd:#c3cad5;--btn-tx:#1d3557}
+:root[data-theme=dark]{--btn:#34598c;--btn-bd:#444b57;--btn-tx:#e6ebf2}
+html body button.main,html body button.hbtn:not(.sug):not(.qrb),html body #grpBody button.gbtn{min-height:40px;height:auto;padding:8px 16px;border-radius:6px!important;font-size:14px;font-weight:600;letter-spacing:0;box-shadow:none!important;transform:none!important;transition:background-color .12s,border-color .12s;background:var(--card)!important;color:var(--btn-tx)!important;border:1px solid var(--btn-bd)!important}
+html body button.main:hover,html body button.hbtn:not(.sug):not(.qrb):hover,html body #grpBody button.gbtn:hover{border-color:var(--btn-tx)!important;filter:none}
+html body button.main:not(.go):not(.danger),html body #grpBody button.gbtn.pri{background:var(--btn)!important;border-color:var(--btn)!important;color:#fff!important}
+html body button.main:not(.go):not(.danger):hover,html body #grpBody button.gbtn.pri:hover{filter:brightness(1.15)}
+html body button.danger.main,html body #grpBody button.gbtn.danger{background:var(--card)!important;color:var(--bad)!important;border-color:color-mix(in srgb,var(--bad) 55%,var(--card))!important}
+html body #grpBody button.gbtn.danger:hover{background:var(--badbg)!important;border-color:var(--bad)!important}
+html body button .ico{width:16px;height:16px;stroke-width:1.8}
+/* ===== Less lag: no blur or endless decoration ===== */
+*,*::before,*::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.aichat-head::before{animation:none;filter:none}.chat-hero-ic{animation:none}
 </style>
 </head>
 <body>
@@ -915,7 +928,7 @@ button .ico{flex:none}
       <h2>Make progress.<br>Reach your goals.</h2>
       <p>Keep your exam results, follow your progress and get a smarter plan for your next step.</p>
     </div>
-    <div class="auth-exams"><span>IELTS</span><span>SAT</span><span>ҰБТ</span></div>
+    <div class="auth-exams"><span>IELTS</span><span>SAT</span><span>UNT</span></div>
     <div class="auth-brand-foot">One place for every achievement.</div>
   </div>
   <div class="auth-form">
@@ -996,7 +1009,7 @@ button .ico{flex:none}
 
     <section class="app-panel" id="goalsPanel"><div class="page-intro"><h2>Goals and exam dates</h2><p class="mu">Set a goal for each part and an exam date. The overall goal is counted for you.</p></div><div class="card own"><div id="goals" class="goals"></div></div></section>
     <section class="app-panel" id="plannerPanel"><div class="page-intro"><h2>Plans</h2></div>
-<div class="card own"><div class="row"><div><label>Exam</label><select id="pExam"><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">ҰБТ</option></select></div><div><label>Date</label><div id="pDate"></div></div></div>
+<div class="card own"><div class="row"><div><label>Exam</label><select id="pExam"><option value="IELTS">IELTS</option><option value="SAT">SAT</option><option value="ENT">UNT</option></select></div><div><label>Date</label><div id="pDate"></div></div></div>
 <div class="row"><div id="pSecWrap"><label>Sections</label><div id="pSecBox"></div></div><div></div></div><button class="main" id="pAdd" type="button">Add plan</button><p class="mu" id="pMsg"></p></div>
 <div class="block"><div class="week" id="pWeek"></div></div>
 <div id="pFree"></div>
@@ -1016,6 +1029,7 @@ button .ico{flex:none}
 <label class="switch"><input type="checkbox" id="ppub" checked> Public profile</label></div>
 <div id="profView" class="info" hidden><div class="info-row"><span>Name</span><b id="vName"></b></div><div class="info-row"><span>Status</span><b id="vGrade"></b></div><div class="info-row"><span>Birthday</span><b id="vBirth"></b></div><div class="info-row"><span>Public profile</span><b id="vPub"></b></div></div>
 <button class="main" id="psaveBtn" type="button">Save profile</button><p class="mu" id="pmsg"></p></div>
+<div class="card own" id="entSet" data-tab="profile"></div>
 <div class="card own" id="siteSet" data-tab="site"></div>
 <div class="card own" data-tab="notif"><h3 class="sub-h">Reminders</h3>
 <label class="switch"><input type="checkbox" id="nDaily"> Daily study reminder</label>
@@ -1035,7 +1049,7 @@ button .ico{flex:none}
 </div>
 
 <script>
-const EX={IELTS:{n:"IELTS",max:9,step:0.5,c:"var(--ielts)"},SAT:{n:"SAT",max:1600,step:10,c:"var(--sat)"},ENT:{n:"ҰБТ",max:140,step:1,c:"var(--ent)"}};
+const EX={IELTS:{n:"IELTS",max:9,step:0.5,c:"var(--ielts)"},SAT:{n:"SAT",max:1600,step:10,c:"var(--sat)"},ENT:{n:"UNT",max:140,step:1,c:"var(--ent)"}};
 const SUBJ={
 full:{max:140,kk:"Толық тест",ru:"Полный тест",en:"Full test"},
 hist:{max:20,m:1,kk:"Қазақстан тарихы",ru:"История Казахстана",en:"History of Kazakhstan"},
@@ -1069,7 +1083,7 @@ function langUI(){
   document.querySelectorAll(".lang-box").forEach(b=>{
     const c=b.dataset.ctx,on=c==="add"?cur==="ENT":c==="chart"?chartEx==="ENT":c==="profile"?true:coachEx==="ENT";
     b.hidden=!on;b.innerHTML="";if(!on)return;
-    b.appendChild(el("span","ҰБТ language:","mu"));
+    b.appendChild(el("span","UNT language:","mu"));
     [["kk","Қазақша"],["ru","Русский"]].forEach(([k,n])=>{const x=el("button",null,"chip"+(k===entLang?" on":""));x.innerHTML="<span>"+n+"</span>";x.onclick=()=>{entLang=k;lsSet("ent_lang",k);fillElect();renderExamParts();render()};b.appendChild(x)})
   })
 }
@@ -1139,14 +1153,14 @@ async function saveEntElectives(){
  lsSet("ent_subjects",entSubs);
  const slug=$("pslug")?.value;
  if(uid&&slug){
-  const {error}=await sb.from("profiles").upsert({user_id:uid,slug,is_public:true,ent_subjects:entSubs},{onConflict:"user_id"});
+  const {error}=await sb.from("profiles").upsert({user_id:uid,slug,is_public:$("ppub").checked,ent_subjects:entSubs},{onConflict:"user_id"});
   if(error)console.warn("Could not save elective subjects:",error.message);
  }
 }
 function renderExamParts(){
  fillEntElectives();
  const parts=examParts();$("examParts").hidden=!parts.length;$("singleScoreRow").hidden=!!parts.length;$("subjWrap").hidden=true;
- $("partsTitle").textContent=cur==="IELTS"?"IELTS sections":cur==="ENT"?"ҰБТ пәндері":"SAT sections";
+ $("partsTitle").textContent=cur==="IELTS"?"IELTS sections":cur==="ENT"?"UNT sections":"SAT sections";
  $("partsList").innerHTML=parts.map(p=>{
   const lo=cur==="IELTS"?2.5:(p.min??0),st=p.step||1;
   const scoreControl=stepper("part-value",`data-part="${p.id}" ${cur==="IELTS"?'data-fmt="1" ':""}aria-label="${p.name}"`,lo,p.max,st,cur==="IELTS"?lo.toFixed(1)+"\u20139.0":lo+"\u2013"+p.max);
@@ -1172,7 +1186,7 @@ function updateCalculatedScore(){
  let label="Overall score",total="—",hint="";
  if(cur==="IELTS")label="Overall IELTS band";
  if(cur==="SAT")label="Total SAT score";
- if(cur==="ENT")label="Total ҰБТ score";
+ if(cur==="ENT")label="Total UNT score";
  if(values.length){
    const sum=values.reduce((a,v)=>a+v.score,0);
    if(cur==="IELTS")total=(Math.round(sum/values.length*2)/2).toFixed(1);
@@ -1803,7 +1817,7 @@ async function loadProfile(){
   entSubs=p&&Array.isArray(p.ent_subjects)?p.ent_subjects:lsGet("ent_subjects",[]);
   $("pname").value=p?.display_name||"";$("pslug").value=p?.slug||"";$("ppub").checked=p?!!p.is_public:true;
   $("pgrade").value=/^Grade/.test(pi?.grade||"")?"School student":/^(College|University)$/.test(pi?.grade||"")?"University student":(pi?.grade||"");birth.set(pi?.birthday||"");showAvatar(p?.avatar_url||"");setQuote(p&&p.quote!=null?p.quote:lsGet("quote",""));
-  fillElect();renderExamParts();fillAccount();setProfileEdit(!pi);
+  fillElect();renderExamParts();renderEntSet();fillAccount();setProfileEdit(!pi);
   if(!p||!p.slug){await saveProfileSettings(true);return}
   $("plink").value=location.origin+location.pathname+"?u="+p.slug;
   if(p.is_public)drawProfileQr($("plink").value);else showPrivate();
@@ -2345,7 +2359,7 @@ const TIPS={
 const tipsFor=(id,name)=>TIPS[id]||["Solve one full "+name+" section with a timer, then check every mistake.","Write down the topic of each mistake and review it within 2 days.","Use a question bank by topic, starting with your weakest topic."];
 const SESS={listening:"1 full Listening test (30 min) + listen again with the transcript",reading:"1 full Reading test (60 min) + learn new words from the texts",writing:"Task 2 essay (40 min) + Task 1 (20 min)",speaking:"Record Parts 1–3 and listen back",sat_reading:"1 timed Reading and Writing module (32 min) + review",sat_math:"1 timed Math module (35 min) + review with Desmos",hist:"20 questions + one period timeline",math_l:"10 timed problems",read_l:"3 texts with questions"};
 const sessFor=(id,name)=>SESS[id]||"1 timed "+name+" section + review mistakes";
-const MOCK={IELTS:"Full IELTS mock test",SAT:"Full SAT practice test in Bluebook",ENT:"Full ҰБТ mock test (all subjects, 240 min)"};
+const MOCK={IELTS:"Full IELTS mock test",SAT:"Full SAT practice test in Bluebook",ENT:"Full UNT mock test (all subjects, 240 min)"};
 // analysis of the latest practice
 function analyze(k){
   const G=attemptGroups(k);if(!G.length)return null;
@@ -2383,7 +2397,7 @@ const SUBF={math:["it","eng","econ","sci"],phys:["eng","it","sci"],chem:["med","
 function careerScores(){
   const F={};Object.keys(FIELDS).forEach(f=>F[f]={port:[],exam:[],why:[]});
   portfolio.forEach(p=>{const t=topicOf(p.topic);if(!t)return;const pc=topicPct(p);t.f.forEach((f,i)=>{F[f].port.push(pc*(i===0?1:.7));F[f].why.push(t.n)})});
-  entSubs.filter(s=>SUBF[s]).forEach(s=>{const es=entries.filter(e=>e.exam==="ENT"&&e.subject===s);const pc=es.length?avgA(es.slice(-3).map(e=>e.score))/SUBJ[s].max*100:50;SUBF[s].forEach((f,i)=>{F[f].exam.push(pc*(i===0?1:.8));F[f].why.push("ҰБТ "+subName(s))})});
+  entSubs.filter(s=>SUBF[s]).forEach(s=>{const es=entries.filter(e=>e.exam==="ENT"&&e.subject===s);const pc=es.length?avgA(es.slice(-3).map(e=>e.score))/SUBJ[s].max*100:50;SUBF[s].forEach((f,i)=>{F[f].exam.push(pc*(i===0?1:.8));F[f].why.push("UNT "+subName(s))})});
   const sm=entries.filter(e=>e.exam==="SAT"&&e.subject==="sat_math");if(sm.length){const pc=avgA(sm.slice(-3).map(e=>e.score))/8;["it","eng","econ"].forEach(f=>{F[f].exam.push(pc*.9);F[f].why.push("SAT Math")})}
   return Object.entries(F).map(([f,v])=>{
     const ps=v.port.sort((a,b)=>b-a),port=ps.length?Math.min(100,ps[0]+.25*ps.slice(1).reduce((s,x)=>s+x,0)):null,ex=v.exam.length?Math.max(...v.exam):null;
@@ -2813,7 +2827,18 @@ function setTab(t){
   setTab0=t;const tabs=$("setTabs");if(!tabs)return;tabs.replaceChildren();
   [["profile","👤 Profile"],["site","🌐 Site"],["notif","🔔 Notifications"],["tg","✈️ Telegram"],["password","🔒 Password"]].forEach(([k,n])=>{const b=el("button",n,"seg-btn"+(k===t?" on":""));b.type="button";b.onclick=()=>setTab(k);tabs.appendChild(b)});
   document.querySelectorAll("#profilePanel [data-tab]").forEach(c=>c.hidden=c.dataset.tab!==t);
-  if(t==="site")renderSiteSet();if(t==="tg")renderTgSet();
+  if(t==="profile")renderEntSet();if(t==="site")renderSiteSet();if(t==="tg")renderTgSet();
+}
+function renderEntSet(){
+  const box=$("entSet");if(!box)return;box.replaceChildren(el("h3","UNT elective subjects","sub-h"));
+  const row=el("div",null,"row");
+  [0,1].forEach(i=>{const w=el("div"),sel=document.createElement("select");sel.setAttribute("translate","no");
+    sel.add(new Option("—",""));
+    ELECT.forEach(k=>{if(k!==entSubs[1-i])sel.add(new Option(SUBJ[k][siteLang],k))});
+    sel.value=entSubs[i]||"";
+    sel.onchange=()=>{const v=[entSubs[0]||"",entSubs[1]||""];v[i]=sel.value;entSubs=v;saveEntElectives();fillElect();renderExamParts();render();renderEntSet()};
+    w.append(el("label","Subject "+(i+1)),sel);row.append(w)});
+  box.append(row);
 }
 function renderSiteSet(){
   const box=$("siteSet");if(!box)return;box.replaceChildren();
@@ -2867,7 +2892,22 @@ function styleBtns(){
 
 /* ===================== SITE LANGUAGE ===================== */
 let siteLang=lsGet("site_lang","en");
-const TRL=`Overview|Обзор|Шолу
+const TRL=`UNT language:|Язык ЕНТ:|ҰБТ тілі:
+UNT|ЕНТ|ҰБТ
+UNT sections|Предметы ЕНТ|ҰБТ пәндері
+Elective subjects|Предметы по выбору|Таңдау пәндері
+UNT elective subjects|Предметы по выбору ЕНТ|ҰБТ таңдау пәндері
+Subject 1|Предмет 1|1-пән
+Subject 2|Предмет 2|2-пән
+History of Kazakhstan|История Казахстана|Қазақстан тарихы
+Math literacy|Математическая грамотность|Математикалық сауаттылық
+Reading literacy|Грамотность чтения|Оқу сауаттылығы
+Geography|География|География
+World history|Всемирная история|Дүниежүзі тарихы
+Computer science|Информатика|Информатика
+Kazakh language|Казахский язык|Қазақ тілі
+Russian language|Русский язык|Орыс тілі
+Overview|Обзор|Шолу
 Add Exam|Добавить экзамен|Емтихан қосу
 Smart Assistant|Smart Ассистент|Smart Ассистент
 AI Coach|AI-коуч|AI-коуч
@@ -2903,7 +2943,7 @@ Year|Год|Жыл
 Overall score|Общий балл|Жалпы балл
 Overall IELTS band|Общий балл IELTS|IELTS жалпы балы
 Total SAT score|Общий балл SAT|SAT жалпы балы
-Total ҰБТ score|Общий балл ҰБТ|ҰБТ жалпы балы
+Total UNT score|Общий балл ЕНТ|ҰБТ жалпы балы
 Save Result|Сохранить результат|Нәтижені сақтау
 IELTS sections|Секции IELTS|IELTS бөлімдері
 SAT sections|Секции SAT|SAT бөлімдері
@@ -3279,6 +3319,10 @@ const TRX=[
  [/^(\d{1,2}) (January|February|March|April|May|June|July|August|September|October|November|December) (\d{4})$/,null],
  [/^(\d+) (tests?) in the last (year|6 months)$/,["Тестов за $3: $1","Соңғы $3: $1 тест"]]];
 function tr(s){
+  if(siteLang==="en"||!s)return s;
+  return trText(s).replace(/UNT|ЕНТ|ҰБТ/g,siteLang==="ru"?"ЕНТ":"ҰБТ");
+}
+function trText(s){
   if(siteLang==="en"||!s)return s;const k=s.trim();if(!k)return s;
   const one=tr1(k);if(one!==null)return s.replace(k,one);
   // compound text: "🏆 Olympiads (1)", "Robotics · Strong"
@@ -3330,7 +3374,12 @@ document.documentElement.lang=siteLang;
  ["pointerup","pointercancel"].forEach(n=>thumb.addEventListener(n,()=>{drag=null}));
  upd();setTimeout(upd,400);addEventListener("load",upd);
 })();
-setTheme(lsGet("theme","light"));setEx("IELTS");(()=>{let q=0;const ob=new MutationObserver(()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;ob.disconnect();iconize();styleBtns();translateTree(document.body);ob.observe(document.body,{childList:true,subtree:true})})});ob.observe(document.body,{childList:true,subtree:true});iconize();styleBtns();translateTree(document.body);setTab("profile")})();
+setTheme(lsGet("theme","light"));setEx("IELTS");(()=>{let q=0;const dirty=new Set(),opt={childList:true,subtree:true};
+const ob=new MutationObserver(list=>{list.forEach(m=>dirty.add(m.target));if(q)return;q=requestAnimationFrame(()=>{q=0;ob.disconnect();
+ const nodes=[...dirty];dirty.clear();iconize();styleBtns();
+ if(siteLang!=="en")nodes.filter(n=>n.isConnected&&!nodes.some(o=>o!==n&&o.contains(n))).forEach(translateTree);
+ ob.observe(document.body,opt)})});
+ob.observe(document.body,opt);iconize();styleBtns();translateTree(document.body);setTab("profile")})();
 const PUB=new URLSearchParams(location.search).get("u");
 if(PUB){document.body.classList.add("pub");loadPublic(PUB)}
 else{document.body.classList.add("auth-mode");sb.auth.onAuthStateChange((_ev,s)=>{if(_ev==="PASSWORD_RECOVERY"){recovering=true;setTimeout(showRecover,0);return}setTimeout(()=>show(s),0)});sb.auth.getSession().then(({data})=>show(data.session))}
@@ -3346,7 +3395,7 @@ EYE=SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="
 EYEOFF=SV('<path d="M3 3l18 18"/><path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a10 10 0 0 0 4.3-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'),
 GEAR=SV('<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>'),EXIT=SV('<path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9"/>'),
 USERS=SV('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/>');
-const TABS=[["overall","Overall"],["IELTS","IELTS"],["SAT","SAT"],["ENT","ҰБТ"],["streak","Best streak"],["week","Week"]];
+const TABS=[["overall","Overall"],["IELTS","IELTS"],["SAT","SAT"],["ENT","UNT"],["streak","Best streak"],["week","Week"]];
 const TCOL={overall:"var(--ac)",IELTS:"var(--ielts)",SAT:"var(--sat)",ENT:"var(--ent)",streak:"#f59e0b",week:"#22c55e",parts:"#8b5cf6"};
 const MAX={IELTS:9,SAT:1600,ENT:140},KEY={IELTS:"ielts_last",SAT:"sat_last",ENT:"ent_last"},BEST={IELTS:"ielts_best",SAT:"sat_best",ENT:"ent_best"};
 const num=v=>v==null?null:Number(v);
@@ -3462,7 +3511,7 @@ function drawGroup(){
   const mine=u=>elIds.filter(id=>sc[u]&&sc[u][id]!=null);
   const elSum=u=>{const a=mine(u);return a.length?a.reduce((p,id)=>p+sc[u][id],0):null};
   if(pids.length){const ps=el("div",null,"grp-seg"),pg=el("div",null,"seg mini");
-    [[null,"Total"],...pids.map(id=>[id,id==="elective"?"Таңдау пән":PN[id]])].forEach(([id,n])=>{const x=el("button",n,"seg-btn"+(part===id?" on":""));x.type="button";x.onclick=()=>{G.ppart=id;drawGroup()};pg.append(x)});ps.append(pg);b.append(ps)}
+    [[null,"Total"],...pids.map(id=>[id,id==="elective"?"Elective subjects":PN[id]])].forEach(([id,n])=>{const x=el("button",n,"seg-btn"+(part===id?" on":""));x.type="button";x.onclick=()=>{G.ppart=id;drawGroup()};pg.append(x)});ps.append(pg);b.append(ps)}
   const mf=r=>isEl?elSum(r.user_id):part?((sc[r.user_id]||{})[part]??null):metric(r,t);
   const lb=v=>part?(v==null?"—":pfmt(t,v)):label(v,t);
   const rows=G.rows.slice().sort((x,y)=>{const a=mf(x),c=mf(y);if(a==null&&c==null)return y.total_attempts-x.total_attempts;if(a==null)return 1;if(c==null)return -1;return c-a||y.total_attempts-x.total_attempts});
@@ -3485,7 +3534,7 @@ function drawGroup(){
   card.append(list);b.append(card);
 
   const st=el("div",null,"card"),w=el("div",null,"grp-tbl"),tb=document.createElement("table");
-  tb.innerHTML="<thead><tr><th>Member</th><th>IELTS</th><th>SAT</th><th>ҰБТ</th><th>Best streak</th><th>Week</th><th>Total</th></tr></thead>";
+  tb.innerHTML="<thead><tr><th>Member</th><th>IELTS</th><th>SAT</th><th>UNT</th><th>Best streak</th><th>Week</th><th>Total</th></tr></thead>";
   const body=document.createElement("tbody");
   rows.forEach(r=>{const tr=document.createElement("tr");if(r.user_id===uid)tr.className="me";
     const c=k=>{const l=num(r[KEY[k]]),bs=num(r[BEST[k]]);return l==null?"—":(k==="IELTS"?l.toFixed(1):l)+(bs!=null&&bs!==l?" / "+(k==="IELTS"?bs.toFixed(1):bs):"")};
