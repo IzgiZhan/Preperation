@@ -901,15 +901,16 @@ button .ico{flex:none}
 #grpBody .grp-seg .seg-btn.on{color:var(--ac);border-bottom-color:var(--ac)!important}
 #grpBody .grp-seg .seg.mini .seg-btn.on{background:var(--ac);border-color:var(--ac)!important;color:#fff}
 .el-det{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.el-det>span{display:inline-flex;gap:8px;padding:4px 10px;border-radius:8px;background:var(--card);border:1px solid var(--bd);font-size:13px;color:var(--mu)}.el-det b{display:inline;color:var(--tx)}
-/* ===== Serious buttons ===== */
-:root{--btn:#1d3557;--btn-bd:#c3cad5;--btn-tx:#1d3557}
-:root[data-theme=dark]{--btn:#34598c;--btn-bd:#444b57;--btn-tx:#e6ebf2}
-html body button.main,html body button.hbtn:not(.sug):not(.qrb),html body #grpBody button.gbtn{min-height:40px;height:auto;padding:8px 16px;border-radius:6px!important;font-size:14px;font-weight:600;letter-spacing:0;box-shadow:none!important;transform:none!important;transition:background-color .12s,border-color .12s;background:var(--card)!important;color:var(--btn-tx)!important;border:1px solid var(--btn-bd)!important}
-html body button.main:hover,html body button.hbtn:not(.sug):not(.qrb):hover,html body #grpBody button.gbtn:hover{border-color:var(--btn-tx)!important;filter:none}
-html body button.main:not(.go):not(.danger),html body #grpBody button.gbtn.pri{background:var(--btn)!important;border-color:var(--btn)!important;color:#fff!important}
-html body button.main:not(.go):not(.danger):hover,html body #grpBody button.gbtn.pri:hover{filter:brightness(1.15)}
-html body button.danger.main,html body #grpBody button.gbtn.danger{background:var(--card)!important;color:var(--bad)!important;border-color:color-mix(in srgb,var(--bad) 55%,var(--card))!important}
-html body #grpBody button.gbtn.danger:hover{background:var(--badbg)!important;border-color:var(--bad)!important}
+/* ===== Serious buttons: flat, square-ish, each kind keeps its own colour ===== */
+html body button.main,html body button.hbtn:not(.sug):not(.qrb),html body #grpBody button.gbtn{--k:#1764c0;min-height:40px;height:auto;padding:8px 16px;border-radius:6px!important;font-size:14px;font-weight:600;letter-spacing:0;box-shadow:none!important;transform:none!important;transition:filter .12s;background:var(--k)!important;border:1px solid var(--k)!important;color:#fff!important}
+html body button.main.save,html body #grpBody button.gbtn.ok{--k:#1b7f46}
+html body button.main.add{--k:#0e7490}
+html body button.main.ai,html body button.hbtn.ai.ai.ai{--k:#6341c0}
+html body button.hbtn.amber.amber.amber,html body #grpBody button.gbtn.amber{--k:#a85d00}
+html body button.hbtn.gray.gray.gray,html body #grpBody button.gbtn:not(.pri):not(.ok):not(.blue):not(.danger){--k:#5b6472}
+html body button.main.go,html body #grpBody button.gbtn.blue{--k:#4750b8}
+html body button.main.danger,html body #grpBody button.gbtn.danger{--k:#c0271d}
+html body button.main:hover,html body button.hbtn:not(.sug):not(.qrb):hover,html body #grpBody button.gbtn:hover{filter:brightness(1.12)}
 html body button .ico{width:16px;height:16px;stroke-width:1.8}
 /* ===== Less lag: no blur or endless decoration ===== */
 *,*::before,*::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
