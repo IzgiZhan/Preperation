@@ -739,6 +739,60 @@ button.grp-item:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,
 .free-cell .fc-ck{position:absolute;bottom:6px;font-style:normal;font-size:20px;font-weight:800;color:var(--ok);height:22px}
 .free-cell.on{border-color:var(--ok);background:var(--okbg)}
 @media(max-width:820px){.free-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ===== AI Coach: equal buttons with icons ===== */
+#asstBody button.main,#asstBody .hbtn:not(.sug),#asstBody .abtn{min-height:46px;min-width:168px;padding:0 20px;border-radius:14px;font-size:14.5px;font-weight:650;display:inline-flex;align-items:center;justify-content:center;gap:9px;white-space:nowrap;box-sizing:border-box}
+#asstBody button.main .ico,#asstBody .hbtn:not(.sug) .ico{width:18px;height:18px;flex:none}
+#asstBody .hbtn:not(.sug){background:var(--ac2);color:var(--ac);border:1px solid transparent}
+#asstBody .hbtn.gray:not(.sug){background:var(--bg);color:var(--mu)}
+#asstBody .chips .chip{min-height:42px;min-width:104px;justify-content:center}
+#asstBody .abar{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+@media(max-width:520px){#asstBody .abar>button{flex:1 1 100%}}
+
+/* ===== chance for each part: bar diagram ===== */
+.pdiag{display:flex;flex-direction:column;gap:14px;margin:6px 0 4px}
+.pd-row{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center}
+.pd-name{font-weight:650;font-size:14.5px}
+.pd-val{font-weight:800;font-size:15px;letter-spacing:-.02em;text-align:right}
+.pd-track{grid-column:1/-1;position:relative;height:12px;border-radius:99px;background:var(--bg);overflow:hidden}
+.pd-fill{position:absolute;inset:0 auto 0 0;width:0;border-radius:99px;background:linear-gradient(90deg,color-mix(in srgb,var(--pc) 70%,#fff),var(--pc));box-shadow:0 0 14px -2px var(--pc);transition:width .9s cubic-bezier(.22,1,.36,1)}
+.pd-track::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),var(--card) calc(25% - 1px) 25%);opacity:.55;pointer-events:none}
+.pd-track.empty{background:repeating-linear-gradient(135deg,var(--bg) 0 6px,color-mix(in srgb,var(--mu) 14%,var(--bg)) 6px 12px)}
+.pd-sub{grid-column:1/-1;display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-top:-2px}
+.pd-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mu);margin-top:4px}
+.pd-legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+
+/* ===== AI chat ===== */
+.aichat{position:relative;border-radius:22px;padding:1px;background:linear-gradient(135deg,#7c3aed,#db2777 55%,#f59e0b);box-shadow:0 18px 40px -22px rgba(124,58,237,.7)}
+.aichat-in{border-radius:21px;background:var(--card);overflow:hidden;display:flex;flex-direction:column}
+.aichat-head{display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(135deg,rgba(124,58,237,.10),rgba(219,39,119,.08));border-bottom:1px solid var(--bd)}
+.aichat-av{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#7c3aed,#db2777);box-shadow:0 8px 18px -8px rgba(124,58,237,.8);position:relative}
+.aichat-av svg{width:21px;height:21px}
+.aichat-av::after{content:"";position:absolute;right:-2px;bottom:-2px;width:11px;height:11px;border-radius:50%;background:#22c55e;border:2px solid var(--card)}
+.aichat-ti{flex:1;min-width:0;line-height:1.25}.aichat-ti b{display:block;font-size:15.5px}.aichat-ti span{font-size:12px;color:var(--mu)}
+.aichat-clr{width:38px;height:38px;border:0;border-radius:12px;background:transparent;color:var(--mu);display:grid;place-items:center;cursor:pointer;transition:background .15s,color .15s}
+.aichat-clr:hover{background:var(--bg);color:var(--bad)}.aichat-clr svg{width:18px;height:18px}
+.aichat .chat-log{max-height:48vh;min-height:220px;padding:16px 14px 8px;background:radial-gradient(120% 80% at 100% 0,rgba(124,58,237,.06),transparent 60%),radial-gradient(100% 70% at 0 100%,rgba(219,39,119,.05),transparent 60%)}
+.aichat .chat-row{margin:0;padding:10px 12px 12px;border-top:1px solid var(--bd);background:var(--card);align-items:center}
+.aichat .chat-in{border-radius:999px;padding:13px 18px;min-height:48px;background:var(--bg);border-color:transparent;box-shadow:none}
+.aichat .chat-in:focus{background:var(--card);border-color:#a855f7;box-shadow:0 0 0 4px rgba(168,85,247,.16)}
+.aichat .chat-send{width:48px;height:48px;background:linear-gradient(135deg,#7c3aed,#db2777)!important;box-shadow:0 10px 20px -10px rgba(124,58,237,.9)!important}
+.aichat .chat-send:disabled{opacity:.5}
+.sug-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:14px}
+.sug{display:flex!important;align-items:flex-start;gap:10px;text-align:left;justify-content:flex-start!important;padding:12px 14px!important;min-height:64px!important;min-width:0!important;border-radius:14px!important;background:var(--card)!important;border:1px solid var(--bd)!important;color:var(--tx)!important;font-weight:600;font-size:13.5px;line-height:1.35;white-space:normal;cursor:pointer}
+.sug:hover{border-color:#a855f7!important;box-shadow:0 8px 20px -12px rgba(124,58,237,.8)!important;transform:translateY(-1px)}
+.sug .sug-ic{width:30px;height:30px;flex:none;border-radius:10px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#7c3aed,#db2777)}
+.sug .sug-ic svg{width:16px;height:16px}
+@media(max-width:560px){.sug-grid{grid-template-columns:1fr}}
+.aichat .msg{animation:msgin .28s cubic-bezier(.22,1,.36,1)}
+@keyframes msgin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.aichat .msg.ai .bub{border:0;background:var(--bg);box-shadow:none}
+:root[data-theme=dark] .aichat .msg.ai .bub{background:#26262b}
+.aichat .bub.typing i{background:linear-gradient(135deg,#7c3aed,#db2777)}
+.aichat .bub.typing{background:var(--bg)}
+.bub .caret{display:inline-block;width:7px;height:15px;margin-left:2px;vertical-align:-2px;border-radius:2px;background:#a855f7;animation:blink .8s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+#asstBody .seg.tabs{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(112px,1fr);overflow-x:auto}#asstBody .seg.tabs .seg-btn{justify-content:center;min-height:42px}
 </style>
 </head>
 <body>
@@ -1264,6 +1318,7 @@ flame:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4
 target:'<circle cx="12" cy="12" r="1"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M13 3.055a9 9 0 1 0 7.941 7.945"/><path d="M15 6v3h3l3-3h-3v-3z"/><path d="M15 9l-3 3"/>',
 cal:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/><path d="m9 15 2 2 4-4"/>'};
 const IC=n=>'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">'+ICP[n]+'</svg>',EXICON={IELTS:"globe",SAT:"clip",ENT:"flag"};
+Object.assign(ICP,{wrench:'<path d="M14.7 6.3a4 4 0 0 0 5 5L12 19l-3-3 7.7-7.7z"/><path d="m9 16-4 4"/>',refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',cap:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>',chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',bolt:'<path d="M13 3 5 13h6l-1 8 8-10h-6z"/>',compass:'<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',pen:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>'});
 const fs=(ex,v)=>ex==="IELTS"&&v!=null&&v!==""&&!isNaN(v)?Number(v).toFixed(1):v;
 const fd=(ex,d)=>(d>0?"+":"")+(ex==="IELTS"?Number(d).toFixed(1):d);
 const BI=[[/^save/i,"save"],[/^edit/i,"edit"],[/^add/i,"plus"],[/^cancel/i,"cancel"],[/^details/i,"details"],[/^hide/i,"hide"],[/^change photo/i,"camera"],[/^change password/i,"key"],[/^share/i,"share"],[/^log in/i,"login"],[/^create account/i,"userplus"],[/^mark/i,"save"],[/^turn/i,"bell"]];
@@ -2272,68 +2327,100 @@ function mdRender(text){
   flush();
   return frag;
 }
-function chatRow(m){
+let chatLogEl=null;
+const CHAT_HINT="\n\n[Reply fast: max 4 short sentences or 5 bullets, no intro, no repetition.]";
+const SUGS=[["bulb","How do I fix my weakest part?"],["cal","Make me a plan for this week"],["cap","What universities fit my portfolio?"],["chart","Explain my chance in simple words"]];
+function copyBtn(text){const c=el("button",null,"bub-copy");c.type="button";c.title="Copy";c.innerHTML=IC("copy");
+  c.onclick=async()=>{try{await navigator.clipboard.writeText(text);c.classList.add("ok");setTimeout(()=>c.classList.remove("ok"),1200)}catch(e){}};return c}
+function chatRow(m,empty){
   const r=el("div",null,"msg "+(m.role==="ai"?"ai":"me"));
   if(m.role==="ai"){const av=el("div",null,"msg-av");av.innerHTML=IC("spark");r.appendChild(av)}
   const bub=el("div",null,"bub");
-  if(m.role==="ai"){
-    bub.appendChild(mdRender(m.text));
-    const c=el("button",null,"bub-copy");c.type="button";c.title="Copy";c.innerHTML=IC("copy");
-    c.onclick=async()=>{try{await navigator.clipboard.writeText(m.text);c.classList.add("ok");setTimeout(()=>c.classList.remove("ok"),1200)}catch(e){}};
-    bub.appendChild(c);
-  }else bub.textContent=m.text;
+  if(m.role==="ai"){if(!empty){bub.appendChild(mdRender(m.text));bub.appendChild(copyBtn(m.text))}}
+  else bub.textContent=m.text;
   r.appendChild(bub);
   return r;
+}
+function typingRow(){const r=el("div",null,"msg ai typ"),av=el("div",null,"msg-av");av.innerHTML=IC("spark");
+  const bub=el("div",null,"bub typing");bub.innerHTML="<i></i><i></i><i></i>";r.append(av,bub);return r}
+// the answer appears word by word, so it feels alive and the wait does not feel long
+function typeIn(row,text,log){
+  const bub=row.querySelector(".bub"),n=text.length,step=Math.max(3,Math.ceil(n/70));let i=0;
+  const tick=()=>{
+    if(!bub.isConnected)return;
+    i=Math.min(n,i+step);
+    bub.replaceChildren(mdRender(text.slice(0,i)));
+    if(i<n){const caret=el("span",null,"caret");let t=bub.lastElementChild;
+      if(t&&(t.tagName==="UL"||t.tagName==="OL")&&t.lastElementChild)t=t.lastElementChild;(t||bub).appendChild(caret)}
+    else bub.appendChild(copyBtn(text));
+    if(log.scrollHeight-log.scrollTop-log.clientHeight<140)log.scrollTop=log.scrollHeight;
+    if(i<n)setTimeout(tick,16);
+  };tick();
+}
+function chatHero(k){
+  const w=el("div",null,"chat-empty"),hero=el("div",null,"chat-hero"),ic=el("div",null,"chat-hero-ic");ic.innerHTML=IC("spark");
+  hero.append(ic,el("b","How can I help you today?"),el("p","Ask me anything about your exams, study plan, subjects or university choice.","mu"));
+  w.appendChild(hero);
+  const g=el("div",null,"sug-grid");
+  SUGS.forEach(([icn,t])=>{const c=el("button",null,"hbtn sug");c.type="button";
+    const i=el("span",null,"sug-ic");i.innerHTML=IC(icn);c.append(i,el("span",t));
+    c.onclick=()=>chatSend(k,(siteLang!=="en"&&tr1(t))||t);g.appendChild(c)});
+  w.appendChild(g);return w;
 }
 function chatBlock(k){
   const b=el("div",null,"block");
   chatLoad();
-  const log=el("div",null,"chat-log");
-  if(!chatLog.length){
-    const hero=el("div",null,"chat-hero"),ic=el("div",null,"chat-hero-ic");ic.innerHTML=IC("spark");
-    hero.append(ic,el("b","AI Coach"),el("p","Ask me anything about your exams, study plan, subjects or university choice.","mu"));
-    log.appendChild(hero);
-    const q=el("div",null,"chips");
-    ["How do I fix my weakest part?","Make me a plan for this week","What universities fit my portfolio?","Explain my chance in simple words"]
-      .forEach(t=>{const c=el("button",t,"hbtn");c.type="button";c.onclick=()=>chatSend(k,(siteLang!=="en"&&tr1(t))||t);q.appendChild(c)});
-    log.appendChild(q);
-  }
+  const wrap=el("div",null,"aichat"),inn=el("div",null,"aichat-in");wrap.appendChild(inn);
+  const head=el("div",null,"aichat-head"),av=el("div",null,"aichat-av");av.innerHTML=IC("spark");
+  const ti=el("div",null,"aichat-ti");ti.append(el("b","AI Coach"),el("span","Online · replies in seconds"));
+  const cl=el("button",null,"aichat-clr");cl.type="button";cl.title="Clear chat";cl.setAttribute("aria-label","Clear chat");cl.innerHTML=IC("trash");
+  cl.onclick=()=>{if(chatBusy)return;chatLog=[];chatSave();renderAssistant()};
+  head.append(av,ti,cl);inn.appendChild(head);
+  const log=el("div",null,"chat-log");chatLogEl=log;
+  if(!chatLog.length)log.appendChild(chatHero(k));
   chatLog.forEach(m=>log.appendChild(chatRow(m)));
-  if(chatBusy){
-    const r=el("div",null,"msg ai"),av=el("div",null,"msg-av");av.innerHTML=IC("spark");
-    const bub=el("div",null,"bub typing");bub.innerHTML="<i></i><i></i><i></i>";
-    r.append(av,bub);log.appendChild(r);
-  }
-  b.appendChild(log);
-  if(chatErr){const w=el("div",null,"ai-err");w.append(el("b","Chat did not answer"),el("p",chatErr));b.appendChild(w)}
+  if(chatBusy)log.appendChild(typingRow());
+  inn.appendChild(log);
+  if(chatErr){const w=el("div",null,"ai-err");w.append(el("b","Chat did not answer"),el("p",chatErr));w.style.margin="0 12px 8px";inn.appendChild(w)}
   const row=el("div",null,"chat-row"),ta=document.createElement("textarea");
-  ta.rows=1;ta.placeholder="Write your question\u2026";ta.className="chat-in";ta.disabled=chatBusy;
-  const send=el("button",null,"chat-send");send.type="button";send.innerHTML=IC("send");send.title="Send";send.disabled=chatBusy;
-  const fire=()=>{const t=ta.value.trim();if(t)chatSend(k,t)};
+  ta.rows=1;ta.placeholder="Write your question\u2026";ta.className="chat-in";
+  const send=el("button",null,"chat-send");send.type="button";send.innerHTML=IC("send");send.title="Send";
+  const fire=()=>{const t=ta.value.trim();if(t&&!chatBusy)chatSend(k,t)};
   send.onclick=fire;
   ta.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();fire()}};
   ta.oninput=()=>{ta.style.height="auto";ta.style.height=Math.min(140,ta.scrollHeight)+"px"};
-  row.append(ta,send);b.appendChild(row);
-  if(chatLog.length){const cl=el("button","Clear chat","hbtn gray");cl.type="button";
-    cl.onclick=()=>{chatLog=[];chatSave();renderAssistant()};b.appendChild(cl)}
-  setTimeout(()=>{log.scrollTop=log.scrollHeight;if(!chatBusy)ta.focus()},30);
+  row.append(ta,send);inn.appendChild(row);
+  b.appendChild(wrap);
+  setTimeout(()=>{log.scrollTop=log.scrollHeight;ta.focus()},30);
   return b;
 }
 async function chatSend(k,text){
   if(chatBusy)return;
   chatLoad();
   chatLog.push({role:"me",text});chatSave();
-  chatBusy=true;chatErr="";renderAssistant();
-  const body={chat:true,language:{en:"English",ru:"Russian",kk:"Kazakh"}[asstLang]||"English",
-    context:chatContext(k),messages:chatLog.slice(-10).map(m=>({role:m.role,text:m.text}))};
+  chatBusy=true;chatErr="";
+  // add the message right away without redrawing the whole panel: no flicker, answer feels instant
+  const live=chatLogEl&&chatLogEl.isConnected&&asstTab==="chat";let tp=null;
+  if(live){
+    const blk=chatLogEl.closest(".aichat-in"),e=chatLogEl.querySelector(".chat-empty"),er=blk&&blk.querySelector(".ai-err"),ta=blk&&blk.querySelector(".chat-in");
+    if(e)e.remove();if(er)er.remove();if(ta){ta.value="";ta.style.height="auto"}
+    chatLogEl.appendChild(chatRow({role:"me",text}));tp=typingRow();chatLogEl.appendChild(tp);
+    chatLogEl.scrollTop=chatLogEl.scrollHeight;
+  }else renderAssistant();
+  // send less history and ask for a short answer: fewer tokens in and out = faster reply
+  const hist=chatLog.slice(-6).map((m,i,a)=>({role:m.role,text:String(m.text).slice(0,i===a.length-1&&m.role==="me"?600:500)+(i===a.length-1&&m.role==="me"?CHAT_HINT:"")}));
+  const body={chat:true,fast:true,max_words:120,language:{en:"English",ru:"Russian",kk:"Kazakh"}[asstLang]||"English",
+    context:chatContext(k),messages:hist};
   let data,error;try{({data,error}=await sb.functions.invoke("smart-assistant",{body}))}catch(e){error=e}
   chatBusy=false;
   if(error||!data||data.error||!data.reply){chatErr=await errDetail(error,data);renderAssistant();return}
-  chatLog.push({role:"ai",text:data.reply});chatSave();
-  renderAssistant();
+  const m={role:"ai",text:data.reply};chatLog.push(m);chatSave();
+  if(tp&&tp.isConnected&&chatLogEl&&chatLogEl.isConnected){const row=chatRow(m,true);tp.replaceWith(row);typeIn(row,m.text,chatLogEl)}
+  else renderAssistant();
 }
-const goBtn=(text,fn,cls)=>{const b=el("button",text,"main "+(cls||"go"));b.type="button";b.onclick=fn;return b};
-const emptyMsg=(box,text,btn,fn)=>{box.appendChild(el("p",text,"mu"));if(btn)box.appendChild(goBtn(btn,fn))};
+const goBtn=(text,fn,cls,ic)=>{const b=el("button",null,"main "+(cls||"go"));b.type="button";b.innerHTML=IC(ic||"bolt");b.append(el("span",text));b.onclick=fn;return b};
+const hb=(text,fn,ic,cls)=>{const b=el("button",null,"hbtn"+(cls?" "+cls:""));b.type="button";b.innerHTML=IC(ic);b.append(el("span",text));b.onclick=fn;return b};
+const emptyMsg=(box,text,btn,fn)=>{box.appendChild(el("p",text,"mu"));if(btn)box.appendChild(goBtn(btn,fn,"go",/goal/i.test(btn)?"target":/result/i.test(btn)?"plus":"compass"))};
 function renderAssistant(){
   const box=$("asstBody");if(!box||viewUid||!uid)return;
   if(box.contains(document.activeElement)&&document.activeElement.tagName==="INPUT")return;
@@ -2359,19 +2446,25 @@ function chanceBlock(k){
   // show the arithmetic: the whole goal is only reached when every part is
   if(c.parts.length){
     b.appendChild(el("div","Chance for each part","step"));
-    const pb=el("div",null,"info");
+    const pb=el("div",null,"pdiag");
     c.parts.slice().sort((x,y)=>x.p-y.p).forEach(x=>{
-      const r=infoRow(x.name,x.n?x.p+"%":"no results yet");
-      const bb=r.querySelector("b");bb.style.color=x.n?(x.p>=70?"var(--ok,#16a34a)":x.p>=40?"#f59e0b":"var(--bad)"):"var(--mu)";
-      if(x.n){const sm=document.createElement("small");
-        sm.textContent="goal "+fs(k,x.tg);
-        sm.style.cssText="display:block;font-weight:600;color:var(--mu)";bb.appendChild(sm)}
-      pb.appendChild(r)});
+      const pc=x.n?(x.p>=70?"var(--ok)":x.p>=40?"#f59e0b":"var(--bad)"):"var(--mu)";
+      const r=el("div",null,"pd-row");r.style.setProperty("--pc",pc);
+      const v=el("span",x.n?x.p+"%":"no results yet","pd-val");v.style.color=pc;
+      const tk=el("div",null,"pd-track"+(x.n?"":" empty")),f=el("i",null,"pd-fill");tk.appendChild(f);
+      r.append(el("span",x.name,"pd-name"),v,tk);
+      if(x.n){const sb=el("div",null,"pd-sub");sb.append(el("span","goal "+fs(k,x.tg)));r.appendChild(sb)}
+      pb.appendChild(r);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{f.style.width=(x.n?Math.max(3,x.p):0)+"%"}));
+    });
     b.appendChild(pb);
+    const lg=el("div",null,"pd-legend");
+    [["var(--ok)","On track"],["#f59e0b","Needs work"],["var(--bad)","Hard"]].forEach(([c,t])=>{const s=el("span");const d=document.createElement("i");d.style.background=c;s.append(d,document.createTextNode(t));lg.appendChild(s)});
+    b.appendChild(lg);
+
     b.appendChild(el("p","The total sits close to your weakest part."+(c.untested?" A part with no results counts as 50%.":""),"mu"));
   }
-  const bar=el("div",null,"chips");bar.append(goBtn("What to fix",()=>{asstTab="test";renderAssistant()}));
-  const p2=el("button","My plan","hbtn");p2.type="button";p2.onclick=()=>{asstTab="plan";renderAssistant()};bar.appendChild(p2);
+  const bar=el("div",null,"abar");bar.append(goBtn("What to fix",()=>{asstTab="test";renderAssistant()},"go","wrench"),hb("My plan",()=>{asstTab="plan";renderAssistant()},"cal"));
   b.appendChild(bar);return b;
 }
 function careerBlock(){
@@ -2411,22 +2504,22 @@ function aiBox(k,a){
     list("To do",rep.improve,x=>typeof x==="string"?x:(x.area?x.area+": ":"")+(x.action||""));
     list("This week",rep.next_steps,x=>String(x));
     if(rep.motivation){const m=el("p",rep.motivation);m.style.fontStyle="italic";box.appendChild(m)}
-    const r=el("button","Ask again","hbtn");r.type="button";r.onclick=()=>runAI(k,true);box.appendChild(r);return box}
+    const ab=el("div",null,"abar");ab.appendChild(hb("Ask again",()=>runAI(k,true),"refresh"));box.appendChild(ab);return box}
   if(aiErr[k]){
     const w=el("div",null,"ai-err");
     w.append(el("b","AI did not answer"),el("p",aiErr[k]));
     box.appendChild(w);
   }
-  const bar=el("div",null,"chips");
-  const go=el("button",aiErr[k]?"Try again":"Ask AI","main ai");go.type="button";go.onclick=()=>runAI(k,true);bar.appendChild(go);
-  if(aiErr[k]){const chk=el("button","Check the AI setup","hbtn");chk.type="button";chk.onclick=()=>pingAI(box,chk);bar.appendChild(chk)}
+  const bar=el("div",null,"abar");
+  const go=goBtn(aiErr[k]?"Try again":"Ask AI",()=>runAI(k,true),"ai","spark");bar.appendChild(go);
+  if(aiErr[k]){const chk=hb("Check the AI setup",()=>pingAI(box,chk),"stethoscope");bar.appendChild(chk)}
   box.appendChild(bar);return box;
 }
 // asks the Edge Function what it can see: which key, which models, what is wrong
 async function pingAI(box,btn){
-  btn.disabled=true;btn.textContent="Checking\u2026";
+  btn.disabled=true;(btn.lastChild||btn).textContent="Checking\u2026";
   let data,error;try{({data,error}=await sb.functions.invoke("smart-assistant",{body:{ping:true}}))}catch(e){error=e}
-  btn.disabled=false;btn.textContent="Check the AI setup";
+  btn.disabled=false;(btn.lastChild||btn).textContent="Check the AI setup";
   const w=el("div",null,"ai-err");
   if(error||!data){w.append(el("b","Could not reach the function"),el("p",await errDetail(error,data)),
     el("p","The smart-assistant function is probably not deployed, or it is paused in Supabase."));box.appendChild(w);return}
@@ -2802,6 +2895,11 @@ no date|нет даты|күні жоқ
 💪 You can do it. Work on your weak parts.|💪 У тебя получится. Подтяни слабые части.|💪 Сен істей аласың. Әлсіз жерлерді жақсарт.
 ⚠️ Hard for now. Follow the plan every day.|⚠️ Пока сложно. Занимайся по плану каждый день.|⚠️ Әзірге қиын. Күн сайын жоспармен оқы.
 What to fix|Что исправить|Не түзету керек
+How can I help you today?|Чем могу помочь сегодня?|Бүгін қалай көмектесе аламын?
+Online · replies in seconds|Онлайн · отвечает за секунды|Онлайн · секундтарда жауап береді
+On track|В порядке|Жақсы
+Needs work|Нужно подтянуть|Жақсарту керек
+Hard|Сложно|Қиын
 My plan|Мой план|Менің жоспарым
 First set your goal and exam date.|Сначала поставь цель и дату экзамена.|Алдымен мақсат пен емтихан күнін қой.
 Set goal|Поставить цель|Мақсат қою
